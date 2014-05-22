@@ -1,49 +1,89 @@
 <div class="col-md-3">
-    <section class="panel">
+    <section class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">System</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="list-group">
+                <li class="list-group-item"
+                    ng-class="{'list-group-item-success': data.health.t > 0 && data.health.t < 500, 'list-group-item-warning': data.health.t > 500, 'list-group-item-danger': data.health.t === null}">
+                    <i class="fa fa-medkit"></i>
+                    <b>Health:</b>
+                    <span ng-show="data.health.t > 0 && data.health.t < 500">running</span>
+                    <span ng-show="data.health.t > 500">slowly responding</span>
+                    <span ng-show="data.health.t === null">down</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="fa fa-building-o"></i>
+                    <b>Hostname:</b>
+                    {{ data.gauge.System.hostname }}
+                </li>
+                <li class="list-group-item">
+                    <i ng-show="data.gauge.System.platform && data.gauge.System.platform.indexOf('win') !== -1"
+                       class="fa fa-windows"></i>
+                    <i ng-show="data.gauge.System.platform && data.gauge.System.platform.indexOf('ubuntu') !== -1"
+                       class="fa fa-linux"></i>
+                    <i ng-hide="data.gauge.System.platform || data.gauge.System.platform.indexOf('win') !== -1 || data.gauge.System.platform.indexOf('ubuntu') !== -1"
+                       class="fa fa-cubes"></i>
+                    <b>Platform:</b>
+                    <span class="no-wrap">{{ data.gauge.System.platform }} {{ data.gauge.System.arch }}</span>
+                </li>
+                <li class="list-group-item">
+                    <img src="img/nodejs.png" width="14">
+                    <b>Node:</b>
+                    <span class="no-wrap">{{ data.gauge.System.nodeVersions }}</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="fa fa-clock-o"></i>
+                    <b>Node uptime:</b>
+                    <span class="no-wrap">{{ data.gauge.Uptime.uptime | formatSec }}</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="fa fa-clock-o"></i>
+                    <b>System uptime:</b>
+                    <span class="no-wrap">{{ data.gauge.Uptime.osuptime | formatSec }}</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<div class="col-md-9">
+
+    <section class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">System CPU</h3>
+        </div>
         <div class="panel-body">
             <div class="top-stats-panel">
-                <div id="donut-example"></div>
+                <div id="histogram-CPU" class="system-histogram"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="col-md-9">
+
+    <section class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Process Memory</h3>
+        </div>
+        <div class="panel-body">
+            <div class="top-stats-panel">
+                <div id="histogram-Memory" class="system-histogram"></div>
             </div>
         </div>
     </section>
 </div>
 
 <div class="col-md-3">
-    <section class="panel">
-        <div class="panel-body">
-            <div class="top-stats-panel">
-                <div id="donut-example2"></div>
-            </div>
+    <section class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Process Memory Now</h3>
         </div>
-    </section>
-</div>
-
-<div class="col-md-3">
-    <section class="panel">
         <div class="panel-body">
             <div class="top-stats-panel">
-                <div id="donut-example3"></div>
-            </div>
-        </div>
-    </section>
-</div>
-
-<div class="col-md-3">
-    <section class="panel">
-        <div class="panel-body">
-            <div class="top-stats-panel">
-                <div id="donut-example4"></div>
-            </div>
-        </div>
-    </section>
-</div>
-
-
-<div class="col-md-12">
-    <section class="panel">
-        <div class="panel-body">
-            <div class="top-stats-panel">
-                <div id="area-example"></div>
+                <div id="donut-Memory" class="system-histogram"></div>
             </div>
         </div>
     </section>

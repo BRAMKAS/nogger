@@ -14,22 +14,22 @@ var livereloadport = 35729,
     serverport = 5001;
 
 gulp.task('scripts', function() {
-    return gulp.src(['app/src/**/*.js'])
+    return gulp.src(['front/src/**/*.js'])
         .pipe(concat('dest.js'))
         .pipe(gulp.dest('dist/build'))
         .pipe(refresh(lrserver));
 });
 
 gulp.task('styles', function() {
-    return gulp.src(['app/less/bootstrap.less'])
+    return gulp.src(['front/less/bootstrap.less'])
         .pipe(less())
         .on('error', console.log)
-        .pipe(gulp.dest('app/css'))
+        .pipe(gulp.dest('front/css'))
 });
 
 gulp.task('serve', function() {
     //Set up your static fileserver, which serves files in the build dir
-    http.createServer(ecstatic({ root: __dirname + '/app' })).listen(serverport);
+    http.createServer(ecstatic({ root: __dirname + '/front' })).listen(serverport);
 
     //Set up your livereload server
     lrserver.listen(livereloadport);
@@ -37,14 +37,14 @@ gulp.task('serve', function() {
 
 
 gulp.task('html', function() {
-    return gulp.src("app/*.html")
+    return gulp.src("front/*.html")
         .pipe(embedlr())
         .pipe(gulp.dest('dist/'))
         .pipe(refresh(lrserver));
 });
 
 gulp.task('assets', function() {
-    return gulp.src("app/assets/**")
+    return gulp.src("front/assets/**")
         .pipe(imagemin({optimizationLevel: 5}))
         .pipe(gulp.dest('dist/assets/'))
         .pipe(refresh(lrserver));
@@ -52,7 +52,7 @@ gulp.task('assets', function() {
 
 // Requires gulp >=v3.5.0
 gulp.task('watch', function () {
-    gulp.watch('app/less/**/*.less', ['styles']);
+    gulp.watch('front/less/**/*.less', ['styles']);
 });
 
 gulp.task('default', ['scripts', 'styles', 'html', 'assets', 'serve', 'watch']);

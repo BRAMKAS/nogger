@@ -4,6 +4,15 @@ var path = require('path');
 var password = require('./password');
 var config = require("../config.json");
 var metrics = require('./metrics');
+var ping = require('./ping');
+
+var debugAdapter = require('nogger-node-adapter');
+debugAdapter.setConfig({
+    redisIP: config.redisIP,
+    redisPort: config.redisPort,
+    redisMetricsDb: config.redisMetricsDb,
+    redisLogsDb: config.redisLogsDb
+});
 var app = express();
 
 var pjson = require("../package.json");
@@ -49,9 +58,29 @@ app.io.route('auth', function (req) {
 
 app.io.route('getMetrics', function(req){
     if(clients.indexOf(req.io.socket.id) !== -1){
-        metrics.getMetrics(function(){
-
+        metrics.getMetrics(function(err, data){
+            req.io.respond({err: err, data: data});
         })
+    } else {
+        req.io.respond({err: "not authenticated", data: null});
+    }
+});
+
+app.io.route('ping', function(req){
+    if(clients.indexOf(req.io.socket.id) !== -1){
+        var done = false;
+        ping(function(t, adapter){
+            if(!done){
+                done = true;
+                req.io.respond({err: null, data: {t:t, adapter: adapter}});
+            }
+        });
+        setTimeout(function(){
+            if(!done){
+                done = true;
+                req.io.respond({err: null, data: {t: null}});
+            }
+        }, 5000);
     } else {
         req.io.respond({err: "not authenticated", data: null});
     }
@@ -84,3 +113,4 @@ function broadcast(fn, msg) {
         app.io.sockets.socket(clients[i]).emit(fn, msg);
     }
 }
+

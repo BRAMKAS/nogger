@@ -19,4 +19,7 @@ var app = angular.module('app', [
             .otherwise({
                 redirectTo: '/'
             });
+    })
+    .run(function (socket) {
+        console.log('running');
     });

@@ -2,6 +2,7 @@
     "prod": false,
     "redisIP": "87.230.26.187",
     "redisPort": 6379,
-    "redisDb": 2,
+    "redisMetricsDb": 2,
+    "redisLogsDb": 3,
     "redisPass": "w2KBi1jSsnaiYyYpmp4J4"
 }

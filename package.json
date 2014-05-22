@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "express.io": ">= 1.1.13",
-    "redis": "~0.10.1"
+    "redis": "~0.10.1",
+    "nogger-node-adapter": "~0.1.5"
   },
   "devDependencies": {
     "mocha": "~1.10.0",

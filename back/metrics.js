@@ -3,7 +3,7 @@ var redis = require("redis");
 var db = redis.createClient(config.redisPort, config.redisIP, {
     auth_pass: config.redisPass
 });
-db.select(config.redisDb);
+db.select(config.redisMetricsDb);
 
 exports.getMetrics = function (callback) {
     db.keys("*", function (err, data) {

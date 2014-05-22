@@ -1,7 +1,9 @@
 var config = require("../config.json");
 var redis = require("redis");
-var db = redis.createClient(config.redisPort, config.redisIP);
-db.select(1);
+var db = redis.createClient(config.redisPort, config.redisIP, {
+    auth_pass: config.redisPass
+});
+db.select(config.redisLogsDb);
 
 exports.getLogNames = function (callback) {
     db.keys("*", callback);
