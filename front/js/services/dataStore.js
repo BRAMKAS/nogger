@@ -1,7 +1,12 @@
 'use strict';
 
 app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:line
-    var data = {};
+    var data = {
+        metrics: {},
+        logs: {
+            now: []
+        }
+    };
 
     $interval(function () {
         if (data.gauge && data.gauge.Uptime && data.gauge.Uptime.uptime) {
@@ -28,14 +33,20 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
     }
 
 
-
     return {
-        setHealth: function(health){
+        setHealth: function (health) {
             data.health = health;
             $rootScope.$apply();
         },
-        add: function (newData) {
-            addData(newData, data);
+        setMetrics: function (newData) {
+            addData(newData, data.metrics);
+            $rootScope.$apply();
+        },
+        setLogNames: function (newData) {
+            console.log('set setLogFiles', data.logs);
+        },
+        addLog: function (newLog) {
+            data.logs.now.push(newLog);
             $rootScope.$apply();
         },
         data: data

@@ -1,0 +1,5 @@
+<h1 class="page-header">Logs</h1>
+
+<ul class="list-group">
+    <li ng-repeat="log in logs | orderBy:d:reverse" class="list-group-item" ng-class="{'list-group-item-warning': log.t === 'warn', 'list-group-item-danger': log.t === 'error'}">{{log.m}}<span class="badge">{{log.s.f + ':' + log.s.l}}</span></li>
+</ul>

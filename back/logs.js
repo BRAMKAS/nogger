@@ -16,7 +16,3 @@ exports.getLogs = function(file, offset, callback){
         db.lrange(file, offset, 100, callback);
     }
 };
-
-exports.getLogs("2014-04-03", null, function(err,data){
-    console.log(err, data)
-});

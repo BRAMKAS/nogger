@@ -8,6 +8,10 @@ var app = angular.module('app', [
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(true);
         $routeProvider
+            .when('/live-logs', {
+                templateUrl: 'views/livelogs.html',
+                controller: 'LiveLogsCtrl'
+            })
             .when('/logs', {
                 templateUrl: 'views/logs.html',
                 controller: 'LogsCtrl'

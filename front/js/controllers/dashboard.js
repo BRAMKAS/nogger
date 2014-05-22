@@ -7,7 +7,7 @@ app.controller("DashboardCtrl", function ($scope, dataStore) {
         CPU: '%'
     };
 
-    $scope.$watch('data.histogram', function (histograms) {
+    $scope.$watch('data.metrics.histogram', function (histograms) {
         if (histograms) {
             var data;
             for (var i in histograms) {

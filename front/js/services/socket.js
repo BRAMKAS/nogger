@@ -14,18 +14,29 @@ app.factory('socket', function (dataStore) { // jshint ignore:line
             socket.emit('getMetrics', function (res) {
                 console.log(res);
                 if (!res.err) {
-                    dataStore.add(res.data);
+                    dataStore.setMetrics(res.data);
                 }
             });
 
+            socket.emit('getLogNames', function(res){
+                console.log('got getLogNames from server', res);
+                if(!res.err){
+                    dataStore.setLogNames(res.data);
+                }
+            });
             clearTimeout(timeout);
             ping();
         })
+
     });
 
     socket.on('disconnect', function () {
         console.log('disconnected');
         connected = false;
+    });
+
+    socket.on('newLog', function(data){
+        dataStore.addLog(data);
     });
 
     function ping() {

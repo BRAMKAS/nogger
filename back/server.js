@@ -4,7 +4,8 @@ var path = require('path');
 var password = require('./password');
 var config = require("../config.json");
 var metrics = require('./metrics');
-var ping = require('./ping');
+var logs = require('./logs');
+var publish = require('./publish');
 
 var debugAdapter = require('nogger-node-adapter');
 debugAdapter.setConfig({
@@ -42,6 +43,9 @@ app.io.route('auth', function (req) {
             if (success) {
                 delete wrongAttempts[ip];
                 clients.push(req.io.socket.id);
+                if (clients.length === 1) {
+                    publish.connected();
+                }
                 req.io.respond({err: null, data: pjson.version});
             } else {
                 if (!wrongAttempts[ip]) {
@@ -56,9 +60,9 @@ app.io.route('auth', function (req) {
     }
 });
 
-app.io.route('getMetrics', function(req){
-    if(clients.indexOf(req.io.socket.id) !== -1){
-        metrics.getMetrics(function(err, data){
+app.io.route('getMetrics', function (req) {
+    if (checkAuth(req)) {
+        metrics.getMetrics(function (err, data) {
             req.io.respond({err: err, data: data});
         })
     } else {
@@ -66,17 +70,27 @@ app.io.route('getMetrics', function(req){
     }
 });
 
-app.io.route('ping', function(req){
-    if(clients.indexOf(req.io.socket.id) !== -1){
+app.io.route('getLogNames', function(req){
+    if (checkAuth(req)) {
+        logs.getLogNames(function (err, data) {
+            req.io.respond({err: err, data: data});
+        })
+    } else {
+        req.io.respond({err: "not authenticated", data: null});
+    }
+});
+
+app.io.route('ping', function (req) {
+    if (checkAuth(req)) {
         var done = false;
-        ping(function(t, adapter){
-            if(!done){
+        publish.ping(function (t, adapter) {
+            if (!done) {
                 done = true;
-                req.io.respond({err: null, data: {t:t, adapter: adapter}});
+                req.io.respond({err: null, data: {t: t, adapter: adapter}});
             }
         });
-        setTimeout(function(){
-            if(!done){
+        setTimeout(function () {
+            if (!done) {
                 done = true;
                 req.io.respond({err: null, data: {t: null}});
             }
@@ -91,18 +105,24 @@ app.io.route('disconnect', function (req) {
     if (index !== -1) {
         clients.splice(index, 1);
     }
+    if (clients.length === 0) {
+        publish.disconnected();
+    }
 });
 
 
-app.get('*',function(req, res){
+app.get('*', function (req, res) {
     res.sendfile(path.join(__dirname, '../front/index.html'));
 });
 
 app.listen(port);
 require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-    console.log('server running on ' +add+ ':' + port);
+    console.log('server running on ' + add + ':' + port);
 });
 
+publish.onLog(function(message){
+    broadcast('newLog', message);
+});
 
 function checkAuth(req) {
     return clients.indexOf(req.io.socket.id) !== -1
@@ -114,3 +134,7 @@ function broadcast(fn, msg) {
     }
 }
 
+setInterval(function(){
+    console.warn('WARNING');
+    console.error('ERROR')
+}, 5000);
