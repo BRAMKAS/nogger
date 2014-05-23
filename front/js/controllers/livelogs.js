@@ -1,5 +1,7 @@
 'use strict';
 app.controller("LiveLogsCtrl", function ($scope, dataStore) {
+    var showMax = 100;
+    $scope.showMax = showMax;
     $scope.logs = dataStore.data.logs.now;
     $scope.$watch('logs.length', function(){
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
@@ -7,5 +9,9 @@ app.controller("LiveLogsCtrl", function ($scope, dataStore) {
                 window.scrollTo(0, document.body.scrollHeight)
             })
         }
-    })
+    });
+
+    $scope.increaseShowMax = function(){
+        $scope.showMax += showMax;
+    }
 });

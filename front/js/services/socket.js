@@ -27,7 +27,6 @@ app.factory('socket', function (dataStore) { // jshint ignore:line
             clearTimeout(timeout);
             ping();
         })
-
     });
 
     socket.on('disconnect', function () {

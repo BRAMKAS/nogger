@@ -4,7 +4,8 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
     var data = {
         metrics: {},
         logs: {
-            now: []
+            now: [],
+            files: {}
         }
     };
 
@@ -44,6 +45,9 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
         },
         setLogNames: function (newData) {
             console.log('set setLogFiles', data.logs);
+            for(var i in newData){
+                data.logs.files[newData[i]] = null;
+            }
         },
         addLog: function (newLog) {
             data.logs.now.push(newLog);

@@ -13,6 +13,10 @@ var app = angular.module('app', [
                 controller: 'LiveLogsCtrl'
             })
             .when('/logs', {
+                templateUrl: 'views/logsOverview.html',
+                controller: 'LogsOverviewCtrl'
+            })
+            .when('/logs/:name', {
                 templateUrl: 'views/logs.html',
                 controller: 'LogsCtrl'
             })

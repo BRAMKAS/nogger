@@ -32,3 +32,10 @@
 .system-histogram {
     height: 267px;
 }
+
+.center {
+    margin: 10px;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
