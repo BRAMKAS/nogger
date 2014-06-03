@@ -1,13 +1,17 @@
 <div class="col-sm-3 col-md-2 sidebar inverse">
     <ul class="nav nav-sidebar">
         <li ng-class="{active: route === '/'}"><a href="/"><i class="fa fa-bar-chart-o"></i>Dashboard</a></li>
-        <li ng-class="{active: route === '/livelogs'}"><a href="/live-logs"><i class="fa fa-align-left"></i>Live Logs</a></li>
-        <li ng-class="{active: route === '/logs'}"><a href="/logs"><i class="fa fa-align-left"></i>Logs</a></li>
-        <li ng-class="{active: route === '/analytics'}"><a href="#"><i class="fa fa-bar-chart-o"></i>Analytics</a></li>
-        <li ng-class="{active: route === '/export'}"><a href="#"><i class="fa fa-bar-chart-o"></i>Export</a></li>
+        <li ng-class="{active: route === '/live-logs'}"><a href="/live-logs"><i class="fa fa-align-left"></i>Live Logs</a></li>
+        <li ng-class="{active: route === '/logs'}">
+            <a href="/logs"><i class="fa fa-align-left"></i>Logs</a>
+            <ul class="nav nav-sidebar">
+                <li ng-repeat="logFile in logFiles | orderBy: '-name' | limitTo: 7" ng-class="{active: route === '/logfile/' + logFile.name}"><a ng-href="/logfile/{{logFile.name}}">{{logFile.name}}</a></li>
+            </ul>
+        </li>
     </ul>
+
     <ul class="nav nav-sidebar">
-        <li><a href=""><i class="fa fa-github"></i>Contribute</a></li>
-        <li><a href=""><i class="fa fa-bug"></i>Report a bug</a></li>
+        <li><a href="https://github.com/paul-em/nogger" target="_blank"><i class="fa fa-github"></i>Contribute</a></li>
+        <li><a href="https://github.com/paul-em/nogger/issues/new" target="_blank"><i class="fa fa-bug"></i>Report a bug</a></li>
     </ul>
 </div>

@@ -5,27 +5,30 @@ app.factory('socket', function (dataStore) { // jshint ignore:line
     var connected = false;
     var timeout;
 
-    console.log('connecting');
     socket.on('connect', function () {
         console.log('connected');
         connected = true;
         socket.emit('auth', '1qay', function (res) {
-            console.log(res);
-            socket.emit('getMetrics', function (res) {
-                console.log(res);
-                if (!res.err) {
-                    dataStore.setMetrics(res.data);
-                }
-            });
+            if (!res.err) {
+                socket.emit('getLogNames', function (res) {
+                    if (!res.err) {
+                        dataStore.setLogNames(res.data);
+                    }
 
-            socket.emit('getLogNames', function(res){
-                console.log('got getLogNames from server', res);
-                if(!res.err){
-                    dataStore.setLogNames(res.data);
-                }
-            });
-            clearTimeout(timeout);
-            ping();
+                    socket.emit('getMetrics', function (res) {
+                        if (!res.err) {
+                            console.log('metrics', res.data);
+                            dataStore.setMetrics(res.data);
+                        }
+                        $(document).trigger('auth');
+                        socket.auth = true;
+                    });
+                });
+                clearTimeout(timeout);
+                ping();
+            } else {
+                console.error(res);
+            }
         })
     });
 
@@ -34,14 +37,13 @@ app.factory('socket', function (dataStore) { // jshint ignore:line
         connected = false;
     });
 
-    socket.on('newLog', function(data){
+    socket.on('newLog', function (data) {
         dataStore.addLog(data);
     });
 
     function ping() {
         if (connected) {
             socket.emit('ping', function (res) {
-                console.log('ping', res);
                 if (!res.err) {
                     dataStore.setHealth(res.data);
                 }

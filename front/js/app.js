@@ -16,9 +16,9 @@ var app = angular.module('app', [
                 templateUrl: 'views/logsOverview.html',
                 controller: 'LogsOverviewCtrl'
             })
-            .when('/logs/:name', {
-                templateUrl: 'views/logs.html',
-                controller: 'LogsCtrl'
+            .when('/logfile/:name', {
+                templateUrl: '/views/logFile.html',
+                controller: 'LogFileCtrl'
             })
             .when('/', {
                 templateUrl: 'views/dashboard.html',

@@ -2,21 +2,26 @@
 
 app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:line
     var data = {
-        metrics: {},
+        metrics: {
+            gauge: {
+                Uptime: {}
+            }
+        },
         logs: {
             now: [],
-            files: {}
+            files: []
         }
     };
 
+
     $interval(function () {
-        if (data.gauge && data.gauge.Uptime && data.gauge.Uptime.uptime) {
-            data.gauge.Uptime.uptime = parseInt(data.gauge.Uptime.uptime);
-            data.gauge.Uptime.uptime += 60;
+        if (data.metrics.gauge && data.metrics.gauge.Uptime && data.metrics.gauge.Uptime.uptime) {
+            data.metrics.gauge.Uptime.uptime = parseInt(data.metrics.gauge.Uptime.uptime);
+            data.metrics.gauge.Uptime.uptime += 60;
         }
-        if (data.gauge && data.gauge.Uptime && data.gauge.Uptime.osuptime) {
-            data.gauge.Uptime.osuptime = parseInt(data.gauge.Uptime.osuptime);
-            data.gauge.Uptime.osuptime += 60;
+        if (data.metrics.gauge && data.metrics.gauge.Uptime && data.metrics.gauge.Uptime.osuptime) {
+            data.metrics.gauge.Uptime.osuptime = parseInt(data.metrics.gauge.Uptime.osuptime);
+            data.metrics.gauge.Uptime.osuptime += 60;
         }
     }, 1000 * 60);
 
@@ -44,10 +49,31 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
             $rootScope.$apply();
         },
         setLogNames: function (newData) {
-            console.log('set setLogFiles', data.logs);
             for(var i in newData){
-                data.logs.files[newData[i]] = null;
+                var exists = false;
+                for(var j in data.logs.files){
+                    if(data.logs.files[j].name == newData[i]){
+                        exists = true;
+                        break;
+                    }
+                }
+                if(!exists){
+                    data.logs.files.push({name: newData[i], data: null});
+                }
             }
+            $rootScope.$apply(function(){
+                $rootScope.logFiles = data.logs.files;
+            })
+        },
+        setLogFile: function(name, file){
+            for(var i in data.logs.files){
+                if(data.logs.files[i].name === name){
+                    data.logs.files[i].data = file;
+                    $rootScope.$apply();
+                    return;
+                }
+            }
+            console.warn('could not find logfile to store data');
         },
         addLog: function (newLog) {
             data.logs.now.push(newLog);

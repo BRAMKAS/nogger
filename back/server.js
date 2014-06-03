@@ -80,6 +80,16 @@ app.io.route('getLogNames', function(req){
     }
 });
 
+app.io.route('getLogFile', function(req){
+    if (checkAuth(req)) {
+        logs.getLogs(req.data.name, req.data.offset || 0, function (err, data) {
+            req.io.respond({err: err, data: data});
+        })
+    } else {
+        req.io.respond({err: "not authenticated", data: null});
+    }
+});
+
 app.io.route('ping', function (req) {
     if (checkAuth(req)) {
         var done = false;
@@ -133,8 +143,3 @@ function broadcast(fn, msg) {
         app.io.sockets.socket(clients[i]).emit(fn, msg);
     }
 }
-
-setInterval(function(){
-    console.warn('WARNING');
-    console.error('ERROR')
-}, 5000);

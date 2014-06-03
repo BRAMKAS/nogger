@@ -39,3 +39,28 @@
     display: block;
     cursor: pointer;
 }
+
+.list-group-item .badge {
+    visibility: hidden;
+}
+
+.list-group-item:hover .badge {
+    visibility: visible;
+}
+
+.nav-sidebar ul {
+    margin: 0;
+}
+
+.nav-sidebar li li{
+    list-style: none;
+    border: none;
+}
+
+.nav-sidebar li li a {
+    padding-left: 40px;
+}
+
+.navbar-collapse h2 {
+    display: inline-block;
+}

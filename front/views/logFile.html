@@ -1,0 +1,9 @@
+
+<ul class="list-group">
+    <li ng-repeat="log in logs | orderBy:'-d' | limitTo: showMax | orderBy:'d'" class="list-group-item"
+        ng-class="{'list-group-item-warning': log.t === 'warn', 'list-group-item-danger': log.t === 'error'}"><span
+            class="label label-default">{{log.d | date:'mediumTime'}}</span><span> {{log.m}}</span><span class="badge">{{log.s.f + ':' + log.s.l}}</span>
+    </li>
+</ul>
+<p ng-show="logs.length === 0">Nothing to show</p>
+<p ng-show="logs === null">Loading</p>

@@ -10,13 +10,8 @@
             <a class="navbar-brand" href="/">nogger - node monitor</a>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Help</a></li>
-            </ul>
-            <form class="navbar-form navbar-right">
+            <h2>{{navbar.headline}}</h2>
+            <form class="navbar-form navbar-right" ng-show="navbar.searchEnabled">
                 <input type="text" class="form-control" placeholder="Search...">
             </form>
         </div>

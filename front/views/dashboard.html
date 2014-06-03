@@ -16,32 +16,32 @@
                 <li class="list-group-item">
                     <i class="fa fa-building-o"></i>
                     <b>Hostname:</b>
-                    {{ data.gauge.System.hostname }}
+                    {{ data.metrics.gauge.System.hostname }}
                 </li>
                 <li class="list-group-item">
-                    <i ng-show="data.gauge.System.platform && data.gauge.System.platform.indexOf('win') !== -1"
+                    <i ng-show="data.metrics.gauge.System.platform && data.metrics.gauge.System.platform.indexOf('win') !== -1"
                        class="fa fa-windows"></i>
-                    <i ng-show="data.gauge.System.platform && data.gauge.System.platform.indexOf('ubuntu') !== -1"
+                    <i ng-show="data.metrics.gauge.System.platform && data.metrics.gauge.System.platform.indexOf('ubuntu') !== -1"
                        class="fa fa-linux"></i>
-                    <i ng-hide="data.gauge.System.platform || data.gauge.System.platform.indexOf('win') !== -1 || data.gauge.System.platform.indexOf('ubuntu') !== -1"
+                    <i ng-hide="data.metrics.gauge.System.platform || data.metrics.gauge.System.platform.indexOf('win') !== -1 || data.metrics.gauge.System.platform.indexOf('ubuntu') !== -1"
                        class="fa fa-cubes"></i>
                     <b>Platform:</b>
-                    <span class="no-wrap">{{ data.gauge.System.platform }} {{ data.gauge.System.arch }}</span>
+                    <span class="no-wrap">{{ data.metrics.gauge.System.platform }} {{ data.metrics.gauge.System.arch }}</span>
                 </li>
                 <li class="list-group-item">
                     <img src="img/nodejs.png" width="14">
                     <b>Node:</b>
-                    <span class="no-wrap">{{ data.gauge.System.nodeVersions }}</span>
+                    <span class="no-wrap">{{ data.metrics.gauge.System.nodeVersions }}</span>
                 </li>
                 <li class="list-group-item">
                     <i class="fa fa-clock-o"></i>
                     <b>Node uptime:</b>
-                    <span class="no-wrap">{{ data.gauge.Uptime.uptime | formatSec }}</span>
+                    <span class="no-wrap">{{ data.metrics.gauge.Uptime.uptime | formatSec }}</span>
                 </li>
                 <li class="list-group-item">
                     <i class="fa fa-clock-o"></i>
                     <b>System uptime:</b>
-                    <span class="no-wrap">{{ data.gauge.Uptime.osuptime | formatSec }}</span>
+                    <span class="no-wrap">{{ data.metrics.gauge.Uptime.osuptime | formatSec }}</span>
                 </li>
             </ul>
         </div>

@@ -1,14 +1,18 @@
 'use strict';
-app.controller("LogsOverviewCtrl", function ($scope, dataStore) {
-    $scope.logs = dataStore.logs;
+app.controller("LogsOverviewCtrl", function ($rootScope, $scope, dataStore) {
+    $rootScope.navbar = {
+        headline: 'Logs Overview',
+        searchEnabled: true,
+        filter: false
+    };
+    /*$scope.logFiles = dataStore.data.logs.files;
     $scope.$watch(function(){
-        if(dataStore.logs){
-            return dataStore.logs.length;
+        if(dataStore.data.logs.files){
+            return dataStore.data.logs.files.length;
         } else {
             return 0;
         }
     }, function(){
-        console.log('updated logs', dataStore.logs);
-        $scope.logs = dataStore.logs;
-    })
+        $scope.logFiles = dataStore.data.logs.files;
+    })*/
 });
