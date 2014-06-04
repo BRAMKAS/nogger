@@ -7,13 +7,6 @@ var metrics = require('./metrics');
 var logs = require('./logs');
 var publish = require('./publish');
 
-var debugAdapter = require('nogger-node-adapter');
-debugAdapter.setConfig({
-    redisIP: config.redisIP,
-    redisPort: config.redisPort,
-    redisMetricsDb: config.redisMetricsDb,
-    redisLogsDb: config.redisLogsDb
-});
 var app = express();
 
 var pjson = require("../package.json");

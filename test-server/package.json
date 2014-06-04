@@ -1,0 +1,14 @@
+{
+  "name": "test-server",
+  "version": "0.0.0",
+  "description": "test server for nogger to quickly test functionality",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "Paul Em",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express": "~4.4.1"
+  }
+}

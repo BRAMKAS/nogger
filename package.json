@@ -1,7 +1,7 @@
 {
   "name": "nogger",
   "description": "node logger and monitoring tool",
-  "version": "0.2.0",
+  "version": "0.4.5",
   "homepage": "https://github.com/paul-em/nogger",
   "author": {
     "name": "Paul Em",
@@ -30,7 +30,10 @@
   "dependencies": {
     "express.io": ">= 1.1.13",
     "redis": "~0.10.1",
-    "nogger-node-adapter": "~0.1.5"
+    "nogger-node-adapter": "~0.1.5",
+    "liftoff": "~0.11.1",
+    "chalk": "~0.4.0",
+    "minimist": "~0.1.0"
   },
   "devDependencies": {
     "mocha": "~1.10.0",
