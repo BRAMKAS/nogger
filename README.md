@@ -3,7 +3,8 @@
 node logger and monitoring tool - this is under active development!
 
 ## Getting Started
-Install the module with: `npm install nogger`
+Install the module with: `npm install nogger -g`
+Make sure to set -g to install it globally to have the nogger command available!
 
 ```javascript
 var nogger = require('nogger');
