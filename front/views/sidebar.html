@@ -1,4 +1,4 @@
-<div class="col-sm-3 col-md-2 sidebar inverse">
+<div class="col-sm-3 col-md-2 sidebar inverse" ng-if="route !== '/login'">
     <ul class="nav nav-sidebar">
         <li ng-class="{active: route === '/'}"><a href="/"><i class="fa fa-bar-chart-o"></i>Dashboard</a></li>
         <li ng-class="{active: route === '/live-logs'}"><a href="/live-logs"><i class="fa fa-align-left"></i>Live Logs</a></li>
@@ -11,6 +11,7 @@
     </ul>
 
     <ul class="nav nav-sidebar">
+        <li><a href="#" ng-click="logout()"><i class="fa fa-sign-out"></i>Logout</a></li>
         <li><a href="https://github.com/paul-em/nogger" target="_blank"><i class="fa fa-github"></i>Contribute</a></li>
         <li><a href="https://github.com/paul-em/nogger/issues/new" target="_blank"><i class="fa fa-bug"></i>Report a bug</a></li>
     </ul>

@@ -1,6 +1,7 @@
 'use strict';
 var app = angular.module('app', [
         'ngSanitize',
+        'ngAnimate',
         'ngRoute',
         'ui.bootstrap',
         'pasvaz.bindonce'
@@ -28,6 +29,8 @@ var app = angular.module('app', [
                 redirectTo: '/'
             });
     })
-    .run(function (socket) {
+    .run(function ($rootScope, $animate, socket) {
         console.log('running');
+        $animate.enabled(true);
+        $rootScope.authenticated = null;
     });

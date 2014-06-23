@@ -1,14 +1,15 @@
 'use strict';
 
-app.factory('socket', function (dataStore) { // jshint ignore:line
+app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ignore:line
     var socket = io.connect();
     var connected = false;
     var timeout;
 
-    socket.on('connect', function () {
-        console.log('connected');
-        connected = true;
-        socket.emit('auth', '1qay', function (res) {
+    socket.login = function(pw, save, callback){
+        callback = callback || function(){};
+        console.log("LOGIN", pw);
+        socket.emit('auth', pw, function (res) {
+            console.log('response', res);
             if (!res.err) {
                 socket.emit('getLogNames', function (res) {
                     if (!res.err) {
@@ -22,14 +23,39 @@ app.factory('socket', function (dataStore) { // jshint ignore:line
                         }
                         $(document).trigger('auth');
                         socket.auth = true;
+                        $rootScope.authenticated = true;
+                        $rootScope.$apply();
+                        if(save){
+                            localStorage.setItem('p', pw);
+                        }
+                        sessionStorage.setItem('p', pw);
                     });
                 });
                 clearTimeout(timeout);
                 ping();
             } else {
-                console.error(res);
+                if(res.err !== 'wrong pw'){
+                    alert(res.err);
+                }
+                callback();
+                $rootScope.authenticated = false;
+                $rootScope.$apply();
+                localStorage.removeItem('p');
+                sessionStorage.removeItem('p');
+
             }
         })
+    };
+
+    socket.on('connect', function () {
+        var pw = sessionStorage.getItem('p') || localStorage.getItem('p');
+        connected = true;
+        if(pw){
+            socket.login(pw);
+        } else {
+            $rootScope.authenticated = false;
+            $rootScope.$apply();
+        }
     });
 
     socket.on('disconnect', function () {
@@ -40,6 +66,8 @@ app.factory('socket', function (dataStore) { // jshint ignore:line
     socket.on('newLog', function (data) {
         dataStore.addLog(data);
     });
+
+
 
     function ping() {
         if (connected) {

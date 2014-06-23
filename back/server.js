@@ -49,7 +49,7 @@ app.io.route('auth', function (req) {
             }
         });
     } else {
-        req.io.respond({err: "blocked", data: null});
+        req.io.respond({err: "Too many wrong attempts! You are blocked from the server. To unblock go to your terminal and type: >> nogger unblock " + ip, data: null});
     }
 });
 

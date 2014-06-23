@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict';
-
+var forever = require('forever');
 var Liftoff = require('liftoff');
+var exec = require('child_process').exec;
 var child_process = require('child_process');
 var chalk = require('chalk');
 var argv = require('minimist')(process.argv.slice(2));
@@ -10,46 +11,74 @@ var cli = new Liftoff({
     moduleName: 'nogger',
     processTitle: 'nogger'
 });
+var pkg = require('./../package');
 
 var runnning = false;
 
 var commands = {
-    start: function(){
+    start: function () {
         console.log('start called');
-        child_process.spawn('../back/server');
-        //require('../back/server');
-        //process.disconnect();
+
+        forever.start('./../back/server.js', {
+            uid: 'nogger'
+        });
+
+        /*
+        var child = new (forever.Monitor)('start.js', {
+            max: 3,
+            silent: true,
+            options: []
+        });
+
+        child.on('exit', function () {
+            console.log('your-filename.js has exited after 3 restarts');
+        });
+
+        child.on('stdout', function(){
+            console.log(arguments);
+        });
+
+        child.on('stderr', function(){
+            console.log(arguments);
+        });
+
+        child.start();*/
     },
-    stop: function(){
+    stop: function () {
         console.log('stop called');
-        child_process.execFile('pkill', ['nogger'], function(err, stdout, stderr){
-            if (stdout){console.log('stdout:'+stdout);
-                if (stderr){console.log('stderr:'+stderr);
-                    if (err){throw err;}
-                    //...
-                }
-            }
+        //process.kill(132, 'SIGHUP');
+    },
+    setpassword: function () {
+        var password = require("./../back/password");
+        console.log('setting password to "' + argv._[1] +'"');
+
+        password.set(argv._[1], function () {
+            console.log('password set');
+            process.exit();
         });
     },
-    setpassword: function(){
-        console.log('setpassword called');
+    unblock: function(){
+
     },
-    help: function(){
-        console.log('------ help ------');
-        for(var i in commands){
-            console.log(i);
+    help: function () {
+        console.log('--- possible commands ---');
+        for (var i in commands) {
+            console.log(chalk.blue(i));
         }
+        console.log('-------------------------');
+    },
+    version: function(){
+        console.log(pkg.name + ' ' + pkg.version);
     }
 };
 
 
-cli.launch({},function(env){
-    if(argv._.length && commands[argv._[0]]){
+cli.launch({}, function (env) {
+    if (argv._.length && commands[argv._[0]]) {
         commands[argv._[0]]();
     } else {
         commands.help();
         process.exit(1);
     }
 });
-
 

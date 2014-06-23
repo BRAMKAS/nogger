@@ -14,7 +14,13 @@ app.directive("sidebar", function ($rootScope, $location) {
 
             $rootScope.$watch('logFiles', function(){
                 scope.logFiles = $rootScope.logFiles;
-            })
+            });
+
+            scope.logout = function(){
+                localStorage.removeItem('p');
+                sessionStorage.removeItem('p');
+                document.location = document.location;
+            };
         }
     }
 });

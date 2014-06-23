@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1 class="text-center login-title">Login to nogger</h1>
+
+            <div class="account-wall">
+                <img class="profile-img" src="img/login-photo.png" alt="">
+
+                <form class="form-signin" ng-submit="login()">
+                    <div ng-class="{'has-error': error}">
+                        <input ng-model="pw" type="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="working">
+                        Sign in
+                    </button>
+                    <label class="checkbox pull-left">
+                        <input ng-model="save" type="checkbox" value="remember-me">
+                        Remember me
+                    </label>
+                    <a href="#" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
