@@ -1,41 +1,22 @@
 'use strict';
 
 app.directive('histogram', function () { // jshint ignore:line
-    var colors = ["#87cfcb", "#48a9a7", "#1F9B94", "#14746f"];
-
-    function getColors(num) {
-        switch (num) {
-            case 1:
-                return colors[colors.length - 1];
-            case 2:
-                return [colors[0], colors[colors.length - 1]];
-            case 3:
-                return [colors[0], colors[Math.round(colors.length / 2)], colors[colors.length - 1]];
-            default:
-                return colors.slice(0, num);
-        }
-    }
-
-    function getFillColors(num) {
-        var re = [];
-        for (var i = 0; i < num; i++) {
-            re.push("rgba(255,255,255,." + (i + 1) + ")");
-        }
-        console.log(re);
-        return re;
-    }
 
     function getData(data, label, highlight) {
-        console.log(highlight);
+        var lines = {
+            show: true,
+            fill: false,
+            lineWidth: 2
+        };
+        if(highlight){
+            lines.fill = true;
+            lines.fillColor = { colors: [ { opacity: 0.4 }, { opacity: 0.1 } ] }
+        }
         return {
             color: highlight ? "#14746f" : "#87cfcb",
             label: label,
             data: data,
-            lines: {
-                show: true,
-                fill: false,
-                lineWidth: 2
-            }
+            lines: lines
         };
     }
 
@@ -44,8 +25,10 @@ app.directive('histogram', function () { // jshint ignore:line
         scope: {
             values: '=',
             highlight: '=',
-            tooltips: '=',
-            labels: '='
+            minValue: '=',
+            maxValue: '=',
+            labels: '=',
+            showYaxis: '='
         },
         template: '<div style="width: 100%; height:120px"></div>',
         replace: true,
@@ -78,12 +61,11 @@ app.directive('histogram', function () { // jshint ignore:line
                             });
                         });
                         splitValues.forEach(function (values, index) {
-                            data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !==undefined ? scope.highlight === index : true));
+                            data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true));
                         })
                     } else {
                         data = [getData(scope.values, scope.labels ? scope.labels[0] || "" : "", true)];
                     }
-                    console.log(data);
                     initialized = true;
 
                     var options = {
@@ -118,7 +100,15 @@ app.directive('histogram', function () { // jshint ignore:line
                             shadowSize: 0,
                             highlightColor: 'rgba(30,120,120,.5)'
                         },
+                        yaxis: {
+                            show: scope.showYaxis,
+                            labelWidth: 0,
+                            min: scope.minValue,
+                            max: scope.maxValue
+                        },
                         xaxis: {
+                            ticks: 3,
+                            tickLength: 0,
                             mode: "time",
                             timezone: "browser"
                         },

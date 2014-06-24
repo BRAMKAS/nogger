@@ -60,11 +60,11 @@
         </div>
         <div class="panel-body">
             <div class="top-stats-panel chart">
-                <gauge max-value="gauge.memTotal" value="gauge.memProc"></gauge>
+                <gauge max-value="data.metrics.histogram.Memory[0].v[2]" value="data.metrics.histogram.Memory[0].v[0]"></gauge>
                 <div>
-                    <span>{{(gauge.memProc / gauge.memTotal) | number: 2}} % ({{gauge.memProc}} MB)</span>
+                    <span>{{(data.metrics.histogram.Memory[0].v[0] / data.metrics.histogram.Memory[0].v[2]) * 100 | number: 1}} %</span><small> ({{data.metrics.histogram.Memory[0].v[0]}}/{{data.metrics.histogram.Memory[0].v[2]}} MB)</small>
                 </div>
-                <histogram values="data.metrics.histogram.Memory" highlight="0"></histogram>
+                <histogram values="data.metrics.histogram.Memory" highlight="0" min-value="0" max-value="data.metrics.histogram.Memory[0].v[2]" show-yaxis="false"></histogram>
             </div>
         </div>
     </section>
@@ -77,11 +77,11 @@
         </div>
         <div class="panel-body">
             <div class="top-stats-panel chart">
-                <gauge max-value="gauge.memTotal" value="gauge.memSys"></gauge>
+                <gauge max-value="data.metrics.histogram.Memory[0].v[2]" value="data.metrics.histogram.Memory[0].v[1]"></gauge>
                 <div>
-                    <span>{{(gauge.memSys / gauge.memTotal) | number: 2}} % ({{gauge.memSys}} MB)</span>
+                    <span>{{(data.metrics.histogram.Memory[0].v[1] / data.metrics.histogram.Memory[0].v[2]) * 100 | number: 1}} %</span><small> ({{data.metrics.histogram.Memory[0].v[1]}}/{{data.metrics.histogram.Memory[0].v[2]}} MB)</small>
                 </div>
-                <histogram values="data.metrics.histogram.Memory" highlight="1"></histogram>
+                <histogram values="data.metrics.histogram.Memory" highlight="1" min-value="0" max-value="data.metrics.histogram.Memory[0].v[2]" show-yaxis="false"></histogram>
             </div>
         </div>
     </section>
@@ -94,11 +94,11 @@
         </div>
         <div class="panel-body">
             <div class="top-stats-panel chart">
-                <gauge max-value="100" value="gauge.cpu"></gauge>
+                <gauge max-value="100" value="data.metrics.histogram.CPU[0][1]"></gauge>
                 <div>
-                    <span>{{(gauge.cpu / 100) | number: 2}} %</span>
+                    <span>{{data.metrics.histogram.CPU[0][1] | number: 1}} %</span>
                 </div>
-                <histogram values="data.metrics.histogram.CPU" highlight="1"></histogram>
+                <histogram values="data.metrics.histogram.CPU" highlight="1" min-value="0" max-value="100" show-yaxis="false"></histogram>
             </div>
         </div>
     </section>
