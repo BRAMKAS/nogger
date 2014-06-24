@@ -33,7 +33,7 @@
              ng-class="'route-' + route.substr(1)"></div>
     </div>
     <login ng-show="authenticated === false"></login>
-    <splash-screen ng-show="authenticated === null" ng-animate="'animate'"></splash-screen>
+    <splash-screen ng-show="authenticated === null" class="showAnim"></splash-screen>
 </div>
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -49,8 +49,10 @@
 <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="/bower_components/angular-bindonce/bindonce.min.js"></script>
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="/bower_components/raphael/raphael-min.js"></script>
-<script src="/bower_components/morris.js/morris.min.js"></script>
+<script src="/bower_components/flot/jquery.flot.js"></script>
+<script src="/bower_components/flot/jquery.flot.time.js"></script>
+<script src="/bower_components/flot/jquery.flot.resize.js"></script>
+<script src="/bower_components/gauge.js/dist/gauge.min.js"></script>
 
 <script src="/js/app.js"></script>
 
@@ -64,10 +66,12 @@
 <script src="/js/directives/sidebar.js"></script>
 <script src="/js/directives/login.js"></script>
 <script src="/js/directives/splashScreen.js"></script>
+<script src="/js/directives/charts/gauge.js"></script>
+<script src="/js/directives/charts/histogram.js"></script>
 
 <script src="/js/services/socket.js"></script>
 <script src="/js/services/dataStore.js"></script>
 
-<script src="/js/filters/formatSec.js"></script>
+<script src="/js/filters/formatUptime.js"></script>
 </body>
 </html>

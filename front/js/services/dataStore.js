@@ -32,6 +32,28 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
                     data[i] = {};
                 }
                 addData(newData[i], data[i]);
+            } else if (Object.prototype.toString.call(newData[i]) === '[object Array]') {
+                var shouldParse = false;
+                if (typeof newData[i][0] == 'string') {
+                    try {
+                        JSON.parse(newData[i][0]);
+                        shouldParse = true;
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                }
+                if (shouldParse) {
+                    for (var j in newData[i]) {
+                        if (typeof newData[i][j] === 'string') {
+                            try {
+                                newData[i][j] = JSON.parse(newData[i][j]);
+                            } catch (e) {
+                                console.warn(e);
+                            }
+                        }
+                    }
+                }
+                data[i] = newData[i];
             } else {
                 data[i] = newData[i];
             }
@@ -49,25 +71,25 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
             $rootScope.$apply();
         },
         setLogNames: function (newData) {
-            for(var i in newData){
+            for (var i in newData) {
                 var exists = false;
-                for(var j in data.logs.files){
-                    if(data.logs.files[j].name == newData[i]){
+                for (var j in data.logs.files) {
+                    if (data.logs.files[j].name == newData[i]) {
                         exists = true;
                         break;
                     }
                 }
-                if(!exists){
+                if (!exists) {
                     data.logs.files.push({name: newData[i], data: null});
                 }
             }
-            $rootScope.$apply(function(){
+            $rootScope.$apply(function () {
                 $rootScope.logFiles = data.logs.files;
             })
         },
-        setLogFile: function(name, file){
-            for(var i in data.logs.files){
-                if(data.logs.files[i].name === name){
+        setLogFile: function (name, file) {
+            for (var i in data.logs.files) {
+                if (data.logs.files[i].name === name) {
                     data.logs.files[i].data = file;
                     $rootScope.$apply();
                     return;

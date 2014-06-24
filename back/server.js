@@ -7,6 +7,9 @@ var metrics = require('./metrics');
 var logs = require('./logs');
 var publish = require('./publish');
 
+var adapter = require('nogger-node-adapter');
+adapter.init(config);
+
 var app = express();
 
 var pjson = require("../package.json");

@@ -1,8 +1,12 @@
 'use strict';
 
-app.filter('formatSec', function () { // jshint ignore:line
+app.filter('formatUptime', function () { // jshint ignore:line
     return function (time) {
         var sec = parseInt(time) || 0;
+        if(!sec){
+            return '0m';
+        }
+        sec = Math.round((Date.now() - sec) / 1000);
         var days = Math.floor(sec / (60 * 60 * 24));
         sec = sec - (60 * 60 * 24 * days);
         var hours = Math.floor(sec / (60 * 60));

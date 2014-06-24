@@ -1,7 +1,7 @@
 <div class="col-md-3">
     <section class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">System</h3>
+            <h3 class="panel-title">Static</h3>
         </div>
         <div class="panel-body">
             <ul class="list-group">
@@ -16,61 +16,55 @@
                 <li class="list-group-item">
                     <i class="fa fa-building-o"></i>
                     <b>Hostname:</b>
-                    {{ data.metrics.gauge.System.hostname }}
+                    {{ data.metrics.static.hostname }}
                 </li>
                 <li class="list-group-item">
-                    <i ng-show="data.metrics.gauge.System.platform && data.metrics.gauge.System.platform.indexOf('win') !== -1"
+                    <i ng-show="data.metrics.static.platform && data.metrics.static.platform.indexOf('win') !== -1"
                        class="fa fa-windows"></i>
-                    <i ng-show="data.metrics.gauge.System.platform && data.metrics.gauge.System.platform.indexOf('ubuntu') !== -1"
+                    <i ng-show="data.metrics.static.platform && data.metrics.static.platform.indexOf('ubuntu') !== -1"
                        class="fa fa-linux"></i>
-                    <i ng-hide="data.metrics.gauge.System.platform || data.metrics.gauge.System.platform.indexOf('win') !== -1 || data.metrics.gauge.System.platform.indexOf('ubuntu') !== -1"
+                    <i ng-hide="data.metrics.static.platform || data.metrics.static.platform.indexOf('win') !== -1 || data.metrics.static.platform.indexOf('ubuntu') !== -1"
                        class="fa fa-cubes"></i>
                     <b>Platform:</b>
-                    <span class="no-wrap">{{ data.metrics.gauge.System.platform }} {{ data.metrics.gauge.System.arch }}</span>
+                    <span class="no-wrap">{{ data.metrics.static.platform }} {{ data.metrics.static.arch }}</span>
                 </li>
                 <li class="list-group-item">
                     <img src="img/nodejs.png" width="14">
                     <b>Node:</b>
-                    <span class="no-wrap">{{ data.metrics.gauge.System.nodeVersions }}</span>
+                    <span class="no-wrap">{{ data.metrics.static.nodeVersions }}</span>
                 </li>
                 <li class="list-group-item">
                     <i class="fa fa-clock-o"></i>
                     <b>Node uptime:</b>
-                    <span class="no-wrap">{{ data.metrics.gauge.Uptime.uptime | formatSec }}</span>
+                    <span class="no-wrap">{{ data.metrics.static.nodeStartTime | formatUptime }}</span>
                 </li>
                 <li class="list-group-item">
                     <i class="fa fa-clock-o"></i>
                     <b>System uptime:</b>
-                    <span class="no-wrap">{{ data.metrics.gauge.Uptime.osuptime | formatSec }}</span>
+                    <span class="no-wrap">{{ data.metrics.static.osStartTime | formatUptime }}</span>
+                </li>
+                <li class="list-group-item" ng-repeat="(key, value) in data.metrics.static" ng-if="['hostname', 'platform', 'arch', 'nodeStartTime', 'nodeVersions', 'osStartTime'].indexOf(key) === -1">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <b>{{key}}:</b>
+                    {{ value }}
                 </li>
             </ul>
         </div>
     </section>
 </div>
 
-<div class="col-md-9">
-
-    <section class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">System CPU</h3>
-        </div>
-        <div class="panel-body">
-            <div class="top-stats-panel">
-                <div id="histogram-CPU" class="system-histogram"></div>
-            </div>
-        </div>
-    </section>
-</div>
-
-<div class="col-md-9">
-
+<div class="col-md-3">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Process Memory</h3>
         </div>
         <div class="panel-body">
-            <div class="top-stats-panel">
-                <div id="histogram-Memory" class="system-histogram"></div>
+            <div class="top-stats-panel chart">
+                <gauge max-value="gauge.memTotal" value="gauge.memProc"></gauge>
+                <div>
+                    <span>{{(gauge.memProc / gauge.memTotal) | number: 2}} % ({{gauge.memProc}} MB)</span>
+                </div>
+                <histogram values="data.metrics.histogram.Memory" highlight="0"></histogram>
             </div>
         </div>
     </section>
@@ -79,12 +73,34 @@
 <div class="col-md-3">
     <section class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Process Memory Now</h3>
+            <h3 class="panel-title">System Memory</h3>
         </div>
         <div class="panel-body">
-            <div class="top-stats-panel">
-                <div id="donut-Memory" class="system-histogram"></div>
+            <div class="top-stats-panel chart">
+                <gauge max-value="gauge.memTotal" value="gauge.memSys"></gauge>
+                <div>
+                    <span>{{(gauge.memSys / gauge.memTotal) | number: 2}} % ({{gauge.memSys}} MB)</span>
+                </div>
+                <histogram values="data.metrics.histogram.Memory" highlight="1"></histogram>
             </div>
         </div>
     </section>
 </div>
+
+<div class="col-md-3">
+    <section class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">System CPU</h3>
+        </div>
+        <div class="panel-body">
+            <div class="top-stats-panel chart">
+                <gauge max-value="100" value="gauge.cpu"></gauge>
+                <div>
+                    <span>{{(gauge.cpu / 100) | number: 2}} %</span>
+                </div>
+                <histogram values="data.metrics.histogram.CPU" highlight="1"></histogram>
+            </div>
+        </div>
+    </section>
+</div>
+

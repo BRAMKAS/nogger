@@ -13,20 +13,31 @@ exports.getMetrics = function (callback) {
             var re = {};
             var expect = data.length;
             var finished = 0;
+
             data.forEach(function (val) {
-                var type = val.substr(0, val.indexOf("#"));
-                var name = val.substr(val.indexOf("#") + 1);
-                var add = function(err, data){
+                var type, name;
+                if (val.indexOf("#") > 0) {
+                    type = val.substr(0, val.indexOf("#"));
+                    name = val.substr(val.indexOf("#") + 1);
+                } else {
+                    type = val;
+                }
+
+                var add = function (err, data) {
                     if (!err) {
                         re[type] = re[type] || {};
-                        re[type][name] = data;
+                        if(name){
+                            re[type][name] = data;
+                        } else {
+                            re[type] = data;
+                        }
                     }
                     finished++;
                     if (finished === expect) {
                         callback(null, re);
                     }
                 };
-                if (type === "gauge") {
+                if (type === "static" || type === "gauge") {
                     db.hgetall(val, add);
                 } else {
                     db.lrange(val, 0, 100, add);
@@ -36,8 +47,8 @@ exports.getMetrics = function (callback) {
     });
 };
 
-exports.getList = function(file, offset, callback){
-    if(offset === null){
+exports.getList = function (file, offset, callback) {
+    if (offset === null) {
         db.lrange(file, 0, -1, callback);
     } else {
         db.lrange(file, offset, 100, callback);

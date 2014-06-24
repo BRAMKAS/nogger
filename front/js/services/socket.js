@@ -7,7 +7,6 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
 
     socket.login = function(pw, save, callback){
         callback = callback || function(){};
-        console.log("LOGIN", pw);
         socket.emit('auth', pw, function (res) {
             console.log('response', res);
             if (!res.err) {
