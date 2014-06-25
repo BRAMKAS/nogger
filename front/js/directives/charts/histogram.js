@@ -8,9 +8,9 @@ app.directive('histogram', function () { // jshint ignore:line
             fill: false,
             lineWidth: 2
         };
-        if(highlight){
+        if (highlight) {
             lines.fill = true;
-            lines.fillColor = { colors: [ { opacity: 0.4 }, { opacity: 0.1 } ] }
+            lines.fillColor = { colors: [ '#1fb5ad', '#1fb5ad' ] }
         }
         return {
             color: highlight ? "#14746f" : "#87cfcb",
@@ -19,6 +19,16 @@ app.directive('histogram', function () { // jshint ignore:line
             lines: lines
         };
     }
+
+    $("<div id='tooltip'></div>").css({
+        position: "absolute",
+        display: "none",
+        border: "1px solid #fdd",
+        padding: "2px",
+        "background-color": "#eee",
+        opacity: 0.80
+    }).appendTo("body");
+
 
     return {
         restrict: 'E',
@@ -34,40 +44,58 @@ app.directive('histogram', function () { // jshint ignore:line
         replace: true,
         link: function (scope, elem) {
             var initialized = false;
+            var plot;
 
             scope.$watch('values', function (values) {
                 if (initialized) {
-
+                    plot.setData(calcData());
+                    plot.draw();
                 } else {
                     init();
+                }
+            });
+
+
+            elem.bind("plothover", function (event, pos, item) {
+                if (item) {
+                    $("#tooltip").html(item.datapoint[1])
+                        .css({top: item.pageY - 30, left: item.pageX - 8})
+                        .fadeIn(200);
+                } else {
+                    $("#tooltip").hide();
                 }
             });
 
             setTimeout(function () {
                 init();
             }, 2000);
+
+            function calcData() {
+                var data;
+                if (typeof scope.values[0].v === 'object') {
+                    var splitValues = [];
+                    data = [];
+                    scope.values.forEach(function (value, index) {
+                        value.v.forEach(function (v, i) {
+                            if (!splitValues[i]) {
+                                splitValues[i] = [];
+                            }
+                            splitValues[i].push([value.d , v]);
+                        });
+                    });
+                    splitValues.forEach(function (values, index) {
+                        data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true));
+                    })
+                } else {
+                    data = [getData(scope.values, scope.labels ? scope.labels[0] || "" : "", true)];
+                }
+                return data;
+            }
+
             function init() {
                 if (!initialized && scope.values && $.fn.plot) {
-                    var data;
-                    if (typeof scope.values[0].v === 'object') {
-                        var splitValues = [];
-                        data = [];
-                        scope.values.forEach(function (value, index) {
-                            value.v.forEach(function (v, i) {
-                                if (!splitValues[i]) {
-                                    splitValues[i] = [];
-                                }
-                                splitValues[i].push([value.d , v]);
-                            });
-                        });
-                        splitValues.forEach(function (values, index) {
-                            data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true));
-                        })
-                    } else {
-                        data = [getData(scope.values, scope.labels ? scope.labels[0] || "" : "", true)];
-                    }
                     initialized = true;
-
+                    var data = calcData();
                     var options = {
                         grid: {
                             backgroundColor: {
@@ -83,12 +111,12 @@ app.directive('histogram', function () { // jshint ignore:line
                         },
                         tooltip: true,
                         tooltipOpts: {
-                            content: scope.tooltips || "%s X: %x Y: %y",
+                            content: "%s X: %x Y: %y",
                             shifts: {
                                 x: -60,
                                 y: 25
                             },
-                            defaultTheme: false
+                            defaultTheme: true
                         },
                         legend: {
                             labelBoxBorderColor: "#ccc",
@@ -118,7 +146,7 @@ app.directive('histogram', function () { // jshint ignore:line
                         }
                         // colors: getColors(length)
                     };
-                    var plot = elem.plot(data, options);
+                    plot = elem.plot(data, options);
                     return true
                 }
                 return false;

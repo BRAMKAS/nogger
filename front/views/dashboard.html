@@ -1,7 +1,7 @@
 <div class="col-md-3">
     <section class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Static</h3>
+            <h3 class="panel-title">System</h3>
         </div>
         <div class="panel-body">
             <ul class="list-group">
@@ -42,11 +42,6 @@
                     <i class="fa fa-clock-o"></i>
                     <b>System uptime:</b>
                     <span class="no-wrap">{{ data.metrics.static.osStartTime | formatUptime }}</span>
-                </li>
-                <li class="list-group-item" ng-repeat="(key, value) in data.metrics.static" ng-if="['hostname', 'platform', 'arch', 'nodeStartTime', 'nodeVersions', 'osStartTime'].indexOf(key) === -1">
-                    <i class="fa fa-pencil-square-o"></i>
-                    <b>{{key}}:</b>
-                    {{ value }}
                 </li>
             </ul>
         </div>
@@ -100,6 +95,26 @@
                 </div>
                 <histogram values="data.metrics.histogram.CPU" highlight="1" min-value="0" max-value="100" show-yaxis="false"></histogram>
             </div>
+        </div>
+    </section>
+</div>
+
+
+
+
+<div class="col-md-3" ng-if="hasStatics()">
+    <section class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Static</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="(key, value) in data.metrics.static" ng-if="systemStatics.indexOf(key) === -1">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <b>{{key}}:</b>
+                    {{ value }}
+                </li>
+            </ul>
         </div>
     </section>
 </div>
