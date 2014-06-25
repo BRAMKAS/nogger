@@ -1,14 +1,27 @@
 'use strict';
-var express = require('express.io');
-var path = require('path');
-var password = require('./password');
 var config = require("../config.json");
-var metrics = require('./metrics');
-var logs = require('./logs');
-var publish = require('./publish');
 
 var adapter = require('nogger-node-adapter');
 adapter.init(config);
+
+new adapter.metrics.Static(function(){
+    return {
+        "Statictest" : "pretty long text that will destroy the whole layout.. probably.."
+    }
+});
+
+var authCounter = new adapter.metrics.Meter('AuthCounter');
+var activeVisitors = new adapter.metrics.Counter('Active Visitors');
+var authTimer = new adapter.metrics.Timer('loginTimer', 10000);
+
+
+
+var express = require('express.io');
+var path = require('path');
+var password = require('./password');
+var metrics = require('./metrics');
+var logs = require('./logs');
+var publish = require('./publish');
 
 var app = express();
 
@@ -31,7 +44,15 @@ app.io.configure(function () {
     //app.io.set('log level', 1);                    // reduce logging
 });
 
+app.io.route('connect', function(){
+    activeVisitors.inc();
+    activeVisitors.update();
+});
+
 app.io.route('auth', function (req) {
+    authCounter.mark();
+    authCounter.update();
+    authTimer.start();
     var ip = req.io.socket.handshake.address.address;
     console.log('auth, ip:', ip);
     if (!wrongAttempts[ip] || wrongAttempts[ip] < 10) {
@@ -42,6 +63,7 @@ app.io.route('auth', function (req) {
                 if (clients.length === 1) {
                     publish.connected();
                 }
+                authTimer.end();
                 req.io.respond({err: null, data: pjson.version});
             } else {
                 if (!wrongAttempts[ip]) {
@@ -107,6 +129,8 @@ app.io.route('ping', function (req) {
 });
 
 app.io.route('disconnect', function (req) {
+    activeVisitors.dec();
+    activeVisitors.update();
     var index = clients.indexOf(req.io.socket.id);
     if (index !== -1) {
         clients.splice(index, 1);
@@ -139,3 +163,7 @@ function broadcast(fn, msg) {
         app.io.sockets.socket(clients[i]).emit(fn, msg);
     }
 }
+
+
+
+
