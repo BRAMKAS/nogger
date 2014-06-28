@@ -20,6 +20,7 @@ app.directive('histogram', function () { // jshint ignore:line
         };
     }
 
+
     $("<div id='tooltip'></div>").css({
         position: "absolute",
         display: "none",
@@ -38,7 +39,8 @@ app.directive('histogram', function () { // jshint ignore:line
             minValue: '=',
             maxValue: '=',
             labels: '=',
-            showYaxis: '='
+            showYaxis: '=',
+            ticks: '='
         },
         template: '<div style="width: 100%; height:120px"></div>',
         replace: true,
@@ -46,9 +48,12 @@ app.directive('histogram', function () { // jshint ignore:line
             var initialized = false;
             var plot;
 
-            scope.$watch('values', function (values) {
+            scope.$watch(function () {
+                return scope.values ? scope.values.length : 0;
+            }, function (values) {
                 if (initialized) {
                     plot.setData(calcData());
+                    plot.setupGrid();
                     plot.draw();
                 } else {
                     init();
@@ -72,19 +77,22 @@ app.directive('histogram', function () { // jshint ignore:line
 
             function calcData() {
                 var data;
-                if (typeof scope.values[0].v === 'object') {
+                if (typeof scope.values[0][1] === 'object') {
                     var splitValues = [];
                     data = [];
                     scope.values.forEach(function (value, index) {
-                        value.v.forEach(function (v, i) {
+                        value[1].forEach(function (v, i) {
                             if (!splitValues[i]) {
                                 splitValues[i] = [];
                             }
-                            splitValues[i].push([value.d , v]);
+                            splitValues[i].push([value[0] , v]);
                         });
                     });
+
                     splitValues.forEach(function (values, index) {
-                        data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true));
+                        if(data.length < 10){
+                            data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true));
+                        }
                     })
                 } else {
                     data = [getData(scope.values, scope.labels ? scope.labels[0] || "" : "", true)];
@@ -130,15 +138,18 @@ app.directive('histogram', function () { // jshint ignore:line
                         },
                         yaxis: {
                             show: scope.showYaxis,
+                            ticks: scope.ticks,
                             labelWidth: 0,
                             min: scope.minValue,
                             max: scope.maxValue
                         },
                         xaxis: {
                             ticks: 3,
+                           // tickSize: 0.1,
                             tickLength: 0,
                             mode: "time",
-                            timezone: "browser"
+                            timezone: "browser",
+                            alignTicksWithAxis: 2
                         },
                         points: {
                             show: false
@@ -146,7 +157,7 @@ app.directive('histogram', function () { // jshint ignore:line
                         }
                         // colors: getColors(length)
                     };
-                    plot = elem.plot(data, options);
+                    plot = $.plot(elem, data, options);
                     return true
                 }
                 return false;

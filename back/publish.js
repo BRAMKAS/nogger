@@ -5,12 +5,15 @@ var redis = require("redis"),
 
 subscriber.subscribe("pong");
 subscriber.subscribe("log");
+subscriber.subscribe("metric");
 
 var pingStartTime;
 var pingCallback;
 var logCallback;
+var metricCallback;
 
 subscriber.on("message", function (channel, message) {
+
     if(channel === 'pong' && pingCallback && pingStartTime){
         var t = Date.now() -  pingStartTime;
         pingStartTime = null;
@@ -19,6 +22,10 @@ subscriber.on("message", function (channel, message) {
 
     if(channel === 'log' && logCallback){
         logCallback(JSON.parse(message));
+    }
+
+    if(channel === 'metric' && metricCallback){
+        metricCallback(JSON.parse(message));
     }
 });
 
@@ -38,4 +45,8 @@ exports.disconnected = function(){
 
 exports.onLog = function(callback){
     logCallback = callback;
+};
+
+exports.onMetric = function(callback){
+    metricCallback = callback;
 };

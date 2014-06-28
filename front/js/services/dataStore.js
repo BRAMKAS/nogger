@@ -101,6 +101,14 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
             data.logs.now.push(newLog);
             $rootScope.$apply();
         },
+        addMetric: function (newMetrics) {
+            console.log('adding new metrics');
+            newMetrics.forEach(function (newMetric) {
+                if (data.metrics && data.metrics[newMetric.t] && data.metrics[newMetric.t][newMetric.n]) {
+                    data.metrics[newMetric.t][newMetric.n].unshift(newMetric.v);
+                }
+            })
+        },
         data: data
     };
 });

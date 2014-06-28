@@ -66,7 +66,9 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
         dataStore.addLog(data);
     });
 
-
+    socket.on('newMetric', function (data) {
+        dataStore.addMetric(data);
+    });
 
     function ping() {
         if (connected) {

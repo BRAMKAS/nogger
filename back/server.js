@@ -12,7 +12,6 @@ new adapter.metrics.Static(function(){
 
 var authCounter = new adapter.metrics.Meter('AuthCounter');
 var activeVisitors = new adapter.metrics.Counter('Active Visitors');
-var authTimer = new adapter.metrics.Timer('loginTimer', 10000);
 
 
 
@@ -44,7 +43,7 @@ app.io.configure(function () {
     //app.io.set('log level', 1);                    // reduce logging
 });
 
-app.io.route('connect', function(){
+app.io.on('connection', function(){
     activeVisitors.inc();
     activeVisitors.update();
 });
@@ -52,7 +51,6 @@ app.io.route('connect', function(){
 app.io.route('auth', function (req) {
     authCounter.mark();
     authCounter.update();
-    authTimer.start();
     var ip = req.io.socket.handshake.address.address;
     console.log('auth, ip:', ip);
     if (!wrongAttempts[ip] || wrongAttempts[ip] < 10) {
@@ -63,7 +61,6 @@ app.io.route('auth', function (req) {
                 if (clients.length === 1) {
                     publish.connected();
                 }
-                authTimer.end();
                 req.io.respond({err: null, data: pjson.version});
             } else {
                 if (!wrongAttempts[ip]) {
@@ -152,6 +149,10 @@ require('dns').lookup(require('os').hostname(), function (err, add, fam) {
 
 publish.onLog(function(message){
     broadcast('newLog', message);
+});
+
+publish.onMetric(function(message){
+    broadcast('newMetric', message);
 });
 
 function checkAuth(req) {

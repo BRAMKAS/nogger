@@ -52,6 +52,11 @@
     cursor: pointer;
 }
 
+.chart h1 {
+    font-size: 60px;
+    margin-bottom: 50px;
+}
+
 .list-group-item .badge {
     visibility: hidden;
 }
