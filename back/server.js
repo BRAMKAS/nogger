@@ -10,8 +10,8 @@ new adapter.metrics.Static(function(){
     }
 });
 
-var authCounter = new adapter.metrics.Meter('AuthCounter');
-var activeVisitors = new adapter.metrics.Counter('Active Visitors');
+var authCounter = new adapter.metrics.Meter('Meter');
+var activeVisitors = new adapter.metrics.Counter('Counter');
 
 
 

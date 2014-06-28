@@ -40,7 +40,10 @@ app.directive('histogram', function () { // jshint ignore:line
             maxValue: '=',
             labels: '=',
             showYaxis: '=',
-            ticks: '='
+            ticks: '=',
+            yTickMult: '=',
+            yTickPostFix: '=',
+            yTickPreFix: '='
         },
         template: '<div style="width: 100%; height:120px"></div>',
         replace: true,
@@ -90,7 +93,7 @@ app.directive('histogram', function () { // jshint ignore:line
                     });
 
                     splitValues.forEach(function (values, index) {
-                        if(data.length < 10){
+                        if (data.length < 10) {
                             data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true));
                         }
                     })
@@ -139,13 +142,27 @@ app.directive('histogram', function () { // jshint ignore:line
                         yaxis: {
                             show: scope.showYaxis,
                             ticks: scope.ticks,
+                            tickFormatter: function(val, axis){
+                                if(scope.yTickMult){
+                                    val = val * scope.yTickMult;
+
+                                    console.log(scope)
+                                }
+                                if(scope.yTickPostFix){
+                                    val = val  + scope.yTickPostFix;
+                                }
+                                if(scope.yTickPreFix){
+                                    val = scope.yTickPreFix + val;
+                                }
+                                return val;
+                            },
                             labelWidth: 0,
                             min: scope.minValue,
                             max: scope.maxValue
                         },
                         xaxis: {
                             ticks: 3,
-                           // tickSize: 0.1,
+                            // tickSize: 0.1,
                             tickLength: 0,
                             mode: "time",
                             timezone: "browser",

@@ -14,4 +14,9 @@ app.controller("DashboardCtrl", function ($rootScope, $scope, dataStore) {
         }
         return false;
     };
+
+    $scope.timerTickFormatter = function(val){
+        console.log(val);
+        return val;
+    }
 });

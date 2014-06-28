@@ -55,11 +55,15 @@
         </div>
         <div class="panel-body">
             <div class="top-stats-panel chart">
-                <gauge max-value="data.metrics.histogram.Memory[0][1][2]" value="data.metrics.histogram.Memory[0][1][0]"></gauge>
+                <gauge max-value="data.metrics.histogram.Memory[0][1][2]"
+                       value="data.metrics.histogram.Memory[0][1][0]"></gauge>
                 <div>
-                    <span>{{(data.metrics.histogram.Memory[0][1][0] / data.metrics.histogram.Memory[0][1][2]) * 100 | number: 1}} %</span><small> ({{data.metrics.histogram.Memory[0][1][0]}}/{{data.metrics.histogram.Memory[0][1][2]}} MB)</small>
+                    <span>{{(data.metrics.histogram.Memory[0][1][0] / data.metrics.histogram.Memory[0][1][2]) * 100 | number: 1}} %</span>
+                    <small> ({{data.metrics.histogram.Memory[0][1][0]}}/{{data.metrics.histogram.Memory[0][1][2]}} MB)
+                    </small>
                 </div>
-                <histogram values="data.metrics.histogram.Memory" highlight="0" min-value="0" max-value="data.metrics.histogram.Memory[0][1][2]" show-yaxis="false"></histogram>
+                <histogram values="data.metrics.histogram.Memory" highlight="0" min-value="0"
+                           max-value="data.metrics.histogram.Memory[0][1][2]" show-yaxis="false"></histogram>
             </div>
         </div>
     </section>
@@ -72,11 +76,15 @@
         </div>
         <div class="panel-body">
             <div class="top-stats-panel chart">
-                <gauge max-value="data.metrics.histogram.Memory[0][1][2]" value="data.metrics.histogram.Memory[0][1][1]"></gauge>
+                <gauge max-value="data.metrics.histogram.Memory[0][1][2]"
+                       value="data.metrics.histogram.Memory[0][1][1]"></gauge>
                 <div>
-                    <span>{{(data.metrics.histogram.Memory[0][1][1] / data.metrics.histogram.Memory[0][1][2]) * 100 | number: 1}} %</span><small> ({{data.metrics.histogram.Memory[0][1][1]}}/{{data.metrics.histogram.Memory[0][1][2]}} MB)</small>
+                    <span>{{(data.metrics.histogram.Memory[0][1][1] / data.metrics.histogram.Memory[0][1][2]) * 100 | number: 1}} %</span>
+                    <small> ({{data.metrics.histogram.Memory[0][1][1]}}/{{data.metrics.histogram.Memory[0][1][2]}} MB)
+                    </small>
                 </div>
-                <histogram values="data.metrics.histogram.Memory" highlight="1" min-value="0" max-value="data.metrics.histogram.Memory[0][1][2]" show-yaxis="false"></histogram>
+                <histogram values="data.metrics.histogram.Memory" highlight="1" min-value="0"
+                           max-value="data.metrics.histogram.Memory[0][1][2]" show-yaxis="false"></histogram>
             </div>
         </div>
     </section>
@@ -93,13 +101,12 @@
                 <div>
                     <span>{{data.metrics.histogram.CPU[0][1] | number: 1}} %</span>
                 </div>
-                <histogram values="data.metrics.histogram.CPU" highlight="1" min-value="0" max-value="100" show-yaxis="false"></histogram>
+                <histogram values="data.metrics.histogram.CPU" highlight="1" min-value="0" max-value="100"
+                           show-yaxis="false"></histogram>
             </div>
         </div>
     </section>
 </div>
-
-
 
 
 <div class="col-md-3" ng-if="hasStatics()">
@@ -109,7 +116,8 @@
         </div>
         <div class="panel-body">
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="(key, value) in data.metrics.static" ng-if="systemStatics.indexOf(key) === -1">
+                <li class="list-group-item" ng-repeat="(key, value) in data.metrics.static"
+                    ng-if="systemStatics.indexOf(key) === -1">
                     <i class="fa fa-pencil-square-o"></i>
                     <b>{{key}}:</b>
                     {{ value }}
@@ -127,7 +135,15 @@
         <div class="panel-body">
             <div class="top-stats-panel chart">
                 <div>
-                    <h1>{{data.metrics.counter[key][0][1]}}</h1>
+                    <h1>
+                        {{data.metrics.counter[key][0][1]}}
+                        <i class="fa fa-long-arrow-down" style="color: #dc1700;font-size: 0.5em;transform:rotate(-55deg);-webkit-transform:rotate(-55deg);"
+                           ng-show="data.metrics.counter[key][0][1] < data.metrics.counter[key][data.metrics.counter[key].length -1][1]"></i>
+                        <i class="fa fa-long-arrow-right" style="color: #a4a4a4;font-size: 0.5em;"
+                           ng-show="data.metrics.counter[key][0][1] === data.metrics.counter[key][data.metrics.counter[key].length -1][1]"></i>
+                        <i class="fa fa-long-arrow-up" style="color: #008000;font-size: 0.5em;transform:rotate(55deg);-webkit-transform:rotate(55deg);"
+                           ng-show="data.metrics.counter[key][0][1] > data.metrics.counter[key][data.metrics.counter[key].length -1][1]"></i>
+                    </h1>
                 </div>
                 <histogram values="data.metrics.counter[key]" min-value="0" ticks="1"></histogram>
             </div>
@@ -161,9 +177,11 @@
         <div class="panel-body">
             <div class="top-stats-panel chart">
                 <div>
-                    <h1>{{data.metrics.timer[key][0][1]}}ms</h1>
+                    <h2>&Oslash;: {{data.metrics.timer[key][0][1] / 10}}ms</h2>
+                    <h4>min: {{data.metrics.timer[key][0][3] / 10}}ms</h4>
+                    <h4>max: {{data.metrics.timer[key][0][2] / 10}}ms</h4>
                 </div>
-                <histogram values="data.metrics.timer[key]" min-value="0" ticks="1"></histogram>
+                <histogram values="data.metrics.timer[key]" min-value="0" ticks="1" y-tick-post-fix="'ms'" y-tick-mult="0.1"></histogram>
             </div>
         </div>
     </section>
