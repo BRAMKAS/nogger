@@ -177,11 +177,11 @@
         <div class="panel-body">
             <div class="top-stats-panel chart">
                 <div>
-                    <h2>&Oslash;: {{data.metrics.timer[key][0][1] / 10}}ms</h2>
-                    <h4>min: {{data.metrics.timer[key][0][3] / 10}}ms</h4>
-                    <h4>max: {{data.metrics.timer[key][0][2] / 10}}ms</h4>
+                    <h2>&Oslash;: {{data.metrics.timer[key][0][1][0] / 10}}ms</h2>
+                    <h4>min: {{data.metrics.timer[key][0][1][2] / 10}}ms</h4>
+                    <h4>max: {{data.metrics.timer[key][0][1][1] / 10}}ms</h4>
                 </div>
-                <histogram values="data.metrics.timer[key]" min-value="0" ticks="1" y-tick-post-fix="'ms'" y-tick-mult="0.1"></histogram>
+                <histogram highlight="null" fill-between="0" values="data.metrics.timer[key]" min-value="0" ticks="1" y-tick-post-fix="'ms'" y-tick-mult="0.1"></histogram>
             </div>
         </div>
     </section>

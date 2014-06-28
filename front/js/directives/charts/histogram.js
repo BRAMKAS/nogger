@@ -2,7 +2,7 @@
 
 app.directive('histogram', function () { // jshint ignore:line
 
-    function getData(data, label, highlight) {
+    function getData(data, label, highlight, index, fillBetween) {
         var lines = {
             show: true,
             fill: false,
@@ -12,11 +12,20 @@ app.directive('histogram', function () { // jshint ignore:line
             lines.fill = true;
             lines.fillColor = { colors: [ '#1fb5ad', '#1fb5ad' ] }
         }
+
+        var fillData;
+        if(fillBetween !== undefined){
+            fillData = 'genericId' + fillBetween;
+            console.log(fillData);
+        }
+
         return {
             color: highlight ? "#14746f" : "#87cfcb",
             label: label,
             data: data,
-            lines: lines
+            lines: lines,
+            id: 'genericId' + index,
+            fillBetween: fillData
         };
     }
 
@@ -43,7 +52,8 @@ app.directive('histogram', function () { // jshint ignore:line
             ticks: '=',
             yTickMult: '=',
             yTickPostFix: '=',
-            yTickPreFix: '='
+            yTickPreFix: '=',
+            fillBetween: '='
         },
         template: '<div class="histogram"></div>',
         replace: true,
@@ -96,13 +106,12 @@ app.directive('histogram', function () { // jshint ignore:line
                     });
 
                     splitValues.forEach(function (values, index) {
-                        if (data.length < 10) {
-                            data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true));
-                        }
+                        data.push(getData(values, scope.labels ? scope.labels[index] || "" : "", scope.highlight !== undefined ? scope.highlight === index : true, index, scope.fillBetween));
                     })
                 } else {
-                    data = [getData(scope.values, scope.labels ? scope.labels[0] || "" : "", true)];
+                    data = [getData(scope.values, scope.labels ? scope.labels[0] || "" : "", true, 0)];
                 }
+                console.log(data);
                 return data;
             }
 

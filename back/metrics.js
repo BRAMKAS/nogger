@@ -5,16 +5,9 @@ var db = redis.createClient(config.redisPort, config.redisIP, {
 });
 db.select(config.redisMetricsDb);
 
-var Timer = require('nogger-node-adapter').metrics.Timer;
-var authTimer = new Timer('Timer', 10000);
-
-
 exports.getMetrics = function (callback) {
-    console.log('getMetrics');
-    authTimer.start();
     db.keys("*", function (err, data) {
         if (err) {
-            authTimer.end();
             callback(err);
         } else {
             var re = {};
@@ -41,7 +34,6 @@ exports.getMetrics = function (callback) {
                     }
                     finished++;
                     if (finished === expect) {
-                        authTimer.end();
                         callback(null, re);
                     }
                 };
