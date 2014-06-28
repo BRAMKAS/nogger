@@ -1850,9 +1850,6 @@ Licensed under the MIT license.
                 if (!isNaN(v))
                     axis.ticks.push({ v: v, label: label });
             }
-            if(axis.direction === 'x'){
-                console.log(ticks, axis.ticks);
-            }
         }
 
         function snapRangeToTicks(axis, ticks) {

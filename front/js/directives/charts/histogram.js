@@ -45,11 +45,11 @@ app.directive('histogram', function () { // jshint ignore:line
             yTickPostFix: '=',
             yTickPreFix: '='
         },
-        template: '<div style="width: 100%; height:120px"></div>',
+        template: '<div class="histogram"></div>',
         replace: true,
         link: function (scope, elem) {
             var initialized = false;
-            var plot;
+            var plot, plotTimeout;
 
             scope.$watch(function () {
                 return scope.values ? scope.values.length : 0;
@@ -63,12 +63,15 @@ app.directive('histogram', function () { // jshint ignore:line
                 }
             });
 
-
             elem.bind("plothover", function (event, pos, item) {
                 if (item) {
-                    $("#tooltip").html(item.datapoint[1])
+                    clearTimeout(plotTimeout);
+                    $("#tooltip").html(formatVal(item.datapoint[1]))
                         .css({top: item.pageY - 30, left: item.pageX - 8})
                         .fadeIn(200);
+                    plotTimeout = setTimeout(function () {
+                        $("#tooltip").hide();
+                    }, 1500);
                 } else {
                     $("#tooltip").hide();
                 }
@@ -142,19 +145,8 @@ app.directive('histogram', function () { // jshint ignore:line
                         yaxis: {
                             show: scope.showYaxis,
                             ticks: scope.ticks,
-                            tickFormatter: function(val, axis){
-                                if(scope.yTickMult){
-                                    val = val * scope.yTickMult;
-
-                                    console.log(scope)
-                                }
-                                if(scope.yTickPostFix){
-                                    val = val  + scope.yTickPostFix;
-                                }
-                                if(scope.yTickPreFix){
-                                    val = scope.yTickPreFix + val;
-                                }
-                                return val;
+                            tickFormatter: function (val, axis) {
+                                return formatVal(val);
                             },
                             labelWidth: 0,
                             min: scope.minValue,
@@ -178,6 +170,19 @@ app.directive('histogram', function () { // jshint ignore:line
                     return true
                 }
                 return false;
+            }
+
+            function formatVal(val){
+                if (scope.yTickMult) {
+                    val = Math.round(val * scope.yTickMult);
+                }
+                if (scope.yTickPostFix) {
+                    val = val + scope.yTickPostFix;
+                }
+                if (scope.yTickPreFix) {
+                    val = scope.yTickPreFix + val;
+                }
+                return val;
             }
         }
     };

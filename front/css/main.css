@@ -29,9 +29,10 @@
     margin: 0.1em 0;
 }
 
-.system-histogram, .chart{
+.chart{
     height: 267px;
     text-align: center;
+    position: relative;
 }
 
 .chart-gauge {
@@ -55,6 +56,13 @@
 .chart h1 {
     font-size: 60px;
     margin-bottom: 50px;
+}
+
+.chart .histogram {
+    width: 100%;
+    height:120px;
+    position: absolute;
+    bottom: 0;
 }
 
 .list-group-item .badge {
