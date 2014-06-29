@@ -10,7 +10,7 @@ var publish = require('./publish');
 var app = express();
 
 var pjson = require("../package.json");
-var port = 7076;
+var port = config.noggerPort;
 
 var clients = [];
 var wrongAttempts = {};

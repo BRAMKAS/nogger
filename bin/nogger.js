@@ -2,6 +2,7 @@
 'use strict';
 var forever = require('forever');
 var Liftoff = require('liftoff');
+var path = require('path');
 var exec = require('child_process').exec;
 var child_process = require('child_process');
 var chalk = require('chalk');
@@ -17,36 +18,18 @@ var runnning = false;
 
 var commands = {
     start: function () {
-        console.log('start called');
+        console.log('start called', path.resolve(__dirname, '..', 'back/server.js'));
 
-        forever.start('./../back/server.js', {
+        forever.start(path.resolve(__dirname, '..', 'back/server.js'), {
             uid: 'nogger'
         });
-
-        /*
-        var child = new (forever.Monitor)('start.js', {
-            max: 3,
-            silent: true,
-            options: []
-        });
-
-        child.on('exit', function () {
-            console.log('your-filename.js has exited after 3 restarts');
-        });
-
-        child.on('stdout', function(){
-            console.log(arguments);
-        });
-
-        child.on('stderr', function(){
-            console.log(arguments);
-        });
-
-        child.start();*/
     },
     stop: function () {
         console.log('stop called');
         //process.kill(132, 'SIGHUP');
+    },
+    set: function(){
+        // set config
     },
     setpassword: function () {
         var password = require("./../back/password");

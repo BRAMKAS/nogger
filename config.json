@@ -4,5 +4,6 @@
     "redisPort": 6379,
     "redisMetricsDb": 2,
     "redisLogsDb": 3,
-    "redisPass": "w2KBi1jSsnaiYyYpmp4J4"
+    "redisPass": "w2KBi1jSsnaiYyYpmp4J4",
+    "noggerPort": 7078
 }

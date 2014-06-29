@@ -1,7 +1,7 @@
 {
   "name": "nogger",
   "description": "node logger and monitoring tool",
-  "version": "0.5.7",
+  "version": "0.6.0",
   "homepage": "https://github.com/paul-em/nogger",
   "author": {
     "name": "Paul Em",
