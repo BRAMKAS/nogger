@@ -12,7 +12,7 @@
         <div class="navbar-collapse collapse">
             <h1>{{navbar.headline}}</h1>
             <form class="navbar-form navbar-right" ng-show="navbar.searchEnabled">
-                <input type="text" class="form-control" placeholder="Search...">
+                <input ng-model="search" type="text" class="form-control" placeholder="Search...">
             </form>
         </div>
     </div>

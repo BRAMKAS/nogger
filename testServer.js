@@ -40,8 +40,10 @@ randomInterval(10000, function(){
 randomInterval(1000, function(){
     if(timer.running){
         timer.end();
+        console.log('timer ended');
     } else {
         timer.start();
+        console.log('timer started');
     }
 });
 

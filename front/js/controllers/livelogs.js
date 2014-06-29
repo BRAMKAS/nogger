@@ -18,5 +18,5 @@ app.controller("LiveLogsCtrl", function ($rootScope, $scope, dataStore) {
 
     $scope.increaseShowMax = function () {
         $scope.showMax += showMax;
-    }
+    };
 });

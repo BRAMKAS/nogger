@@ -19,4 +19,5 @@ app.controller("DashboardCtrl", function ($rootScope, $scope, dataStore) {
         console.log(val);
         return val;
     }
+
 });

@@ -2,11 +2,9 @@
 app.directive("navbar", function ($rootScope, $location) {
     return {
         restrict: 'E',
-        scope: {
-            active: "="
-        },
         templateUrl: "/views/navbar.html",
         link: function (scope) {
+            $rootScope.search = "";
             scope.route = $location.path();
             $rootScope.$on('$routeChangeSuccess', function () {
                 scope.route = $location.path();
@@ -14,7 +12,7 @@ app.directive("navbar", function ($rootScope, $location) {
 
             $rootScope.$watch('navbar', function(){
                 scope.navbar = $rootScope.navbar;
-            })
+            });
         }
     }
 });
