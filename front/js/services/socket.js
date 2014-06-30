@@ -10,12 +10,15 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
         socket.emit('auth', pw, function (res) {
             console.log('response', res);
             if (!res.err) {
+                console.log('getting LogNames');
                 socket.emit('getLogNames', function (res) {
+                    console.log('got LogNames', res);
                     if (!res.err) {
                         dataStore.setLogNames(res.data);
                     }
-
+                    console.log('getting Metrics');
                     socket.emit('getMetrics', function (res) {
+                        console.log('got Metrics', res);
                         if (!res.err) {
                             console.log('metrics', res.data);
                             dataStore.setMetrics(res.data);

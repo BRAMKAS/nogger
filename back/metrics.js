@@ -13,36 +13,39 @@ exports.getMetrics = function (callback) {
             var re = {};
             var expect = data.length;
             var finished = 0;
+            if (expect === 0) {
+                callback(null, []);
+            } else {
+                data.forEach(function (val) {
+                    var type, name;
+                    if (val.indexOf("#") > 0) {
+                        type = val.substr(0, val.indexOf("#"));
+                        name = val.substr(val.indexOf("#") + 1);
+                    } else {
+                        type = val;
+                    }
 
-            data.forEach(function (val) {
-                var type, name;
-                if (val.indexOf("#") > 0) {
-                    type = val.substr(0, val.indexOf("#"));
-                    name = val.substr(val.indexOf("#") + 1);
-                } else {
-                    type = val;
-                }
-
-                var add = function (err, data) {
-                    if (!err) {
-                        re[type] = re[type] || {};
-                        if(name){
-                            re[type][name] = data;
-                        } else {
-                            re[type] = data;
+                    var add = function (err, data) {
+                        if (!err) {
+                            re[type] = re[type] || {};
+                            if (name) {
+                                re[type][name] = data;
+                            } else {
+                                re[type] = data;
+                            }
                         }
+                        finished++;
+                        if (finished === expect) {
+                            callback(null, re);
+                        }
+                    };
+                    if (type === "static" || type === "gauge") {
+                        db.hgetall(val, add);
+                    } else {
+                        db.lrange(val, 0, 100, add);
                     }
-                    finished++;
-                    if (finished === expect) {
-                        callback(null, re);
-                    }
-                };
-                if (type === "static" || type === "gauge") {
-                    db.hgetall(val, add);
-                } else {
-                    db.lrange(val, 0, 100, add);
-                }
-            });
+                });
+            }
         }
     });
 };
