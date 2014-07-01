@@ -29,14 +29,25 @@ var blockedListPath = path.resolve(__dirname, '..', 'blockedList.json');
 
 var commands = {
     start: function () {
-        daemon.start();
+        var pid = daemon.status();
+        if (pid) {
+            console.log('nogger is already running. PID: ' + pid);
+        } else {
+            daemon.start(function (err, pid) {
+                if (!err) {
+                    require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+                        console.log('Nogger listening on ' + add + ':' + config.noggerPort);
+                    });
+                }
+            });
+        }
     },
     stop: function () {
         daemon.stop();
     },
-    status: function(){
+    status: function () {
         var pid = daemon.status();
-        if(pid){
+        if (pid) {
             console.log('nogger is running. PID: ' + pid);
         } else {
             console.log('nogger is not running');
@@ -81,7 +92,7 @@ var commands = {
             process.exit();
         });
     },
-    block: function(){
+    block: function () {
         var index = blockedList.ip.indexOf(argv._[1]);
         if (index === -1) {
             blockedList.ip.push(argv._[1]);
