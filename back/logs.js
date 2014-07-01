@@ -1,4 +1,4 @@
-var config = require("../config.json");
+var config = require("./config");
 var redis = require("redis");
 var db = redis.createClient(config.redisPort, config.redisIP, {
     auth_pass: config.redisPass

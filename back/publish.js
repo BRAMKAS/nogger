@@ -1,4 +1,4 @@
-var config = require("../config.json");
+var config = require("./config");
 var redis = require("redis"),
     subscriber = redis.createClient(config.redisPort, config.redisIP);
     publisher = redis.createClient(config.redisPort, config.redisIP);

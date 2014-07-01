@@ -1,5 +1,5 @@
 'use strict';
-var config = require("../config.json");
+var config = require("./config");
 var express = require('express.io');
 var path = require('path');
 var password = require('./password');
@@ -16,7 +16,8 @@ var clients = [];
 var wrongAttempts = {};
 
 app.use(express.cookieParser());
-if (config.prod) {
+var prod = false;
+if (!prod) {
     app.use(express.static(path.join(__dirname, '../front-build')));
 } else {
     app.use(express.static(path.join(__dirname, '../front')));

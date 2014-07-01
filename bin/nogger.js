@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 'use strict';
+var fs = require('fs');
 var Liftoff = require('liftoff');
 var path = require('path');
 var exec = require('child_process').exec;
 var child_process = require('child_process');
 var chalk = require('chalk');
 var argv = require('minimist')(process.argv.slice(2));
-var daemon = require("daemonize2").setup({
-    main: "../index.js",
-    name: "nogger",
-    pidfile: "nogger.pid"
+
+var daemon = require('daemonize2').setup({
+    main: '../index.js',
+    name: 'nogger',
+    pidfile: 'nogger.pid'
 });
 
 var cli = new Liftoff({
@@ -19,7 +21,11 @@ var cli = new Liftoff({
 });
 var pkg = require('./../package');
 
-var runnning = false;
+var config = require('../config.json') || {};
+var configDefaults = require('../configDefaults.json');
+var configPath = path.resolve(__dirname, '..', 'config.json');
+var blockedList = require('../blockedList.json');
+var blockedListPath = path.resolve(__dirname, '..', 'blockedList.json');
 
 var commands = {
     start: function () {
@@ -28,28 +34,64 @@ var commands = {
     stop: function () {
         daemon.stop();
     },
-    set: function () {
-        // set config
+    config: function () {
+        logDataLine('current configuration');
+        logDataLine('');
+        for (var i in config) {
+            logDataLine('  ' + i, config[i]);
+        }
+        for (var j in configDefaults) {
+            if (config[j] === undefined) {
+                logDataLine('  ' + j, configDefaults[j] + '  ' + chalk.gray('(default)'))
+            }
+        }
     },
-    setpassword: function () {
-        var password = require("./../back/password");
-        console.log('setting password to "' + argv._[1] + '"');
-
+    set: function () {
+        var key = argv._[1];
+        var val = argv._[2];
+        if (!key || !val) {
+            console.log(chalk.red('usage: nogger set <key> <val>'));
+            help();
+        } else {
+            if (configDefaults[key] === undefined) {
+                console.log(chalk.red('invalid key'));
+                console.log('');
+            } else {
+                config[key] = val;
+                fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
+                console.log('updated config!');
+                console.log('');
+            }
+            commands.config();
+        }
+    },
+    setpw: function () {
+        var password = require('./../back/password');
+        console.log('encrypting password...');
         password.set(argv._[1], function () {
-            console.log('password set');
+            console.log('password saved!');
             process.exit();
         });
     },
-    unblock: function () {
-
-    },
-    help: function () {
-        var available = "Usage: [";
-        for (var i in commands) {
-            available += i + "|";
+    block: function(){
+        var index = blockedList.ip.indexOf(argv._[1]);
+        if (index === -1) {
+            blockedList.ip.push(argv._[1]);
+            fs.writeFileSync(blockedListPath, JSON.stringify(blockedList, null, 4));
+            console.log('blocked ip ' + argv._[1]);
+        } else {
+            console.log(chalk.red('ip ' + argv._[1] + ' is already on blockedList'));
         }
-        available = available.substr(0, available.length - 1) + "]";
-        console.log(available);
+    },
+    unblock: function () {
+        var index = blockedList.ip.indexOf(argv._[1]);
+        if (index !== -1) {
+            blockedList.ip.splice(index, 1);
+            fs.writeFileSync(blockedListPath, JSON.stringify(blockedList, null, 4));
+            console.log('unblocked ip ' + argv._[1]);
+        } else {
+            console.log(chalk.red('ip ' + argv._[1] + ' is not on blockedList'));
+        }
     },
     version: function () {
         console.log(pkg.name + ' ' + pkg.version);
@@ -61,8 +103,44 @@ cli.launch({}, function (env) {
     if (argv._.length && commands[argv._[0]]) {
         commands[argv._[0]]();
     } else {
-        commands.help();
+        help();
         process.exit(1);
     }
 });
 
+function help() {
+    logHelpLine('');
+    logHelpLine('usage: nogger [action]');
+    logHelpLine('');
+    logHelpLine('');
+    logHelpLine('  actions:');
+    logHelpLine('');
+    logHelpLine('    start            Starts nogger as a daemon');
+    logHelpLine('    stop             Stops the nogger daemon');
+    logHelpLine('    config           Lists all nogger configurations');
+    logHelpLine('    set <key> <val>  Sets the key of the config');
+    logHelpLine('    clear <key>      Clears the key from the config');
+    logHelpLine('    setpw <password> Updates the password for the dashboard');
+    logHelpLine('    block <ip>       Adds ip to blocked list');
+    logHelpLine('    unblock <ip>     Unblocks a ip from blocked list');
+    logHelpLine('    version          Shows current nogger version');
+    logHelpLine('');
+}
+
+function logHelpLine(val) {
+    console.log(chalk.cyan('help') + ':', val);
+}
+
+function logDataLine(val, val2) {
+    var space = '';
+    if (val2 !== undefined) {
+        if (val.length < 17) {
+            for (var i = 0; i < 17 - val.length; i++) {
+                space += ' ';
+            }
+        }
+    } else {
+        val2 = '';
+    }
+    console.log(chalk.magenta('data') + ':', val + space + val2);
+}
