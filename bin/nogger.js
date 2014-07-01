@@ -34,6 +34,14 @@ var commands = {
     stop: function () {
         daemon.stop();
     },
+    status: function(){
+        var pid = daemon.status();
+        if(pid){
+            console.log('nogger is running. PID: ' + pid);
+        } else {
+            console.log('nogger is not running');
+        }
+    },
     config: function () {
         logDataLine('current configuration');
         logDataLine('');
@@ -117,6 +125,7 @@ function help() {
     logHelpLine('');
     logHelpLine('    start            Starts nogger as a daemon');
     logHelpLine('    stop             Stops the nogger daemon');
+    logHelpLine('    status           Returns if nogger is running or not');
     logHelpLine('    config           Lists all nogger configurations');
     logHelpLine('    set <key> <val>  Sets the key of the config');
     logHelpLine('    clear <key>      Clears the key from the config');

@@ -10,14 +10,16 @@ var publish = require('./publish');
 var app = express();
 
 var pjson = require("../package.json");
+
 var port = config.noggerPort;
 
 var clients = [];
 var wrongAttempts = {};
 
 app.use(express.cookieParser());
+
 var prod = false;
-if (!prod) {
+if (prod) {
     app.use(express.static(path.join(__dirname, '../front-build')));
 } else {
     app.use(express.static(path.join(__dirname, '../front')));
