@@ -12,9 +12,17 @@ new nogger.metrics.Static(function(){
 var meter = new nogger.metrics.Meter('TestMeter');
 var counter = new nogger.metrics.Counter('TestCounter');
 var timer = new nogger.metrics.Timer('TestTimer');
-var histogramVal = Math.random() * 1000;
+var histogramVal = Math.round(Math.random() * 1000);
+var alphaVal = Math.round(Math.random() * 1000);
+var betaVal = Math.round(Math.random() * 1000);
 var histogram = new nogger.metrics.Histogram('TestHistogram', 'histogramVal', function(){
     return histogramVal;
+});
+var histogram2 = new nogger.metrics.Histogram('TestHistogram2', ['alphaVal', 'betaVal'], function(){
+    return [
+        alphaVal,
+        betaVal
+    ];
 });
 var gaugeVal = Math.round(Math.random() * 100);
 var gauge = new nogger.metrics.Gauge(function(){
@@ -53,6 +61,8 @@ randomInterval(10000, function(){
 
 randomInterval(10000, function(){
     histogramVal = Math.round(Math.random() * 1000);
+    alphaVal = Math.round(Math.random() * 1000);
+    betaVal =Math.round(Math.random() * 1000);
 });
 
 function randomInterval(t, fn){

@@ -1,6 +1,6 @@
 'use strict';
 
-app.directive('histogram', function () { // jshint ignore:line
+app.directive('histogram', function (colorGen) { // jshint ignore:line
 
     function getData(data, label, highlight, index, fillBetween) {
         var lines = {
@@ -20,7 +20,7 @@ app.directive('histogram', function () { // jshint ignore:line
         }
 
         return {
-            color: highlight ? "#14746f" : "#87cfcb",
+            color: highlight ? "#14746f" : colorGen(index),
             label: label,
             data: data,
             lines: lines,

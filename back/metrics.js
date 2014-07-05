@@ -23,7 +23,7 @@ exports.getMetrics = function (callback) {
                         name = val.substr(val.indexOf("#") + 1);
                         if (type === 'histogram') {
                             name = name.substr(0, name.lastIndexOf("["));
-                            labels = val.substr(val.lastIndexOf("["));
+                            labels = JSON.parse(val.substr(val.lastIndexOf("[")));
                         }
                     } else {
                         type = val;

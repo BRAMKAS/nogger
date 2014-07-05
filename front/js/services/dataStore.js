@@ -38,12 +38,12 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
                 addData(newData[i], data[i]);
             } else if (isArray(newData[i])) {
                 var shouldParse = false;
-                if (typeof newData[i][0] == 'string') {
+                if (typeof newData[i][0] == 'string' && i !== 'labels') {
                     try {
                         JSON.parse(newData[i][0]);
                         shouldParse = true;
                     } catch (e) {
-                        console.warn(e);
+                        console.warn(e, i);
                     }
                 }
                 if (shouldParse) {

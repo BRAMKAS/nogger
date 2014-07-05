@@ -186,3 +186,20 @@
         </div>
     </section>
 </div>
+
+
+<div class="col-md-3" ng-repeat="(key, value) in data.metrics.histogram" ng-if="key !== 'CPU' && key !== 'Memory'">
+    <section class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{key}}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="top-stats-panel chart">
+                <div ng-if="value.data[0][1].length > 1">
+                    <pie values="value.data[0][1]" labels="value.labels"></pie>
+                </div>
+                <histogram values="value.data" highlight="null"></histogram>
+            </div>
+        </div>
+    </section>
+</div>
