@@ -13,7 +13,7 @@ var meter = new nogger.metrics.Meter('TestMeter');
 var counter = new nogger.metrics.Counter('TestCounter');
 var timer = new nogger.metrics.Timer('TestTimer');
 var histogramVal = Math.random() * 1000;
-var histogram = new nogger.metrics.Histogram('TestHistogram', function(){
+var histogram = new nogger.metrics.Histogram('TestHistogram', 'histogramVal', function(){
     return histogramVal;
 });
 var gaugeVal = Math.round(Math.random() * 100);

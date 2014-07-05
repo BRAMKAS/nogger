@@ -1,6 +1,10 @@
 'use strict';
 
 app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:line
+    function isArray(val) {
+        return Object.prototype.toString.call(val) === '[object Array]';
+    }
+
     var data = {
         metrics: {
             gauge: {
@@ -27,12 +31,12 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
 
     function addData(newData, data) {
         for (var i in newData) {
-            if (typeof newData[i] === 'object' && Object.prototype.toString.call(newData[i]) !== '[object Array]') {
+            if (typeof newData[i] === 'object' && !isArray(newData[i])) {
                 if (!data[i]) {
                     data[i] = {};
                 }
                 addData(newData[i], data[i]);
-            } else if (Object.prototype.toString.call(newData[i]) === '[object Array]') {
+            } else if (isArray(newData[i])) {
                 var shouldParse = false;
                 if (typeof newData[i][0] == 'string') {
                     try {
@@ -105,7 +109,11 @@ app.factory('dataStore', function ($rootScope, $interval) { // jshint ignore:lin
             console.log('adding new metrics');
             newMetrics.forEach(function (newMetric) {
                 if (data.metrics && data.metrics[newMetric.t] && data.metrics[newMetric.t][newMetric.n]) {
-                    data.metrics[newMetric.t][newMetric.n].unshift(newMetric.v);
+                    if (isArray(data.metrics[newMetric.t][newMetric.n])) {
+                        data.metrics[newMetric.t][newMetric.n].unshift(newMetric.v);
+                    } else if (typeof data.metrics[newMetric.t][newMetric.n] === 'object' && data.metrics[newMetric.t][newMetric.n].data) {
+                        data.metrics[newMetric.t][newMetric.n].data.unshift(newMetric.v);
+                    }
                 }
             })
         },

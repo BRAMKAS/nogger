@@ -29,8 +29,13 @@
     margin: 0.1em 0;
 }
 
+.static-metrics .panel-body {
+    height: 317px;
+    overflow: auto;
+}
+
 .chart{
-    height: 267px;
+    height: 287px;
     text-align: center;
     position: relative;
 }
@@ -38,7 +43,6 @@
 .chart-gauge {
     width: 100%;
     max-width: 300px;
-    margin-top: -30px;
 }
 
 .chart img {
@@ -63,6 +67,15 @@
     height:120px;
     position: absolute;
     bottom: 0;
+}
+
+.chart .histogram:after {
+    content: '';
+    height: 110px;
+}
+
+.list-group-item {
+    word-break: break-all;
 }
 
 .list-group-item .badge {

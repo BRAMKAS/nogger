@@ -17,10 +17,14 @@ exports.getMetrics = function (callback) {
                 callback(null, []);
             } else {
                 data.forEach(function (val) {
-                    var type, name;
+                    var type, name, labels;
                     if (val.indexOf("#") > 0) {
                         type = val.substr(0, val.indexOf("#"));
                         name = val.substr(val.indexOf("#") + 1);
+                        if (type === 'histogram') {
+                            name = name.substr(0, name.lastIndexOf("["));
+                            labels = val.substr(val.lastIndexOf("["));
+                        }
                     } else {
                         type = val;
                     }
@@ -29,6 +33,9 @@ exports.getMetrics = function (callback) {
                         if (!err) {
                             re[type] = re[type] || {};
                             if (name) {
+                                if(labels){
+                                    data = {labels: labels, data: data};
+                                }
                                 re[type][name] = data;
                             } else {
                                 re[type] = data;
