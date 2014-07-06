@@ -4,7 +4,7 @@ var redis = require("redis"),
     publisher = redis.createClient(config.redisPort, config.redisIP);
 
 subscriber.subscribe("pong" + config.redisMetricsDb);
-subscriber.subscribe("log" + config.redisMetricsDb);
+subscriber.subscribe("log" + config.redisLogsDb);
 subscriber.subscribe("metric" + config.redisMetricsDb);
 
 var pingStartTime;
