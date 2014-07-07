@@ -3025,7 +3025,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-header {
-  min-width: 25%;
+  min-width: 16.666666%;
 }
 @media (min-width: 768px) {
   .navbar-header {

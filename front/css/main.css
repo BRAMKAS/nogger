@@ -34,7 +34,7 @@
     overflow: auto;
 }
 
-.chart{
+.chart {
     height: 287px;
     text-align: center;
     position: relative;
@@ -68,7 +68,7 @@
 
 .chart .histogram {
     width: 100%;
-    height:120px;
+    height: 120px;
     position: absolute;
     bottom: 0;
 }
@@ -109,6 +109,19 @@
     display: inline-block;
     text-transform: uppercase;
     color: #a8a8a8;
+    margin-left: 100px;
+}
+
+.navbar-header .navbar-brand {
+    position: relative;
+    width: 100%;
+}
+
+.navbar-header .navbar-brand img {
+    height: 80px;
+    position: absolute;
+    top: 0;
+    right: -80px;
 }
 
 .form-signin {
@@ -202,21 +215,20 @@
     position: absolute;
 }
 
-
 .showAnim.ng-hide-add,
 .showAnim.ng-hide-remove {
     transition: 0.4s linear all;
-    display:block!important;
+    display: block !important;
 }
 .showAnim.ng-hide-remove {
     opacity: 0;
 }
 .showAnim.ng-hide-remove.ng-hide-remove-active {
-    opacity:1;
+    opacity: 1;
 }
 .showAnim.ng-hide-add {
-    opacity:1;
+    opacity: 1;
 }
 .showAnim.ng-hide-add.ng-hide-add-active {
-    opacity:0;
+    opacity: 0;
 }
