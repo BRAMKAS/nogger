@@ -22,7 +22,8 @@
     "morris.js": "~0.5.1",
     "angular-animate": "~1.2.18",
     "gauge.js": "~1.2.1",
-    "flot": "~0.8.3"
+    "flot": "~0.8.3",
+    "socket.io-client": "~1.0.6"
   },
   "resolutions": {
     "angular": "1.2.16"
