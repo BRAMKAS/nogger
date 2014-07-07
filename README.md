@@ -2,15 +2,36 @@
 
 node logger and monitoring tool - this is under active development!
 
+
 ## Getting Started
 Install the module with: `npm install nogger -g`
-Make sure to set -g to install it globally to have the nogger command available!
+Make sure to set -g to install it globally to have the nogger command available! You don't need to install nogger separately for your project. In order to get it in your project you have to install an adapter. 
+Right now there is only an adapter for node.js available:
 
-```javascript
-var nogger = require('nogger');
-nogger.awesome(); // "hello "
+https://github.com/paul-em/nogger-node-adapter
+
+## CLI
+
 ```
+  $ nogger help
+  
+  usage: nogger [action]
 
+
+   actions:
+
+     start            Starts nogger as a daemon
+     stop             Stops the nogger daemon
+     status           Returns if nogger is running or not
+     config           Lists all nogger configurations
+     set <key> <val>  Sets the key of the config
+     clear <key>      Clears the key from the config
+     setpw <password> Updates the password for the dashboard
+     block <ip>       Adds ip to blocked list
+     unblock <ip>     Unblocks a ip from blocked list
+     version          Shows current nogger version
+
+```
 ## Contributing
 
 Please submit all issues and pull requests to the [paul-em/nogger](http://github.com/paul-em/nogger) repository!
