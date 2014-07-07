@@ -3,6 +3,6 @@
     "redisPort": 6379,
     "redisMetricsDb": 1,
     "redisLogsDb": 2,
-    "redisPass": null,
-    "noggerPort": 7079
+    "redisPass": "",
+    "noggerPort": 1337
 }
