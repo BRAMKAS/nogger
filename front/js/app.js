@@ -33,4 +33,10 @@ var app = angular.module('app', [
         console.log('running');
         $animate.enabled(true);
         $rootScope.authenticated = null;
+        $rootScope.show = {
+            sidebar: false
+        };
+        $rootScope.$on('$routeChangeSuccess', function () {
+            $rootScope.show.sidebar = false;
+        });
     });

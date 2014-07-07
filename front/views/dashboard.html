@@ -1,4 +1,11 @@
-<div class="col-md-3">
+<ul class="pager" ng-show="col.zoomed">
+    <li class="previous"><a href="#" ng-click="col.zoomed = false">&larr; back</a></li>
+</ul>
+
+
+<div class="col-md-3"
+     ng-class="{'col-md-3': col.zoomed !== 'sysStatic', 'col-md-12 zoomed': col.zoomed === 'sysStatic'}"
+     ng-click="col.zoomed = 'sysStatic'" ng-show="!col.zoomed || col.zoomed === 'sysStatic'">
     <section class="panel panel-default static-metrics">
         <div class="panel-heading">
             <h3 class="panel-title">System</h3>
@@ -48,7 +55,9 @@
     </section>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-3"
+     ng-class="{'col-md-3': col.zoomed !== 'procMem', 'col-md-12 zoomed': col.zoomed === 'procMem'}"
+     ng-click="col.zoomed = 'procMem'" ng-show="!col.zoomed || col.zoomed === 'procMem'">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Process Memory</h3>
@@ -59,7 +68,9 @@
                        value="data.metrics.histogram.Memory.data[0][1][0]"></gauge>
                 <div>
                     <span>{{(data.metrics.histogram.Memory.data[0][1][0] / data.metrics.histogram.Memory.data[0][1][2]) * 100 | number: 1}} %</span>
-                    <small> ({{data.metrics.histogram.Memory.data[0][1][0]}}/{{data.metrics.histogram.Memory.data[0][1][2]}} MB)
+                    <small>
+                        ({{data.metrics.histogram.Memory.data[0][1][0]}}/{{data.metrics.histogram.Memory.data[0][1][2]}}
+                        MB)
                     </small>
                 </div>
                 <histogram values="data.metrics.histogram.Memory.data" highlight="0" min-value="0"
@@ -69,7 +80,9 @@
     </section>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-3"
+     ng-class="{'col-md-3': col.zoomed !== 'sysMem', 'col-md-12 zoomed': col.zoomed === 'sysMem'}"
+     ng-click="col.zoomed = 'sysMem'" ng-show="!col.zoomed || col.zoomed === 'sysMem'">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">System Memory</h3>
@@ -80,7 +93,9 @@
                        value="data.metrics.histogram.Memory.data[0][1][1]"></gauge>
                 <div>
                     <span>{{(data.metrics.histogram.Memory.data[0][1][1] / data.metrics.histogram.Memory.data[0][1][2]) * 100 | number: 1}} %</span>
-                    <small> ({{data.metrics.histogram.Memory.data[0][1][1]}}/{{data.metrics.histogram.Memory.data[0][1][2]}} MB)
+                    <small>
+                        ({{data.metrics.histogram.Memory.data[0][1][1]}}/{{data.metrics.histogram.Memory.data[0][1][2]}}
+                        MB)
                     </small>
                 </div>
                 <histogram values="data.metrics.histogram.Memory.data" highlight="1" min-value="0"
@@ -90,7 +105,9 @@
     </section>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-3"
+     ng-class="{'col-md-3': col.zoomed !== 'sysCpu', 'col-md-12 zoomed': col.zoomed === 'sysCpu'}"
+     ng-click="col.zoomed = 'sysCpu'" ng-show="!col.zoomed || col.zoomed === 'sysCpu'">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">System CPU</h3>
@@ -109,7 +126,9 @@
 </div>
 
 
-<div class="col-md-3" ng-if="hasStatics()">
+<div class="col-md-3" ng-if="hasStatics()"
+     ng-class="{'col-md-3': col.zoomed !== 'static', 'col-md-12 zoomed': col.zoomed === 'static'}"
+     ng-click="col.zoomed = 'static'" ng-show="!col.zoomed || col.zoomed === 'static'">
     <section class="panel panel-default static-metrics">
         <div class="panel-heading">
             <h3 class="panel-title">Static</h3>
@@ -127,7 +146,9 @@
     </section>
 </div>
 
-<div class="col-md-3" ng-repeat="(key, value) in data.metrics.counter">
+<div class="col-md-3" ng-repeat="(key, value) in data.metrics.counter"
+     ng-class="{'col-md-3': col.zoomed !== 'counter' + key, 'col-md-12 zoomed': col.zoomed === 'counter' +key}"
+     ng-click="col.zoomed = 'counter' + key" ng-show="!col.zoomed || col.zoomed === 'counter' + key">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{key}}</h3>
@@ -137,11 +158,13 @@
                 <div>
                     <h1>
                         {{data.metrics.counter[key][0][1]}}
-                        <i class="fa fa-long-arrow-down" style="color: #dc1700;font-size: 0.5em;transform:rotate(-55deg);-webkit-transform:rotate(-55deg);"
+                        <i class="fa fa-long-arrow-down"
+                           style="color: #dc1700;font-size: 0.5em;transform:rotate(-55deg);-webkit-transform:rotate(-55deg);"
                            ng-show="data.metrics.counter[key][0][1] < data.metrics.counter[key][data.metrics.counter[key].length -1][1]"></i>
                         <i class="fa fa-long-arrow-right" style="color: #a4a4a4;font-size: 0.5em;"
                            ng-show="data.metrics.counter[key][0][1] === data.metrics.counter[key][data.metrics.counter[key].length -1][1]"></i>
-                        <i class="fa fa-long-arrow-up" style="color: #008000;font-size: 0.5em;transform:rotate(55deg);-webkit-transform:rotate(55deg);"
+                        <i class="fa fa-long-arrow-up"
+                           style="color: #008000;font-size: 0.5em;transform:rotate(55deg);-webkit-transform:rotate(55deg);"
                            ng-show="data.metrics.counter[key][0][1] > data.metrics.counter[key][data.metrics.counter[key].length -1][1]"></i>
                     </h1>
                 </div>
@@ -152,7 +175,9 @@
 </div>
 
 
-<div class="col-md-3" ng-repeat="(key, value) in data.metrics.meter">
+<div class="col-md-3" ng-repeat="(key, value) in data.metrics.meter"
+     ng-class="{'col-md-3': col.zoomed !== 'meter' + key, 'col-md-12 zoomed': col.zoomed === 'meter' +key}"
+     ng-click="col.zoomed = 'meter' + key" ng-show="!col.zoomed || col.zoomed === 'meter' + key">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{key}}</h3>
@@ -169,7 +194,9 @@
 </div>
 
 
-<div class="col-md-3" ng-repeat="(key, value) in data.metrics.timer">
+<div class="col-md-3" ng-repeat="(key, value) in data.metrics.timer"
+     ng-class="{'col-md-3': col.zoomed !== 'timer' + key, 'col-md-12 zoomed': col.zoomed === 'timer' +key}"
+     ng-click="col.zoomed = 'timer' + key" ng-show="!col.zoomed || col.zoomed === 'timer' + key">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{key}}</h3>
@@ -181,14 +208,17 @@
                     <h4>min: {{data.metrics.timer[key][0][1][2] / 10}}ms</h4>
                     <h4>max: {{data.metrics.timer[key][0][1][1] / 10}}ms</h4>
                 </div>
-                <histogram highlight="null" fill-between="0" values="data.metrics.timer[key]" min-value="0" ticks="1" y-tick-post-fix="'ms'" y-tick-mult="0.1"></histogram>
+                <histogram highlight="null" fill-between="0" values="data.metrics.timer[key]" min-value="0" ticks="1"
+                           y-tick-post-fix="'ms'" y-tick-mult="0.1"></histogram>
             </div>
         </div>
     </section>
 </div>
 
 
-<div class="col-md-3" ng-repeat="(key, value) in data.metrics.histogram" ng-if="key !== 'CPU' && key !== 'Memory'">
+<div class="col-md-3" ng-repeat="(key, value) in data.metrics.histogram" ng-if="key !== 'CPU' && key !== 'Memory'"
+     ng-class="{'col-md-3': col.zoomed !== 'histogram' + key, 'col-md-12 zoomed': col.zoomed === 'histogram' +key}"
+     ng-click="col.zoomed = 'histogram' + key" ng-show="!col.zoomed || col.zoomed === 'histogram' + key">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{key}}</h3>

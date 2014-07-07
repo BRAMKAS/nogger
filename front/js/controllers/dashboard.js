@@ -18,6 +18,11 @@ app.controller("DashboardCtrl", function ($rootScope, $scope, dataStore) {
     $scope.timerTickFormatter = function(val){
         console.log(val);
         return val;
-    }
+    };
 
+    $scope.enlarge = function($element){
+        console.log($element)
+    };
+
+    $scope.col = { zoomed: false };
 });

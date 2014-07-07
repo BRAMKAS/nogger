@@ -1,4 +1,4 @@
-<div class="col-sm-3 col-md-2 sidebar inverse" ng-if="route !== '/login'">
+<div class="col-sm-3 col-md-2 sidebar inverse" ng-if="route !== '/login'" ng-class="{'showSidebar': show.sidebar}">
     <ul class="nav nav-sidebar">
         <li ng-class="{active: route === '/'}"><a href="/"><i class="fa fa-bar-chart-o"></i>Dashboard</a></li>
         <li ng-class="{active: route === '/live-logs'}"><a href="/live-logs"><i class="fa fa-align-left"></i>Live Logs</a></li>

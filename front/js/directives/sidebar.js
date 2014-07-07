@@ -21,6 +21,8 @@ app.directive("sidebar", function ($rootScope, $location) {
                 sessionStorage.removeItem('p');
                 document.location = document.location;
             };
+
+            scope.show = $rootScope.show;
         }
     }
 });

@@ -13,6 +13,8 @@ app.directive("navbar", function ($rootScope, $location) {
             $rootScope.$watch('navbar', function(){
                 scope.navbar = $rootScope.navbar;
             });
+
+            scope.show = $rootScope.show;
         }
     }
 });
