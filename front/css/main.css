@@ -145,7 +145,7 @@
     right: 0;
 }
 
-.navbar-brand {
+.navbar-header .navbar-brand {
     padding-left: 70px;
     padding-right: 80px;
 }
@@ -157,7 +157,7 @@
         right: -80px;
     }
 
-    .navbar-brand {
+    .navbar-header .navbar-brand {
         padding-left: 15px;
     }
 }
