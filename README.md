@@ -35,6 +35,10 @@ https://github.com/paul-em/nogger-node-adapter
      version          Shows current nogger version
 
 ```
+## How it works
+
+![Nogger How it works](https://raw.githubusercontent.com/paul-em/nogger/master/assets/how-it-works.png "Nogger How it works")
+
 ## Contributing
 
 Please submit all issues and pull requests to the [paul-em/nogger](http://github.com/paul-em/nogger) repository!
