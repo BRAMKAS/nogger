@@ -4,14 +4,19 @@ node logger and monitoring tool - this is under active development!
 
 ![Nogger Logo](https://raw.githubusercontent.com/paul-em/nogger/master/front/img/logo-256.png "Nogger Logo")
 
+## What it is
+
+Nogger is a monitoring tool that helps to analyse CPU and Memory consumption of your server as well as see your log files. With adapters you can add also custom metrics, for example active visitors. This data will be saved to a Redis database in a certain interval. When you are connected to the dashboard, the data gets pushed to you directly in a more frequent interval.
+
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/Screenshot-1.png "Nogger Screenshot")
 
 ## Getting Started
 Install the module with: `npm install nogger -g`
 Make sure to set -g to install it globally to have the nogger command available! You don't need to install nogger separately for your project. In order to get it in your project you have to install an adapter. 
 Right now there is only an adapter for node.js available:
-
 https://github.com/paul-em/nogger-node-adapter
+
+Nogger connects to a Redis Database, so be sure to have one running on your system. For more information check out http://redis.io/
 
 ## CLI
 
