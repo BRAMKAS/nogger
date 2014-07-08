@@ -1,7 +1,10 @@
-# nogger [![Build Status](https://secure.travis-ci.org/paul-em/nogger.png?branch=master)](http://travis-ci.org/paul-em/nogger) [![NPM version](https://badge-me.herokuapp.com/api/npm/nogger.png)](http://badges.enytc.com/for/npm/nogger) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/paul-em/nogger/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+# Nogger [![Build Status](https://secure.travis-ci.org/paul-em/nogger.png?branch=master)](http://travis-ci.org/paul-em/nogger) [![NPM version](https://badge-me.herokuapp.com/api/npm/nogger.png)](http://badges.enytc.com/for/npm/nogger) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/paul-em/nogger/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 node logger and monitoring tool - this is under active development!
 
+![Nogger Logo](https://raw.githubusercontent.com/paul-em/nogger/master/front/img/logo-256.png "Nogger Logo")
+
+![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/Screenshot-1.png "Nogger Screenshot")
 
 ## Getting Started
 Install the module with: `npm install nogger -g`
