@@ -16,7 +16,7 @@
                     ng-class="{'list-group-item-success': data.health.t > 0 && data.health.t < 500, 'list-group-item-warning': data.health.t > 500, 'list-group-item-danger': data.health.t === null}">
                     <i class="fa fa-medkit"></i>
                     <b>Health:</b>
-                    <span ng-show="data.health.t > 0 && data.health.t < 500">running</span>
+                    <span ng-show="data.health.t >= 0 && data.health.t < 500">running</span>
                     <span ng-show="data.health.t > 500">slowly responding</span>
                     <span ng-show="data.health.t === null">down</span>
                 </li>
