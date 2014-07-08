@@ -12,7 +12,6 @@ app.directive("login", function (socket) {
                 scope.error = false;
             });
             scope.login = function () {
-                console.log('login', scope.pw, $.trim(scope.pw), scope.save);
                 if ($.trim(scope.pw).length > 0) {
                     scope.working = true;
                     socket.login(scope.pw, scope.save, function(){

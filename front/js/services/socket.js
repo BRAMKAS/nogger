@@ -11,17 +11,12 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
         socket.emit('auth', pw, function (res) {
             console.log('response', res);
             if (!res.err) {
-                console.log('getting LogNames');
                 socket.emit('getLogNames', function (res) {
-                    console.log('got LogNames', res);
                     if (!res.err) {
                         dataStore.setLogNames(res.data);
                     }
-                    console.log('getting Metrics');
                     socket.emit('getMetrics', function (res) {
-                        console.log('got Metrics', res);
                         if (!res.err) {
-                            console.log('metrics', res.data);
                             dataStore.setMetrics(res.data);
                         }
                         $(document).trigger('auth');
@@ -49,15 +44,12 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
             }
         })
     };
-    console.log('connecting to server');
     setTimeout(function () {
         if (!connected) {
             console.warn('seems like there is a problem connecting to the server');
-            console.log(socket);
         }
     }, 5000);
     socket.on('connect', function () {
-        console.log('connected to server');
         var pw = sessionStorage.getItem('p') || localStorage.getItem('p');
         connected = true;
         if (pw) {
@@ -69,7 +61,6 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
     });
 
     socket.on('disconnect', function () {
-        console.log('disconnected');
         connected = false;
     });
 

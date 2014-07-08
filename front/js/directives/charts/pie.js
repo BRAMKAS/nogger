@@ -40,7 +40,6 @@ app.directive('pie', function (colorGen) { // jshint ignore:line
                     }
                     re.push({label: label, data: val, color: colorGen(index)});
                 });
-                console.log('re', re);
                 return re;
             }
 
@@ -50,6 +49,15 @@ app.directive('pie', function (colorGen) { // jshint ignore:line
 
             function init() {
                 if (!initialized && scope.values && $.fn.plot) {
+                    var onlyZero = true;
+                    for (var i in scope.values) {
+                        if (scope.values[i]) {
+                            onlyZero = false;
+                            break;
+                        }
+                    }
+
+
                     initialized = true;
                     var data = calcData();
                     var options = {
@@ -66,7 +74,7 @@ app.directive('pie', function (colorGen) { // jshint ignore:line
                             }
                         },
                         legend: {
-                            show: false
+                            show: onlyZero
                         }
                     };
                     plot = $.plot(elem, data, options);

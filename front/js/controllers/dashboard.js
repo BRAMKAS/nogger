@@ -16,19 +16,10 @@ app.controller("DashboardCtrl", function ($rootScope, $scope, dataStore) {
     };
 
     $scope.timerTickFormatter = function(val){
-        console.log(val);
         return val;
     };
 
-    $scope.enlarge = function($element){
-        console.log($element)
-    };
 
     $scope.col = { zoomed: false };
 
-    setInterval(function(){
-        if($scope.data && $scope.data.health){
-            console.log($scope.data.health);
-        }
-    },1000);
 });

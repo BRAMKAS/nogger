@@ -16,7 +16,6 @@ app.directive('histogram', function (colorGen) { // jshint ignore:line
         var fillData;
         if(fillBetween !== undefined){
             fillData = 'genericId' + fillBetween;
-            console.log(fillData);
         }
 
         return {
@@ -111,7 +110,6 @@ app.directive('histogram', function (colorGen) { // jshint ignore:line
                 } else {
                     data = [getData(scope.values, scope.labels ? scope.labels[0] || "" : "", true, 0)];
                 }
-                console.log(data);
                 return data;
             }
 
