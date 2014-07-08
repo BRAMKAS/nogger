@@ -36,7 +36,7 @@ var commands = {
             daemon.start(function (err, pid) {
                 if (!err) {
                     require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-                        console.log('Nogger listening on ' + add + ':' + config.noggerPort);
+                        console.log('Nogger listening on ' + add + ':' + config.noggerPort || configDefaults.noggerPort);
                     });
                 }
             });
