@@ -25,4 +25,10 @@ app.controller("DashboardCtrl", function ($rootScope, $scope, dataStore) {
     };
 
     $scope.col = { zoomed: false };
+
+    setInterval(function(){
+        if($scope.data && $scope.data.health){
+            console.log($scope.data.health);
+        }
+    },1000);
 });

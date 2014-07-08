@@ -5,8 +5,9 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
     var connected = false;
     var timeout;
 
-    socket.login = function(pw, save, callback){
-        callback = callback || function(){};
+    socket.login = function (pw, save, callback) {
+        callback = callback || function () {
+        };
         socket.emit('auth', pw, function (res) {
             console.log('response', res);
             if (!res.err) {
@@ -27,7 +28,7 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
                         socket.auth = true;
                         $rootScope.authenticated = true;
                         $rootScope.$apply();
-                        if(save){
+                        if (save) {
                             localStorage.setItem('p', pw);
                         }
                         sessionStorage.setItem('p', pw);
@@ -36,7 +37,7 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
                 clearTimeout(timeout);
                 ping();
             } else {
-                if(res.err !== 'wrong pw'){
+                if (res.err !== 'wrong pw') {
                     alert(res.err);
                 }
                 callback();
@@ -48,11 +49,18 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
             }
         })
     };
-
+    console.log('connecting to server');
+    setTimeout(function () {
+        if (!connected) {
+            console.warn('seems like there is a problem connecting to the server');
+            console.log(socket);
+        }
+    }, 5000);
     socket.on('connect', function () {
+        console.log('connected to server');
         var pw = sessionStorage.getItem('p') || localStorage.getItem('p');
         connected = true;
-        if(pw){
+        if (pw) {
             socket.login(pw);
         } else {
             $rootScope.authenticated = false;

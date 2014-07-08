@@ -1,2 +1,8 @@
 {
+    "redisIP": "87.230.26.187",
+    "redisPort": 6379,
+    "redisMetricsDb": 6,
+    "redisLogsDb": 7,
+    "redisPass": "w2KBi1jSsnaiYyYpmp4J4",
+    "noggerPort": 1337
 }
