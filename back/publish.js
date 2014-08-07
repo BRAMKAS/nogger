@@ -2,6 +2,7 @@ var config = require("./config");
 var redis = require("redis"),
     subscriber = redis.createClient(config.redisPort, config.redisIP);
     publisher = redis.createClient(config.redisPort, config.redisIP);
+var connected = false;
 
 subscriber.subscribe("pong" + config.redisMetricsDb);
 subscriber.subscribe("log" + config.redisLogsDb);
@@ -27,6 +28,10 @@ subscriber.on("message", function (channel, message) {
     if(channel === 'metric' + config.redisMetricsDb && metricCallback){
         metricCallback(JSON.parse(message));
     }
+
+    if(channel === 'restart' + config.redisLogsDb && connected){
+        publisher.publish('clientChannel' + config.redisMetricsDb, 'connected')
+    }
 });
 
 exports.ping = function (cb){
@@ -36,10 +41,12 @@ exports.ping = function (cb){
 };
 
 exports.connected = function(){
+    connected = true;
     publisher.publish('clientChannel' + config.redisMetricsDb, 'connected')
 };
 
 exports.disconnected = function(){
+    connected = false;
     publisher.publish('clientChannel' + config.redisMetricsDb, 'disconnected')
 };
 
