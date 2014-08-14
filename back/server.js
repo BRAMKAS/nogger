@@ -90,7 +90,8 @@ app.io.route('getLogNames', function (req) {
 
 app.io.route('getLogFile', function (req) {
     if (checkAuth(req)) {
-        logs.getLogs(req.data.name, req.data.offset || 0, function (err, data) {
+        var offset = req.data.offset && req.data.offset !== null ? req.data.offset : 0;
+        logs.getLogs(req.data.name, offset, function (err, data) {
             req.io.respond({err: err, data: data});
         })
     } else {
