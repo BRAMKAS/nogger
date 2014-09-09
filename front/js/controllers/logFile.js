@@ -27,7 +27,7 @@ app.controller("LogFileCtrl", function ($rootScope, $scope, $routeParams, dataSt
     }
 
     function getLogFile() {
-        socket.emit('getLogFile', {name: $routeParams.name}, function (re) {
+        socket.emit('getLogFile', {name: $routeParams.name, offset: null}, function (re) {
             if (!re.err && re.data) {
                 var data = [];
                 for (var i in re.data) {

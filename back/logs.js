@@ -10,9 +10,9 @@ exports.getLogNames = function (callback) {
 };
 
 exports.getLogs = function(file, offset, callback){
-    if(offset === null){
+ //   if(offset === null){
         db.lrange(file, 0, -1, callback);
-    } else {
-        db.lrange(file, offset, 100, callback);
-    }
+ //   } else {
+  //      db.lrange(file, offset, 100, callback);
+  //  }
 };
