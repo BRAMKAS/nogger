@@ -55,6 +55,37 @@ randomInterval(1000, function(){
     }
 });
 
+randomInterval(1000, function(){
+    if(timer.running){
+        timer.end();
+        console.debug('timer ended');
+    } else {
+        timer.start();
+        console.debug('timer started');
+    }
+});
+
+randomInterval(1000, function(){
+    if(timer.running){
+        timer.end();
+        console.warn('timer ended');
+    } else {
+        timer.start();
+        console.warn('timer started');
+    }
+});
+
+randomInterval(1000, function(){
+    if(timer.running){
+        timer.end();
+        console.error('timer ended');
+    } else {
+        timer.start();
+        console.error('timer started');
+    }
+});
+
+
 randomInterval(10000, function(){
     gaugeVal = Math.round(Math.random() * 100);
 });

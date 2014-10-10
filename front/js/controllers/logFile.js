@@ -37,6 +37,8 @@ app.controller("LogFileCtrl", function ($rootScope, $scope, $routeParams, dataSt
                         console.error(e);
                     }
                 }
+
+                console.log('got logfile', $routeParams.name, data);
                 $scope.logs = data;
                 dataStore.setLogFile($routeParams.name, data);
             }
