@@ -3,9 +3,9 @@ var nogger = require('nogger-node-adapter');
 
 nogger.init(config);
 
-new nogger.metrics.Static(function(){
+new nogger.metrics.Static(function () {
     return {
-        "TestStatic" : "This is a text that will appear on the page"
+        "TestStatic": "This is a text that will appear on the page"
     }
 });
 
@@ -15,38 +15,37 @@ var timer = new nogger.metrics.Timer('TestTimer');
 var histogramVal = Math.round(Math.random() * 1000);
 var alphaVal = Math.round(Math.random() * 1000);
 var betaVal = Math.round(Math.random() * 1000);
-var histogram = new nogger.metrics.Histogram('TestHistogram', 'histogramVal', function(){
+var histogram = new nogger.metrics.Histogram('TestHistogram', 'histogramVal', function () {
     return histogramVal;
 });
-var histogram2 = new nogger.metrics.Histogram('TestHistogram2', ['alphaVal', 'betaVal'], function(){
+var histogram2 = new nogger.metrics.Histogram('TestHistogram2', ['alphaVal', 'betaVal'], function () {
     return [
         alphaVal,
         betaVal
     ];
 });
 var gaugeVal = Math.round(Math.random() * 100);
-var gauge = new nogger.metrics.Gauge(function(){
+var gauge = new nogger.metrics.Gauge(function () {
     return {
         'TestGauge': gaugeVal
     };
 });
 
 
-
-randomInterval(10000, function(){
+randomInterval(10000, function () {
     meter.mark();
 });
 
-randomInterval(10000, function(){
-    if(Math.random() > 0.5 && counter.val > 0){
+randomInterval(10000, function () {
+    if (Math.random() > 0.5 && counter.val > 0) {
         counter.dec();
     } else {
         counter.inc();
     }
 });
 
-randomInterval(1000, function(){
-    if(timer.running){
+randomInterval(1000, function () {
+    if (timer.running) {
         timer.end();
         console.log('timer ended');
     } else {
@@ -55,50 +54,36 @@ randomInterval(1000, function(){
     }
 });
 
-randomInterval(1000, function(){
-    if(timer.running){
-        timer.end();
-        console.debug('timer ended');
-    } else {
-        timer.start();
-        console.debug('timer started');
-    }
+randomInterval(1000, function () {
+    console.debug('DEBUG');
 });
 
-randomInterval(1000, function(){
-    if(timer.running){
-        timer.end();
-        console.warn('timer ended');
-    } else {
-        timer.start();
-        console.warn('timer started');
-    }
+randomInterval(1000, function () {
+    console.warn('WARN');
 });
 
-randomInterval(1000, function(){
-    if(timer.running){
-        timer.end();
-        console.error('timer ended');
-    } else {
-        timer.start();
-        console.error('timer started');
-    }
+randomInterval(1000, function () {
+    console.error('ERROR');
 });
 
 
-randomInterval(10000, function(){
+randomInterval(10000, function () {
     gaugeVal = Math.round(Math.random() * 100);
 });
 
-randomInterval(10000, function(){
+randomInterval(10000, function () {
     histogramVal = Math.round(Math.random() * 1000);
     alphaVal = Math.round(Math.random() * 1000);
-    betaVal =Math.round(Math.random() * 1000);
+    betaVal = Math.round(Math.random() * 1000);
 });
 
-function randomInterval(t, fn){
+setTimeout(function(){
+    nonexistingFunc();
+},10000);
+
+function randomInterval(t, fn) {
     fn();
-    setTimeout(function(){
+    setTimeout(function () {
         randomInterval(t, fn);
     }, Math.random() * t);
 }

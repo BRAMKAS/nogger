@@ -5,9 +5,6 @@ app.controller("LiveLogsCtrl", function ($rootScope, $scope, dataStore) {
         searchEnabled: true,
         filter: ['error', 'warn', 'info', 'debug']
     };
-    setInterval(function(){
-    console.log($scope.activeFilter);
-    },1000);
     var showMax = 100;
     $scope.showMax = showMax;
     $scope.logs = dataStore.data.logs.now;
