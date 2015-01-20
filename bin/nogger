@@ -29,6 +29,7 @@ var blockedListPath = path.resolve(__dirname, '..', 'blockedList.json');
 
 var commands = {
     start: function () {
+        var path = argv._[1];
         var pid = daemon.status();
         if (pid) {
             console.log('nogger is already running. PID: ' + pid);
@@ -137,6 +138,7 @@ function help() {
     logHelpLine('');
     logHelpLine('  actions:');
     logHelpLine('');
+    //logHelpLine('    start <path>     Starts nogger as a daemon. Path points to a folder where config is located. Default is "./"');
     logHelpLine('    start            Starts nogger as a daemon');
     logHelpLine('    stop             Stops the nogger daemon');
     logHelpLine('    status           Returns if nogger is running or not');
