@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 var fs = require('fs');
 var Liftoff = require('liftoff');
 var path = require('path');
@@ -26,6 +25,7 @@ var configDefaults = require('../configDefaults.json');
 var configPath = path.resolve(__dirname, '..', 'config.json');
 var blockedList = require('../blockedList.json');
 var blockedListPath = path.resolve(__dirname, '..', 'blockedList.json');
+
 
 var commands = {
     start: function () {
@@ -93,8 +93,8 @@ var commands = {
             process.exit();
         });
     },
-    showblocked: function(){
-          console.log(JSON.stringify(blockedList));
+    showblocked: function () {
+        console.log(JSON.stringify(blockedList));
     },
     block: function () {
         var index = blockedList.ip.indexOf(argv._[1]);

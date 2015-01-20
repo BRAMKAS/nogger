@@ -1,63 +1,64 @@
 {
-  "name": "nogger",
-  "description": "node logger and monitoring tool",
-  "version": "0.8.5",
-  "homepage": "https://github.com/paul-em/nogger",
-  "author": {
-    "name": "Paul Em",
-    "email": ""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/paul-em/nogger.git"
-  },
-  "bugs": {
-    "url": "https://github.com/paul-em/nogger/issues"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/paul-em/nogger/blob/master/LICENSE"
-    }
-  ],
-  "main": "./bin/nogger",
-  "engines": {
-    "node": ">= 0.10.0"
-  },
-  "bin": {
-    "nogger": "./bin/nogger"
-  },
-  "scripts": {
-    "test": "mocha"
-  },
-  "dependencies": {
-    "express.io": ">= 1.1.13",
-    "redis": "~0.10.1",
-    "nogger-node-adapter": ">= 0.5.3",
-    "liftoff": "~0.11.1",
-    "chalk": "~0.4.0",
-    "minimist": "~0.1.0",
-    "daemonize2": "~0.4.2"
-  },
-  "devDependencies": {
-    "mocha": "~1.10.0",
-    "gulp-less": "~1.2.3",
-    "express": "~4.1.1",
-    "tiny-lr": "0.0.7",
-    "gulp-livereload": "~1.3.1",
-    "connect-livereload": "~0.4.0",
-    "gulp-concat": "~2.2.0",
-    "gulp-minify-css": "~0.3.6",
-    "gulp-embedlr": "~0.5.2",
-    "ecstatic": "~0.5.1",
-    "gulp-imagemin": "~0.5.0",
-    "gulp-uncss-task": "~0.3.0",
-    "gulp-usemin": "~0.3.5",
-    "gulp-uglify": "~0.3.1",
-    "gulp-rev": "~0.4.1",
-    "gulp-ngmin": "~0.3.0",
-    "gulp-clean": "~0.3.1",
-    "gulp-run-sequence": "~0.3.2"
-  },
-  "keywords": []
+    "name": "nogger",
+    "preferGlobal": "true",
+    "description": "node logger and monitoring tool",
+    "version": "0.8.10",
+    "homepage": "https://github.com/paul-em/nogger",
+    "author": {
+        "name": "Paul Em",
+        "email": ""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/paul-em/nogger.git"
+    },
+    "bugs": {
+        "url": "https://github.com/paul-em/nogger/issues"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/paul-em/nogger/blob/master/LICENSE"
+        }
+    ],
+    "main": "./index.js",
+    "engines": {
+        "node": ">= 0.10.0"
+    },
+    "bin": {
+        "nogger": "./bin/nogger.js"
+    },
+    "scripts": {
+        "test": "mocha"
+    },
+    "dependencies": {
+        "express.io": ">= 1.1.13",
+        "redis": "~0.10.1",
+        "nogger-node-adapter": ">= 0.5.3",
+        "liftoff": "~0.11.1",
+        "chalk": "~0.4.0",
+        "minimist": "~0.1.0",
+        "daemonize2": "~0.4.2"
+    },
+    "devDependencies": {
+        "mocha": "~1.10.0",
+        "gulp-less": "~1.2.3",
+        "express": "~4.1.1",
+        "tiny-lr": "0.0.7",
+        "gulp-livereload": "~1.3.1",
+        "connect-livereload": "~0.4.0",
+        "gulp-concat": "~2.2.0",
+        "gulp-minify-css": "~0.3.6",
+        "gulp-embedlr": "~0.5.2",
+        "ecstatic": "~0.5.1",
+        "gulp-imagemin": "~0.5.0",
+        "gulp-uncss-task": "~0.3.0",
+        "gulp-usemin": "~0.3.5",
+        "gulp-uglify": "~0.3.1",
+        "gulp-rev": "~0.4.1",
+        "gulp-ngmin": "~0.3.0",
+        "gulp-clean": "~0.3.1",
+        "gulp-run-sequence": "~0.3.2"
+    },
+    "keywords": []
 }
