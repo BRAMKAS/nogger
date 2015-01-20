@@ -92,6 +92,9 @@ var commands = {
             process.exit();
         });
     },
+    showblocked: function(){
+          console.log(JSON.stringify(blockedList));
+    },
     block: function () {
         var index = blockedList.ip.indexOf(argv._[1]);
         if (index === -1) {
@@ -141,6 +144,7 @@ function help() {
     logHelpLine('    set <key> <val>  Sets the key of the config');
     logHelpLine('    clear <key>      Clears the key from the config');
     logHelpLine('    setpw <password> Updates the password for the dashboard');
+    logHelpLine('    showblocked      Displays blocked list');
     logHelpLine('    block <ip>       Adds ip to blocked list');
     logHelpLine('    unblock <ip>     Unblocks a ip from blocked list');
     logHelpLine('    version          Shows current nogger version');
