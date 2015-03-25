@@ -18,7 +18,7 @@ That's it! No databases or other dependencies are required.
 ## CLI
 
 ```
-  $ nogger help
+  $ nogger --help
   
 |--HELP--------------------------------------------------------|
 |                                                              |
