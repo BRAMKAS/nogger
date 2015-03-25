@@ -8,6 +8,7 @@ Nogger is a log reader written with nodejs that brings features like grep and ta
 
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-1.png "Nogger Screenshot")
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-2.png "Nogger Screenshot")
+![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-3.png "Nogger Screenshot")
 
 ## Getting Started
 Install the module with: `npm install nogger -g`
