@@ -102,10 +102,10 @@ getCertificate(function (keys) {
                             id: instance.id,
                             path: instance.path,
                             port: instance.port,
-                            url: 'https://' + host + ':' + instance.port
+                            url: 'https://' + host + ':' + instance.port,
+                            size: stats.size
                         },
-                        otherInstances: running,
-                        stats: stats
+                        otherInstances: running
                     }
                 });
             })

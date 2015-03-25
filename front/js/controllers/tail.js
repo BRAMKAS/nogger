@@ -21,12 +21,10 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
     }, 100);
 
     socket.on('line', function (data) {
-        console.log('paused?', $scope.settings.paused);
         if (!$scope.settings.paused) {
             $rootScope.logs.push(data);
-            console.log($rootScope.logs.length);
             if ($rootScope.logs.length > 500) {
-                console.log('exeeded 500 lines in cache - removing first 100');
+                console.log('exceeded 500 lines in cache - removing first 100');
                 $rootScope.logs.splice(0, 100);
             }
             debounceApply();

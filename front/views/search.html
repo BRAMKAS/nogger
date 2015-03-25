@@ -23,7 +23,7 @@
                 <h3 class="panel-title">Limit</h3>
             </div>
             <div class="panel-body">
-                <input class="form-control form-inline" type="number" min="1" max="500" ng-model="limit">
+                <input class="form-control form-inline" type="number" min="1" max="5000" ng-model="limit">
             </div>
         </section>
     </div>
@@ -40,10 +40,11 @@
             {{limit}} entries. Only showing first {{limit}}.
         </li>
         <li class="list-group-item center" ng-show="searchResults.length <= limit && searchResults.length > 0">Found
-            {{searchResults.length}} matches out of {{total}} lines.
+            {{searchResults.length}} matches out of {{total | number}} lines.
         </li>
-        <li class="list-group-item" ng-show="searchResults.length > 0"></li>
+    </ul>
 
+    <ul class="list-group">
         <li bindonce ng-repeat="result in searchResults track by $index"
             class="list-group-item" bo-text="result"></li>
     </ul>
