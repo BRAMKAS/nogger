@@ -1,24 +1,24 @@
-<div stick-bottom>
-    <div>
+<div style="position: relative">
+    <div stick-bottom>
         <a ng-show="logs.length > showMax" ng-click="increaseShowMax()" class="center">Show more</a>
         <ul class="list-group">
-            <li ng-repeat="log in logs | limitTo:buffer | filter:grep track by $index"
+            <li ng-repeat="log in logs | reverse | limitTo:buffer | reverse | filter:testGrep track by $index"
                 class="list-group-item"
-                ng-class="{'list-group-item-warning': testHighlight(log)}">
+                ng-class="{'list-group-item-danger': testHighlight(log)}">
                 {{log}}
             </li>
         </ul>
         <p ng-show="!logs || logs.length === 0">Nothing to show</p>
     </div>
 
-    <div>
+    <div class="controls">
         <div class="col-md-2">
             <section class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Buffer lines</h3>
                 </div>
                 <div class="panel-body">
-                    <input class="form-control form-inline" type="number" min="1" max="100" ng-model="buffer">
+                    <input class="form-control form-inline" type="number" min="1" max="150" ng-model="buffer">
                 </div>
             </section>
         </div>
@@ -28,31 +28,47 @@
                     <h3 class="panel-title">Update</h3>
                 </div>
                 <div class="panel-body text-center">
-                    <button class="btn btn-block" ng-click="paused = !paused">
+                    <button class="btn btn-block" ng-click="pause()">
                         <i class="fa" ng-class="{'fa-pause': !paused, 'fa-play': paused}"></i>
                     </button>
                 </div>
             </section>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-2">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Follow tail</h3>
+                </div>
+                <div class="panel-body text-center">
+                    <button class="btn btn-block" ng-click="follow = !follow">
+                        {{follow ? 'on' : 'off'}}
+                    </button>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-3">
             <section class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Grep</h3>
+                    <label class="regex-checkbox">regex<input type="checkbox" ng-model="grepRegex"></label>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body search-box">
                     <input ng-model="grep" type="search" class="form-control form-inline" placeholder="Search...">
+                    <input type="button" ng-show="grepRegex" class="btn" ng-click="grepCaseSensitive = ! grepCaseSensitive" value="{{grepCaseSensitive ? 'i̷' : 'i'}}" title="{{grepCaseSensitive ? 'case sensitive' : 'case insensitive'}}">
                 </div>
             </section>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <section class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Highlight</h3>
+                    <label class="regex-checkbox">regex<input type="checkbox" ng-model="highlightRegex"></label>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body search-box">
                     <input ng-model="highlight" type="search" class="form-control form-inline" placeholder="Search...">
+                    <input type="button" ng-show="highlightRegex" class="btn" ng-click="highlightCaseSensitive = ! highlightCaseSensitive" value="{{highlightCaseSensitive ? 'i̷' : 'i'}}" title="{{highlightCaseSensitive ? 'case sensitive' : 'case insensitive'}}">
                 </div>
             </section>
         </div>

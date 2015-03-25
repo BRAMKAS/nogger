@@ -1,7 +1,30 @@
 .no-wrap {
     white-space: nowrap;
 }
-
+.regex-checkbox{
+    position: absolute;
+    right: 20px;
+    top: 7px;
+    font-weight: normal;
+    font-size: smaller;
+    vertical-align: top;
+}
+.regex-checkbox input {
+    margin-left: 5px;
+}
+.search-box {
+    display: flex;
+}
+.search-box input:first-of-type {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    flex: 8;
+}
+.search-box input:last-of-type {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    flex: 1;
+}
 .list-group-item {
     word-break: break-all;
 }

@@ -1,53 +1,88 @@
 'use strict';
 app.controller("TailCtrl", function ($rootScope, $scope, socket) {
-    $scope.buffer = 20;
+    $scope.buffer = 50;
     $scope.grep = '';
+    $scope.grepRegex = false;
+    $scope.grepSensitive = false;
     $scope.highlight = '';
+    $scope.highlightRegex = false;
+    $scope.highlightSensitive = false;
     $scope.paused = false;
-    $scope.userRegex = false;
+    $scope.follow = true;
+
+    var pauseQueue = [];
 
     // update messages
     var debounceApply = _.debounce(function () {
         $scope.$apply();
+        scrollBottom();
     }, 100);
 
     socket.on('line', function (data) {
-        $rootScope.logs.push(data);
-        console.log($rootScope.logs.length);
-        if ($rootScope.logs.length > 500) {
-            console.log('exeeded 500 lines in cache - removing first 100');
-            $rootScope.logs.splice(0, 100);
+        if (!$scope.paused) {
+            $rootScope.logs.push(data);
+            console.log($rootScope.logs.length);
+            if ($rootScope.logs.length > 500) {
+                console.log('exeeded 500 lines in cache - removing first 100');
+                $rootScope.logs.splice(0, 100);
+            }
+            debounceApply();
+        } else {
+            pauseQueue.push(data);
+            if (pauseQueue.length > 500) {
+                pauseQueue.splice(0, 100);
+            }
         }
-        debounceApply();
     });
 
     // scroll to bottom
-    $rootScope.$watch('logs.length', function () {
-        if (hasOverflow()) {
-            setTimeout(function () {
-                window.scrollTo(0, document.body.scrollHeight)
-            })
-        }
-    });
+    $rootScope.$watch('logs.length', scrollBottom);
+    $rootScope.$watch('grep', scrollBottom);
+    $rootScope.$watch('grepSensitive', scrollBottom);
+    $rootScope.$watch('buffer', scrollBottom);
     window.scrollTo(0, document.body.scrollHeight);
 
-
+    $scope.pause = function(){
+        $scope.paused = !$scope.paused;
+        if(!$scope.paused && pauseQueue.length > 0){
+            $rootScope.logs = $rootScope.logs.concat(pauseQueue);
+            if ($rootScope.logs.length > 500) {
+                $rootScope.logs.splice(0, 100);
+            }
+        }
+    };
     $scope.testHighlight = function (log) {
         if ($scope.highlight.length === 0) {
             return false;
         }
-        return (log.indexOf($scope.highlight) !== -1);
+        return test(log, 'highlight');
     };
 
-    function adjustSize() {
-        if (!hasOverflow()) {
+    $scope.testGrep = function (log) {
+        if ($scope.grep.length === 0) {
+            return true;
+        }
+        return test(log, 'grep');
+    };
 
+    function test(log, type) {
+        if ($scope[type + 'Regex']) {
+            try {
+                return log.match(new RegExp($scope[type], $scope[type + 'CaseSensitive'] ? '' : 'i'));
+            } catch (e) {
+                return true;
+            }
         } else {
-
+            return log.toLowerCase().indexOf($scope[type].toLowerCase()) != -1;
         }
     }
 
-    function hasOverflow() {
-        return (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
+    function scrollBottom() {
+        if ($scope.follow) {
+            setTimeout(function () {
+                window.scrollTo(0, document.body.scrollHeight)
+            });
+            window.scrollTo(0, document.body.scrollHeight)
+        }
     }
 });

@@ -35,7 +35,9 @@ tail.on("line", function(data) {
 tail.on("error", function(error) {
     console.log('Tail error: ', error);
 });
-
+setInterval(function(){
+    console.log('SOMETHING ' + new Date())
+}, 300);
 var clients = [];
 var wrongAttempts = {};
 
