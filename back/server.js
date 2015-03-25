@@ -4,6 +4,7 @@ var express = require('express.io');
 var path = require('path');
 var app = express();
 var argv = require('minimist')(process.argv.slice(2));
+var pem = require('pem');
 var _ = require('underscore');
 var Tail = require('tail').Tail;
 
@@ -11,13 +12,13 @@ var pkg = require('./../package');
 var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 var noggerDir = '.nogger';
 var settingsPath = path.resolve(home, noggerDir, 'settings.json');
+var host;
 
 var id = argv._[0];
-var prevBlockedList = [];
 
+saveLogs();
 var settings = readSettings();
 var instance = getInstance();
-
 
 if (!instance) {
     console.log('id not found');
@@ -25,6 +26,15 @@ if (!instance) {
     return;
 }
 
+console.log('starting server');
+var tail = new Tail(instance.path);
+tail.unwatch();
+tail.on("line", function(data) {
+    broadcast('line', data);
+});
+tail.on("error", function(error) {
+    console.log('Tail error: ', error);
+});
 
 var clients = [];
 var wrongAttempts = {};
@@ -37,94 +47,125 @@ if (prod) {
 } else {
     app.use(express.static(path.join(__dirname, '../front')));
 }
-app.http().io();
 
-app.io.configure(function () {
-    app.io.enable('browser client minification');  // send minified client
-    //app.io.set('log level', 1);                    // reduce logging
-});
+getCertificate(function (keys) {
+    app.https(keys).io();
 
-app.io.route('auth', function (req) {
-    var ip = req.io.socket.handshake.address.address;
-    console.log('auth, ip:', ip, 'pw', req.data, instance.pw);
-    console.log('blockedList', settings.blockedList);
+    app.io.configure(function () {
+        app.io.enable('browser client minification');  // send minified client
+        //app.io.set('log level', 1);                    // reduce logging
+    });
 
-    if (settings.blockedList.indexOf(ip) !== -1) {
-        req.io.respond({
-            err: "Too many wrong attempts! You are blocked from the server. To unblock go to your terminal and type: >> nogger unblock " + ip,
-            data: null
-        });
-        return;
-    }
+    app.io.route('auth', function (req) {
+        var ip = req.io.socket.handshake.address.address;
+        console.log('auth, ip:', ip, 'pw', req.data, instance.pw);
+        console.log('blockedList', settings.blockedList);
 
-    if (req.data === instance.pw) {
-        delete wrongAttempts[ip];
-        clients.push(req.io.socket.id);
-        // TODO: tail watch
-        req.io.respond({err: null, data: pkg.version});
-    } else {
-        if (!wrongAttempts[ip]) {
-            wrongAttempts[ip] = 0;
+        if (settings.blockedList.indexOf(ip) !== -1) {
+            req.io.respond({
+                err: "Too many wrong attempts! You are blocked from the server. To unblock go to your terminal and type: >> nogger unblock " + ip,
+                data: null
+            });
+            return;
         }
-        wrongAttempts[ip]++;
-        if (wrongAttempts[ip] > 10) {
-            if (settings.blockedList.indexOf(ip) === -1) {
-                settings.blockedList.push(ip);
-                updateBlockedList();
+
+        if (req.data === instance.pw) {
+            delete wrongAttempts[ip];
+            clients.push(req.io.socket.id);
+            if(clients.length === 1){
+                tail.watch();
             }
+            var s = readSettings();
+            var running = [];
+            s.instances.forEach(function (otherInstance) {
+                if (otherInstance.status === "running" && otherInstance.id !== instance.id) {
+                    running.push({
+                        id: otherInstance.id,
+                        path: otherInstance.path,
+                        port: otherInstance.port,
+                        url: 'https://' + host + ':' + otherInstance.port
+                    });
+                }
+            });
+
+            req.io.respond({
+                err: null,
+                data: {
+                    version: pkg.version,
+                    instance: {
+                        id: instance.id,
+                        path: instance.path,
+                        port: instance.port,
+                        url: 'https://' + host + ':' + instance.port
+                    },
+                    otherInstances: running
+                }
+            });
+        } else {
+            if (!wrongAttempts[ip]) {
+                wrongAttempts[ip] = 0;
+            }
+            wrongAttempts[ip]++;
+            if (wrongAttempts[ip] > 10) {
+                if (settings.blockedList.indexOf(ip) === -1) {
+                    settings.blockedList.push(ip);
+                    updateBlockedList();
+                }
+            }
+            req.io.respond({err: "wrong pw", data: null});
         }
-        req.io.respond({err: "wrong pw", data: null});
-    }
+    });
+
+    app.io.route('getLogNames', function (req) {
+        if (checkAuth(req)) {
+            var s = readSettings();
+            var running = [];
+            s.instances.forEach(function (instance) {
+                if (instance.status === "running") {
+                    running.push({
+                        id: instance.id,
+                        path: instance.path,
+                        port: instance.port
+                    });
+                }
+            });
+            req.io.respond({err: null, data: running});
+        } else {
+            req.io.respond({err: "not authenticated", data: null});
+        }
+    });
+
+    app.io.route('getFile', function (req) {
+        if (checkAuth(req)) {
+            req.io.respond({err: "not implemented", data: null});
+        } else {
+            req.io.respond({err: "not authenticated", data: null});
+        }
+    });
+
+
+    app.io.route('disconnect', function (req) {
+        var index = clients.indexOf(req.io.socket.id);
+        if (index !== -1) {
+            clients.splice(index, 1);
+        }
+        if(clients.length == 0){
+            tail.unwatch();
+        }
+    });
+
+
+    app.get('*', function (req, res) {
+        res.sendfile(path.join(__dirname, '../front/index.html'));
+    });
+
+
+    app.listen(instance.port);
+    require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+        host = add;
+        console.log('server running on ' + add + ':' + instance.port);
+    });
 });
-
-app.io.route('getFileNames', function (req) {
-    if (checkAuth(req)) {
-        var dir = path.dirname(instance.path);
-        console.log(dir);
-        fs.readdir(dir, function(err, files){
-            if(err){
-                req.io.respond({err: err, data: null});
-                return;
-            }
-            req.io.respond({err: null, data: files});
-        })
-    } else {
-        req.io.respond({err: "not authenticated", data: null});
-    }
-});
-
-app.io.route('getFile', function (req) {
-    if (checkAuth(req)) {
-        req.io.respond({err: "not implemented", data: null});
-    } else {
-        req.io.respond({err: "not authenticated", data: null});
-    }
-});
-
-
-app.io.route('disconnect', function (req) {
-    var index = clients.indexOf(req.io.socket.id);
-    if (index !== -1) {
-        clients.splice(index, 1);
-    }
-    // TODO:  tail.unwatch
-});
-
-
-app.get('*', function (req, res) {
-    res.sendfile(path.join(__dirname, '../front/index.html'));
-});
-
-app.get('/test', function (req, res) {
-    res.send(200, instance);
-});
-
-
-app.listen(instance.port);
-require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-    console.log('server running on ' + add + ':' + instance.port);
-});
-
 
 function checkAuth(req) {
     return clients.indexOf(req.io.socket.id) !== -1
@@ -162,6 +203,59 @@ function updateBlockedList() {
     });
 }
 
+function getCertificate(callback) {
+    if (instance.cert && instance.key) {
+        fs.readFile(instance.cert, 'utf8', function (err, cert) {
+            if (err) {
+                console.log(err);
+            } else {
+                fs.readFile(instance.key, 'utf8', function (err, key) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        callback({
+                            cert: cert,
+                            key: key
+                        });
+                    }
+                })
+            }
+        });
+    } else {
+        pem.createCertificate({days: 365, selfSigned: true}, function (err, keys) {
+            if (err) {
+                console.log("error creating cert", err);
+            } else {
+                callback({
+                    key: keys.serviceKey,
+                    cert: keys.certificate
+                });
+            }
+        })
+    }
+}
 
-
-
+function saveLogs(){
+    console.log = function(){
+        var str = '';
+        for(var i in arguments){
+            if(typeof arguments[i] === 'string'){
+                str += arguments[i];
+            }
+            if(typeof arguments[i] === 'object'){
+                try {
+                str += JSON.stringify(arguments[i]);
+                } catch(e){
+                    str += '[not parseable object]'
+                }
+            }
+            if(typeof arguments[i] === 'number'){
+                str += arguments[i].toString();
+            }
+            if(typeof arguments[i] === 'boolean'){
+                str += arguments[i];
+            }
+        }
+        fs.appendFile(path.join(__dirname, '..', 'nogger.log'), str + '\n');
+    }
+}

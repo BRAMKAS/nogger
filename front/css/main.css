@@ -2,123 +2,25 @@
     white-space: nowrap;
 }
 
-.morris-hover {
-    position: absolute;
-    z-index: 1000
-}
-
-.morris-hover.morris-default-style {
-    border-radius: 5px;
-    padding: 6px;
-    color: #666;
-    background: rgba(255, 255, 255, 0.8);
-    border: solid 1px rgba(230, 230, 230, 0.8);
-    font-family: sans-serif;
-    font-size: 12px;
-    text-align: center
-}
-
-.morris-hover.morris-default-style .morris-hover-row-label {
-    font-weight: bold;
-    margin: 0.25em 0;
-    display: none;
-}
-
-.morris-hover.morris-default-style .morris-hover-point {
-    white-space: nowrap;
-    margin: 0.1em 0;
-}
-
-.static-metrics .panel-body {
-    height: 317px;
-    overflow: auto;
-}
-.zoomed .static-metrics .panel-body {
-    height: 500px;
-}
-
-.chart {
-    height: 287px;
-    text-align: center;
-    position: relative;
-}
-
-.zoomed .chart {
-    height: 500px;
-}
-
-.chart-gauge {
-    width: 100%;
-    max-width: 280px;
-}
-
-.chart img {
-    margin-top: 100px;
-    height: 30px;
-}
-
-.center {
-    margin: 10px;
-    text-align: center;
-    display: block;
-    cursor: pointer;
-}
-
-.chart h1 {
-    font-size: 60px;
-}
-
-.chart h1, .chart h2 {
-    margin-top: 0;
-    padding-top: 10px;
-}
-
-.chart .histogram {
-    width: 100%;
-    height: 110px;
-    position: absolute;
-    bottom: 10px;
-}
-
-.zoomed .chart .histogram {
-    height: 280px;
-    margin-bottom: 20px;
-}
-
-.chart .pie {
-    width: 100%;
-    height: 120px;
-}
-
-.zoomed .chart .pie {
-    height: 200px;
-}
-
 .list-group-item {
     word-break: break-all;
 }
-
 .list-group-item .badge {
     visibility: hidden;
 }
-
 .list-group-item:hover .badge {
     visibility: visible;
 }
-
 .nav-sidebar ul {
     margin: 0;
 }
-
 .nav-sidebar li li {
     list-style: none;
     border: none;
 }
-
 .nav-sidebar li li a {
     padding-left: 40px;
 }
-
 .navbar-collapse h1 {
     font-size: 2.3rem;
     margin-top: 40px;
@@ -127,16 +29,13 @@
     color: #a8a8a8;
     margin-left: 100px;
 }
-
 .navbar-header {
     min-width: 16.666666%;
 }
-
 .navbar-header .navbar-brand {
     position: relative;
     width: 100%;
 }
-
 .navbar-header .navbar-brand img {
     border: 5px solid white;
     height: 80px;
@@ -144,30 +43,22 @@
     top: 0;
     right: 0;
 }
-
 .navbar-header .navbar-brand {
     padding-left: 70px;
 }
-
-
-
 @media screen and (min-width: 768px) {
     .navbar-header .navbar-brand img {
         right: -80px;
     }
-
     .navbar-header .navbar-brand {
         padding-left: 15px;
     }
 }
-
-
-@media screen and (min-width: 992px){
+@media screen and (min-width: 992px) {
     .navbar-header {
         width: 16.666666%;
     }
 }
-
 .navbar-toggle {
     position: absolute;
     padding: 9px 10px;
@@ -180,21 +71,17 @@
     z-index: 9999;
     background-color: white;
 }
-
 .form-signin {
     max-width: 330px;
     padding: 15px;
     margin: 0 auto;
 }
-
 .form-signin .form-signin-heading, .form-signin .checkbox {
     margin-bottom: 10px;
 }
-
 .form-signin .checkbox {
     font-weight: normal;
 }
-
 .form-signin .form-control {
     position: relative;
     font-size: 16px;
@@ -204,23 +91,19 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-
 .form-signin .form-control:focus {
     z-index: 2;
 }
-
 .form-signin input[type="text"] {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
-
 .form-signin input[type="password"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-
 .account-wall {
     margin-top: 20px;
     padding: 40px 0px 20px 0px;
@@ -229,14 +112,12 @@
     -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 }
-
 .login-title {
     color: #555;
     font-size: 18px;
     font-weight: 400;
     display: block;
 }
-
 .profile-img {
     width: 96px;
     height: 96px;
@@ -246,16 +127,13 @@
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
-
 .need-help {
     margin-top: 10px;
 }
-
 .new-account {
     display: block;
     margin-top: 10px;
 }
-
 .splash-screen {
     width: 100%;
     height: 100%;
@@ -264,23 +142,19 @@
     left: 0;
     text-align: center;
 }
-
 .splash-screen div {
     text-align: center;
     width: 100%;
     margin-top: 120px;
 }
-
 .splash-screen h1 {
     float: none;
     padding-left: 15px;
 }
-
 .splash-screen img {
     width: 20%;
     border: 5px solid white;
 }
-
 .showAnim.ng-hide-add,
 .showAnim.ng-hide-remove {
     transition: 0.4s linear all;

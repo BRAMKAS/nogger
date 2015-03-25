@@ -11,9 +11,10 @@ app.directive("sidebar", function ($rootScope, $location) {
             $rootScope.$on('$routeChangeSuccess', function () {
                 scope.route = $location.path();
             });
+            scope.otherInstances = $rootScope.otherInstances;
 
-            $rootScope.$watch('logFiles', function(){
-                scope.logFiles = $rootScope.logFiles;
+            $rootScope.$watch('otherInstances', function(){
+                scope.otherInstances = $rootScope.otherInstances;
             });
 
             scope.logout = function(){

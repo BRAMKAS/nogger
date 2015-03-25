@@ -27,8 +27,8 @@
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -38,7 +38,7 @@
 
 <div class="container-fluid">
     <div class="row" ng-show="authenticated === true">
-        <sidebar ng-controller="SidebarCtrl"></sidebar>
+        <sidebar></sidebar>
         <div ng-view="" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" bindonce
              ng-class="'route-' + route.substr(1)"></div>
     </div>
@@ -52,45 +52,30 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <!-- build:js js/lib.min.js -->
-<script src="/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/bower_components/angular/angular.min.js"></script>
 <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
 <script src="/bower_components/angular-route/angular-route.min.js"></script>
 <script src="/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="/bower_components/angular-bindonce/bindonce.min.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="/bower_components/flot/jquery.flot.js"></script>
-<script src="/bower_components/flot/jquery.flot.time.js"></script>
-<script src="/bower_components/flot/jquery.flot.resize.js"></script>
-<script src="/bower_components/flot/jquery.flot.stack.js"></script>
-<script src="/bower_components/flot/jquery.flot.fillbetween.js"></script>
-<script src="/bower_components/flot/jquery.flot.pie.js"></script>
-<script src="/bower_components/gauge.js/dist/gauge.min.js"></script>
+<script src="/bower_components/underscore/underscore-min.js"></script>
 <!-- endbuild -->
 
 <!-- build:js js/main.min.js -->
 <script src="/js/app.js"></script>
 
-<script src="/js/controllers/dashboard.js"></script>
-<script src="/js/controllers/logfile.js"></script>
 <script src="/js/controllers/logsoverview.js"></script>
-<script src="/js/controllers/livelogs.js"></script>
-<script src="/js/controllers/sidebar.js"></script>
+<script src="/js/controllers/tail.js"></script>
+<script src="/js/controllers/search.js"></script>
 
 <script src="/js/directives/navbar.js"></script>
 <script src="/js/directives/sidebar.js"></script>
 <script src="/js/directives/login.js"></script>
 <script src="/js/directives/splashScreen.js"></script>
-<script src="/js/directives/charts/gauge.js"></script>
-<script src="/js/directives/charts/pie.js"></script>
-<script src="/js/directives/charts/histogram.js"></script>
+<script src="/js/directives/stickBottom.js"></script>
 
 <script src="/js/services/socket.js"></script>
-<script src="/js/services/dataStore.js"></script>
 <script src="/js/services/colorGen.js"></script>
-
-<script src="/js/filters/formatUptime.js"></script>
 <!-- endbuild -->
 </body>
 </html>

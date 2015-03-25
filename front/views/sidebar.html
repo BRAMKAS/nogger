@@ -1,11 +1,13 @@
-<div class="col-sm-3 col-md-2 sidebar inverse" ng-if="route !== '/login'" ng-class="{'showSidebar': show.sidebar}">
+<div class="col-sm-3 col-md-2 sidebar inverse" ng-class="{'showSidebar': show.sidebar}">
     <ul class="nav nav-sidebar">
-        <li ng-class="{active: route === '/'}"><a href="/"><i class="fa fa-bar-chart-o"></i>Dashboard</a></li>
-        <li ng-class="{active: route === '/live-logs'}"><a href="/live-logs"><i class="fa fa-align-left"></i>Live Logs</a></li>
-        <li ng-class="{active: route === '/logs'}">
-            <a href="/logs"><i class="fa fa-align-left"></i>Logs</a>
+        <li ng-class="{active: route === '/'}"><a href="/"><i class="fa fa-bar-chart-o"></i>live logs</a></li>
+        <li ng-class="{active: route === '/search'}"><a href="/search"><i class="fa fa-bar-chart-o"></i>search logs</a></li>
+        <li ng-class="{active: route === '/others'}" ng-if="otherInstances.length > 0">
+            <a href="/others"><i class="fa fa-align-left"></i>other logs</a>
             <ul class="nav nav-sidebar">
-                <li ng-repeat="logFile in logFiles | orderBy: '-name' | limitTo: 7" ng-class="{active: route === '/logfile/' + logFile.name}"><a ng-href="/logfile/{{logFile.name}}">{{logFile.name}}</a></li>
+                <li ng-repeat="other in otherInstances | orderBy: 'port' | limitTo: 7" ng-class="{active: other.id === instance.id}">
+                    <a ng-href="{{other.url}}" title="{{other.path}}">{{other.id}}</a>
+                </li>
             </ul>
         </li>
     </ul>

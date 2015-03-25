@@ -12,7 +12,7 @@ app.directive("login", function (socket) {
                 scope.error = false;
             });
             scope.login = function () {
-                if ($.trim(scope.pw).length > 0) {
+                if (scope.pw.trim().length > 0) {
                     scope.working = true;
                     socket.login(scope.pw, scope.save, function(){
                         scope.working = false;

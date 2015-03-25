@@ -1,9 +1,8 @@
 'use strict';
 
-app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ignore:line
+app.factory('socket', function ($location, $rootScope) { // jshint ignore:line
     var socket = io.connect();
     var connected = false;
-    var timeout;
 
     socket.login = function (pw, save, callback) {
         callback = callback || function () {
@@ -11,22 +10,16 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
         socket.emit('auth', pw, function (res) {
             console.log('response', res);
             if (!res.err) {
-                socket.emit('getFileNames', function (res) {
-                    if (!res.err) {
-                        console.log(res);
-                        dataStore.setLogNames(res.data);
-                    }
-                    $(document).trigger('auth');
-                    socket.auth = true;
-                    $rootScope.authenticated = true;
-                    $rootScope.$apply();
-                    if (save) {
-                        localStorage.setItem('p', pw);
-                    }
-                    sessionStorage.setItem('p', pw);
-                });
-                clearTimeout(timeout);
-
+                $rootScope.instance = res.data.instance;
+                $rootScope.otherInstances = res.data.otherInstances;
+                $rootScope.version = res.data.version;
+                socket.auth = true;
+                $rootScope.authenticated = true;
+                $rootScope.$apply();
+                if (save) {
+                    localStorage.setItem('p', pw);
+                }
+                sessionStorage.setItem('p', pw);
             } else {
                 if (res.err !== 'wrong pw') {
                     alert(res.err);
@@ -36,7 +29,6 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
                 $rootScope.$apply();
                 localStorage.removeItem('p');
                 sessionStorage.removeItem('p');
-
             }
         })
     };
@@ -61,11 +53,11 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
     });
 
     socket.on('newLog', function (data) {
-        dataStore.addLog(data);
+
     });
 
     socket.on('newMetric', function (data) {
-        dataStore.addMetric(data);
+
     });
 
 

@@ -30,7 +30,6 @@ var commands = {
             console.log('id already exists');
             return;
         }
-        id = id.toString();
         var instance = new Instance({
             id: id,
             path: argv._[1],
@@ -426,7 +425,7 @@ function Instance(data) {
     if (!this.id) {
         this.id = generateUniqueId();
     }
-    this.id = this.id.toUpperCase();
+    this.id = this.id.toString().toUpperCase();
     if (this.id.length > 8) {
         errors.push('id too long, max length is 8');
     }
@@ -487,7 +486,7 @@ Instance.prototype.start = function (callback) {
         daemon.start(function (err, pid) {
             if (!err) {
                 require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-                    console.log('Nogger listening on ' + add + ':' + self.port);
+                    console.log('Nogger listening on https://' + add + ':' + self.port);
                     self.status = 'running';
                     callback()
                 });

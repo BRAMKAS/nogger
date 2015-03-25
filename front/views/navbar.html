@@ -12,17 +12,7 @@
                 Nogger - node monitor</a>
         </div>
         <div class="navbar-collapse collapse">
-            <h1>{{navbar.headline}}</h1>
-            <form class="navbar-form navbar-right" ng-show="navbar.searchEnabled || navbar.filter">
-                <select ng-model="activeFilter" ng-show="navbar.filter">
-                    <option value="">all</option>
-                    <option value="debug">debug</option>
-                    <option value="info">info</option>
-                    <option value="warn">warn</option>
-                    <option value="error">error</option>
-                </select>
-                <input ng-show="navbar.searchEnabled" ng-model="search" type="text" class="form-control" placeholder="Search...">
-            </form>
+            <h1>{{instance.id + ' - ' + instance.path}}</h1>
         </div>
     </div>
 </div>
