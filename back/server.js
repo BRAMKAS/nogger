@@ -6,7 +6,9 @@ var app = express();
 var argv = require('minimist')(process.argv.slice(2));
 var pem = require('pem');
 var _ = require('underscore');
+var grep = require('grep1');
 var Tail = require('tail').Tail;
+var lineReader = require('line-reader');
 
 var pkg = require('./../package');
 var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
@@ -28,16 +30,13 @@ if (!instance) {
 
 console.log('starting server');
 var tail = new Tail(instance.path);
-tail.unwatch();
-tail.on("line", function(data) {
+unwatchTail();
+tail.on("line", function (data) {
     broadcast('line', data);
 });
-tail.on("error", function(error) {
+tail.on("error", function (error) {
     console.log('Tail error: ', error);
 });
-setInterval(function(){
-    console.log('SOMETHING ' + new Date())
-}, 300);
 var clients = [];
 var wrongAttempts = {};
 
@@ -74,7 +73,7 @@ getCertificate(function (keys) {
         if (req.data === instance.pw) {
             delete wrongAttempts[ip];
             clients.push(req.io.socket.id);
-            if(clients.length === 1){
+            if (clients.length === 1) {
                 tail.watch();
             }
             var s = readSettings();
@@ -90,19 +89,26 @@ getCertificate(function (keys) {
                 }
             });
 
-            req.io.respond({
-                err: null,
-                data: {
-                    version: pkg.version,
-                    instance: {
-                        id: instance.id,
-                        path: instance.path,
-                        port: instance.port,
-                        url: 'https://' + host + ':' + instance.port
-                    },
-                    otherInstances: running
+            fs.stat(instance.path, function (err, stats) {
+                if(err){
+                    console.log(err);
+                    stats = {};
                 }
-            });
+                req.io.respond({
+                    err: null,
+                    data: {
+                        version: pkg.version,
+                        instance: {
+                            id: instance.id,
+                            path: instance.path,
+                            port: instance.port,
+                            url: 'https://' + host + ':' + instance.port
+                        },
+                        otherInstances: running,
+                        stats: stats
+                    }
+                });
+            })
         } else {
             if (!wrongAttempts[ip]) {
                 wrongAttempts[ip] = 0;
@@ -137,9 +143,39 @@ getCertificate(function (keys) {
         }
     });
 
-    app.io.route('getFile', function (req) {
+    app.io.route('search', function (req) {
         if (checkAuth(req)) {
-            req.io.respond({err: "not implemented", data: null});
+            var found = [];
+            var total = 0;
+            var data = req.data;
+            var regex;
+            if (data.regex) {
+                try {
+                    regex = new RegExp(data.input, data.caseSensitive ? '' : 'i');
+                } catch (e) {
+                    req.io.respond({err: 'regex not valid', data: null});
+                    return;
+                }
+            }
+            lineReader.eachLine(instance.path, function (line, last) {
+                total++;
+                if (regex) {
+                    if (line.match(regex)) {
+                        found.push(line);
+                    }
+                } else {
+                    if (line.toLowerCase().indexOf(data.input.toLowerCase()) !== -1) {
+                        found.push(line);
+                    }
+                }
+                if (found.length > (data.limit || 500)) {
+                    req.io.respond({err: null, data: {result: found}});
+                    return false;
+                }
+                if (last) {
+                    req.io.respond({err: null, data: {result: found, total: total}});
+                }
+            });
         } else {
             req.io.respond({err: "not authenticated", data: null});
         }
@@ -151,8 +187,8 @@ getCertificate(function (keys) {
         if (index !== -1) {
             clients.splice(index, 1);
         }
-        if(clients.length == 0){
-            tail.unwatch();
+        if (clients.length == 0) {
+            unwatchTail();
         }
     });
 
@@ -237,27 +273,34 @@ function getCertificate(callback) {
     }
 }
 
-function saveLogs(){
-    console.log = function(){
+function saveLogs() {
+    console.log = function () {
         var str = '';
-        for(var i in arguments){
-            if(typeof arguments[i] === 'string'){
+        for (var i in arguments) {
+            if (typeof arguments[i] === 'string') {
                 str += arguments[i];
             }
-            if(typeof arguments[i] === 'object'){
+            if (typeof arguments[i] === 'object') {
                 try {
-                str += JSON.stringify(arguments[i]);
-                } catch(e){
+                    str += JSON.stringify(arguments[i]);
+                } catch (e) {
                     str += '[not parseable object]'
                 }
             }
-            if(typeof arguments[i] === 'number'){
+            if (typeof arguments[i] === 'number') {
                 str += arguments[i].toString();
             }
-            if(typeof arguments[i] === 'boolean'){
+            if (typeof arguments[i] === 'boolean') {
                 str += arguments[i];
             }
         }
         fs.appendFile(path.join(__dirname, '..', 'nogger.log'), str + '\n');
     }
+}
+
+function unwatchTail() {
+    // fix for reset of pos bug
+    var firstPos = tail.pos;
+    tail.unwatch();
+    tail.pos = firstPos;
 }

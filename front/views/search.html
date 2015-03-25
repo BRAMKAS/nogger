@@ -1,19 +1,50 @@
-<div class="col-md-12">
+<div class="col-md-3">
+</div>
+<div class="col-md-6">
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Search</h3>
+            <label class="regex-checkbox">regex<input type="checkbox" ng-model="regex"></label>
         </div>
-        <div class="panel-body">
-            <input ng-model="search" type="search" class="form-control form-inline" placeholder="Search...">
+        <div class="panel-body search-box" ng-class="{'search-regex': regex}">
+            <input ng-model="searchInput" type="search" class="form-control form-inline" ng-enter="search()"
+                   placeholder="Search...">
+            <input type="button" ng-show="regex" class="btn" ng-click="caseSensitive = ! caseSensitive"
+                   value="{{caseSensitive ? 'i̷' : 'i'}}"
+                   title="{{caseSensitive ? 'case sensitive' : 'case insensitive'}}">
+            <button class="btn" ng-click="search()">GO</button>
         </div>
     </section>
 </div>
+<div class="controls">
+    <div class="col-md-2">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Limit</h3>
+            </div>
+            <div class="panel-body">
+                <input class="form-control form-inline" type="number" min="1" max="500" ng-model="limit">
+            </div>
+        </section>
+    </div>
+</div>
+<div class="col-md-1">
+</div>
+<div class="col-md-12">
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-warning center" ng-show="searching">loading</li>
+        <li class="list-group-item list-group-item-danger center"
+            ng-show="searchResults.length === 0 && searched && !searching">Nothing to show
+        </li>
+        <li class="list-group-item list-group-item-danger center" ng-show="searchResults.length > limit">Found more than
+            {{limit}} entries. Only showing first {{limit}}.
+        </li>
+        <li class="list-group-item center" ng-show="searchResults.length <= limit && searchResults.length > 0">Found
+            {{searchResults.length}} matches out of {{total}} lines.
+        </li>
+        <li class="list-group-item" ng-show="searchResults.length > 0"></li>
 
-<a ng-show="logs.length > showMax" ng-click="increaseShowMax()" class="center">Show more</a>
-<ul class="list-group">
-    <li ng-repeat="log in logs | orderBy:'-d' | limitTo: showMax | orderBy:'d' | filter:{m:search, t:activeFilter}"
-        class="list-group-item"
-        ng-class="{'list-group-item-warning': log.t === 'warn', 'list-group-item-danger': log.t === 'error'}">
-        {{log.m}}<span class="badge">{{log.s.f + ':' + log.s.l}}</span></li>
-</ul>
-<p ng-show="!logs || logs.length === 0">Nothing to show</p>
+        <li bindonce ng-repeat="result in searchResults track by $index"
+            class="list-group-item" bo-text="result"></li>
+    </ul>
+</div>

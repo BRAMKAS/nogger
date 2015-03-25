@@ -1,14 +1,16 @@
 'use strict';
-app.controller("TailCtrl", function ($rootScope, $scope, socket) {
-    $scope.buffer = 50;
-    $scope.grep = '';
-    $scope.grepRegex = false;
-    $scope.grepSensitive = false;
-    $scope.highlight = '';
-    $scope.highlightRegex = false;
-    $scope.highlightSensitive = false;
-    $scope.paused = false;
-    $scope.follow = true;
+app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
+    $scope.settings = {
+        buffer: 50,
+        grep : '',
+        grepRegex : false,
+        grepSensitive : false,
+        highlight : '',
+        highlightRegex : false,
+        highlightSensitive : false,
+        paused : false,
+        follow : true
+    };
 
     var pauseQueue = [];
 
@@ -19,7 +21,8 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket) {
     }, 100);
 
     socket.on('line', function (data) {
-        if (!$scope.paused) {
+        console.log('paused?', $scope.settings.paused);
+        if (!$scope.settings.paused) {
             $rootScope.logs.push(data);
             console.log($rootScope.logs.length);
             if ($rootScope.logs.length > 500) {
@@ -43,8 +46,8 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket) {
     window.scrollTo(0, document.body.scrollHeight);
 
     $scope.pause = function(){
-        $scope.paused = !$scope.paused;
-        if(!$scope.paused && pauseQueue.length > 0){
+        $scope.settings.paused = !$scope.settings.paused;
+        if(!$scope.settings.paused && pauseQueue.length > 0){
             $rootScope.logs = $rootScope.logs.concat(pauseQueue);
             if ($rootScope.logs.length > 500) {
                 $rootScope.logs.splice(0, 100);
@@ -52,14 +55,14 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket) {
         }
     };
     $scope.testHighlight = function (log) {
-        if ($scope.highlight.length === 0) {
+        if ($scope.settings.highlight.length === 0) {
             return false;
         }
         return test(log, 'highlight');
     };
 
     $scope.testGrep = function (log) {
-        if ($scope.grep.length === 0) {
+        if ($scope.settings.grep.length === 0) {
             return true;
         }
         return test(log, 'grep');
@@ -78,7 +81,7 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket) {
     }
 
     function scrollBottom() {
-        if ($scope.follow) {
+        if ($scope.settings.follow && $location.path() === '/') {
             setTimeout(function () {
                 window.scrollTo(0, document.body.scrollHeight)
             });

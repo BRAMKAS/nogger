@@ -1,6 +1,9 @@
 .no-wrap {
     white-space: nowrap;
 }
+.center {
+    text-align: center;
+}
 .regex-checkbox{
     position: absolute;
     right: 20px;
@@ -15,16 +18,20 @@
 .search-box {
     display: flex;
 }
-.search-box input:first-of-type {
+.search-regex input:first-of-type {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     flex: 8;
 }
-.search-box input:last-of-type {
+.search-regex input:last-of-type {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     flex: 1;
 }
+.search-box button {
+    margin-left: 5px;
+}
+
 .list-group-item {
     word-break: break-all;
 }

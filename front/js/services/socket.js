@@ -48,9 +48,11 @@ app.factory('socket', function ($location, $rootScope) { // jshint ignore:line
         }
     });
 
-    socket.on('disconnect', function () {
+    socket.on('disconnect', function (e) {
         connected = false;
+        console.log('disconnect', e);
     });
+
 
     socket.on('newLog', function (data) {
 
