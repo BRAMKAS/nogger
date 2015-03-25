@@ -1,47 +1,59 @@
 # ![Nogger Logo](https://raw.githubusercontent.com/paul-em/nogger/master/front/img/logo-60.png "Nogger Logo") Nogger [![Build Status](https://secure.travis-ci.org/paul-em/nogger.png?branch=master)](http://travis-ci.org/paul-em/nogger) [![NPM version](https://badge-me.herokuapp.com/api/npm/nogger.png)](http://badges.enytc.com/for/npm/nogger) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/paul-em/nogger/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
-node logger and monitoring tool - this is under active development!
+Read your log files online from a dashboard.
 
 ## What it is
 
-Nogger is a monitoring tool that helps to analyse CPU and Memory consumption of your server as well as see your log files. With adapters you can add also custom metrics, for example active visitors. This data will be saved to a Redis database in a certain interval. When you are connected to the dashboard, the data gets pushed to you directly in a more frequent interval.
+Nogger is a log reader written with nodejs that brings features like grep and tail to the web. Zero configuration is needed!
 
-![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/Screenshot-1.png "Nogger Screenshot")
+![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-1.png "Nogger Screenshot")
+![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-2.png "Nogger Screenshot")
 
 ## Getting Started
 Install the module with: `npm install nogger -g`
-Make sure to set -g to install it globally to have the nogger command available! You don't need to install nogger separately for your project. In order to get it in your project you have to install an adapter. 
-Right now there is only an adapter for node.js available:
-https://github.com/paul-em/nogger-node-adapter
-
-Nogger connects to a Redis Database, so be sure to have one running on your system. For more information check out http://redis.io/
+Make sure to set -g to install it globally to have the nogger command available!
+That's it! No databases or other dependencies are required. 
 
 ## CLI
 
 ```
   $ nogger help
   
-  usage: nogger [action]
-
-
-   actions:
-
-     start            Starts nogger as a daemon
-     stop             Stops the nogger daemon
-     status           Returns if nogger is running or not
-     config           Lists all nogger configurations
-     set <key> <val>  Sets the key of the config
-     clear <key>      Clears the key from the config
-     setpw <password> Updates the password for the dashboard
-     block <ip>       Adds ip to blocked list
-     unblock <ip>     Unblocks a ip from blocked list
-     version          Shows current nogger version
-
+|--HELP--------------------------------------------------------|
+|                                                              |
+| usage: nogger [action]                                       |
+|                                                              |
+|                                                              |
+| actions:                                                     |
+|                                                              |
+|  start [path]       Starts nogger with logfile path          |
+|   -w, --pw <key>)   Optional. Set password for dashboard.    |
+|                       If not set a password is generated.    |
+|   -i, --id <id>)    Optional. A identifier that can be used  |
+|                      instead of a generated one              |
+|   -p, --port <port> Optional. Port for dashboard.            |
+|   -c, --cert <cert> Optional. Provide SSL certificate in     |
+|                      order to avoid having to manually       |
+|                      confirm the certificate in the browser  |
+|   -k, --key <key>   Optional. Provide SSL key in order to    |
+|                      avoid having to manually confirm the    |
+|                      certificate in the browser              |
+|  restart <id>       Restarts an available instance           |
+|  stop <id>          Stops the nogger daemon                  |
+|  remove <id>        Removes an instance from the list        |
+|  stopall            Stops all nogger daemons                 |
+|  list               Returns list of nogger instances running |
+|                                                              |
+|  setpw <pw> (<id>)    Updates the password for the dashboard |
+|  showblocked        Displays blocked list(s)                 |
+|  block <ip>         Add ip to blocked list(s)                |
+|  unblock <ip>       Unblocks an ip from blocked list(s)      |
+|                                                              |
+|  -v, --version      Shows current nogger version             |
+|  -h, --help         Shows help menu                          |
+|                                                              |
+|--------------------------------------------------------------|
 ```
-## How it works
-
-![Nogger How it works](https://raw.githubusercontent.com/paul-em/nogger/master/assets/how-it-works.png "Nogger How it works")
-
 ## Contributing
 
 Please submit all issues and pull requests to the [paul-em/nogger](http://github.com/paul-em/nogger) repository!
