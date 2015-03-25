@@ -11,26 +11,22 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
         socket.emit('auth', pw, function (res) {
             console.log('response', res);
             if (!res.err) {
-                socket.emit('getLogNames', function (res) {
+                socket.emit('getFileNames', function (res) {
                     if (!res.err) {
+                        console.log(res);
                         dataStore.setLogNames(res.data);
                     }
-                    socket.emit('getMetrics', function (res) {
-                        if (!res.err) {
-                            dataStore.setMetrics(res.data);
-                        }
-                        $(document).trigger('auth');
-                        socket.auth = true;
-                        $rootScope.authenticated = true;
-                        $rootScope.$apply();
-                        if (save) {
-                            localStorage.setItem('p', pw);
-                        }
-                        sessionStorage.setItem('p', pw);
-                    });
+                    $(document).trigger('auth');
+                    socket.auth = true;
+                    $rootScope.authenticated = true;
+                    $rootScope.$apply();
+                    if (save) {
+                        localStorage.setItem('p', pw);
+                    }
+                    sessionStorage.setItem('p', pw);
                 });
                 clearTimeout(timeout);
-                ping();
+
             } else {
                 if (res.err !== 'wrong pw') {
                     alert(res.err);
@@ -72,16 +68,6 @@ app.factory('socket', function (dataStore, $location, $rootScope) { // jshint ig
         dataStore.addMetric(data);
     });
 
-    function ping() {
-        if (connected) {
-            socket.emit('ping', function (res) {
-                if (!res.err) {
-                    dataStore.setHealth(res.data);
-                }
-                timeout = setTimeout(ping, 10 * 1000);
-            })
-        }
-    }
 
     return socket;
 });

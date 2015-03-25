@@ -11,14 +11,15 @@ var cli = new Liftoff({
     moduleName: 'nogger',
     processTitle: 'nogger'
 });
-var pkg = require('./../package');
 
+var pkg = require('./../package');
 var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 var noggerDir = '.nogger';
 var settingsPath = path.resolve(home, noggerDir, 'settings.json');
 
 var settings = {
-    instances: []
+    instances: [],
+    blockedList: []
 };
 var instanceLookup = {};
 
@@ -29,6 +30,7 @@ var commands = {
             console.log('id already exists');
             return;
         }
+        id = id.toString();
         var instance = new Instance({
             id: id,
             path: argv._[1],
@@ -47,19 +49,21 @@ var commands = {
             help();
             return;
         }
-        instance.start(function () {
-            settings.instances.push(instance);
-            saveSettings();
+
+        var success = instance.start(function () {
             list();
         });
+        if (success) {
+            settings.instances.push(instance);
+            saveSettings();
+        }
     },
     restart: function () {
         var instance = getInstanceById(argv._[1]);
         if (!instance) {
             return;
         }
-        instance.start(function () {
-            saveSettings();
+        instance.restart(function(){
             list();
         });
     },
@@ -68,8 +72,9 @@ var commands = {
         if (!instance) {
             return;
         }
-        instance.stop();
-        list();
+        instance.stop(function () {
+            list();
+        });
     },
     remove: function () {
         var instance = getInstanceById(argv._[1]);
@@ -87,18 +92,22 @@ var commands = {
         if (!newPw) {
             newPw = generatePassword();
         }
+        newPw = newPw.toString();
         if (argv._[2]) {
             var instance = getInstanceById(argv._[2]);
             if (!instance) {
                 return;
             }
-
             instance.pw = newPw;
+            console.log('performing restart to apply changes');
+            instance.restart();
             saveSettings();
             console.log('updated password for ' + instance.id + ': ' + newPw);
         } else {
+            console.log('performing restart to apply changes');
             settings.instances.forEach(function (instance) {
                 instance.pw = newPw;
+                instance.restart();
             });
             saveSettings();
             console.log('updated password for all instances: ' + newPw);
@@ -106,20 +115,7 @@ var commands = {
 
     },
     showblocked: function () {
-        var instances;
-        if (argv._[1]) {
-            var instance = getInstanceById(argv._[1]);
-            if (!instance) {
-                return;
-            }
-            instances = [instance];
-        } else {
-            instances = settings.instances;
-        }
-        console.log('');
-        instances.forEach(function (instance) {
-            logBlockedList(instance);
-        });
+        logBlockedList();
     },
     block: function () {
         var ip = argv._[1];
@@ -128,35 +124,27 @@ var commands = {
             help();
             return;
         }
-        var instances;
-        if (argv._[2]) {
-            var instance = getInstanceById(argv._[2]);
-            if (!instance) {
-                return;
+        ip = ip.toString().toLowerCase();
+        var found = false;
+        console.log(settings.blockedList);
+        settings.blockedList.some(function (item) {
+            if (item === ip) {
+                found = true;
             }
-            instances = [instance];
-        } else {
-            instances = settings.instances;
-        }
-
-        var found;
-        instances.forEach(function (instance) {
-            found = false;
-            instance.blockedList.some(function (item) {
-                if (item === ip) {
-                    found = true;
-                }
-                return found;
-            });
-            if (!found) {
-                instance.blockedList.push(ip);
-                console.log(instance.id + ': added to blocked list');
-            } else {
-                console.log(instance.id + ': already in list');
-            }
-            logBlockedList(instance);
+            return found;
         });
+        if (!found) {
+            settings.blockedList.push(ip.toString());
+            console.log('added to blocked list');
+        } else {
+            console.log('already in list');
+        }
+        logBlockedList();
         saveSettings();
+        console.log('performing restart to apply changes');
+        settings.instances.forEach(function (instance) {
+            instance.restart();
+        });
     },
     unblock: function () {
         var ip = argv._[1];
@@ -165,38 +153,28 @@ var commands = {
             help();
             return;
         }
-        var instances;
-        if (argv._[2]) {
-            var instance = getInstanceById(argv._[2]);
-            if (!instance) {
-                return;
+        ip = ip.toString().toLowerCase();
+        var found = false;
+        var index = -1;
+        settings.blockedList.some(function (item, i) {
+            if (item === ip) {
+                found = true;
+                index = i;
             }
-            instances = [instance];
-        } else {
-            instances = settings.instances;
-        }
-
-        var found;
-        var index;
-        instances.forEach(function (instance) {
-            found = false;
-            index = -1;
-            instance.blockedList.some(function (item, i) {
-                if (item === ip) {
-                    found = true;
-                    index = i;
-                }
-                return found;
-            });
-            if (!found) {
-                console.log(instance.id + ': not found in blocked list');
-            } else {
-                instance.blockedList.splice(index, 1);
-                console.log(instance.id + ': removed from blocked list');
-            }
-            logBlockedList(instance);
+            return found;
         });
+        if (!found) {
+            console.log('not found in blocked list');
+        } else {
+            settings.blockedList.splice(index, 1);
+            console.log('removed from blocked list');
+        }
+        logBlockedList();
         saveSettings();
+        console.log('performing restart to apply changes');
+        settings.instances.forEach(function (instance) {
+            instance.restart();
+        });
     },
     version: function () {
         console.log(pkg.name + ' ' + pkg.version);
@@ -211,15 +189,15 @@ var commands = {
 function list() {
     console.log('');
     console.log(chalk.cyan('|--------------------------------------------------------------|'));
-    console.log(chalk.cyan('|------id------|--port--|---------logfile---------|---status---|'));
+    console.log(chalk.cyan('|---id---|--port--|------------logfile--------------|--status--|'));
     console.log(chalk.cyan('|--------------------------------------------------------------|'));
-    console.log(chalk.cyan('|              |        |                         |            |'));
+    console.log(chalk.cyan('|        |        |                                 |          |'));
     var somethingRunning = false;
     settings.instances.forEach(function (instance) {
         logListLine([instance.id, instance.port, instance.path, instance.status]);
         somethingRunning = true;
     });
-    console.log(chalk.cyan('|              |        |                         |            |'));
+    console.log(chalk.cyan('|        |        |                                 |          |'));
     console.log(chalk.cyan('|--------------------------------------------------------------|'));
 
     if (!somethingRunning) {
@@ -229,7 +207,7 @@ function list() {
 
 function logListLine(arr) {
     var result = chalk.cyan('|');
-    var blockLengths = [14, 8, 25, 12];
+    var blockLengths = [8, 8, 33, 10];
     arr.forEach(function (item, index) {
         result += fill(item, blockLengths[index]) + chalk.cyan('|');
     });
@@ -262,13 +240,10 @@ function help() {
     logHelpLine(' stopall            Stops all nogger daemons');
     logHelpLine(' list               Returns list of nogger instances running');
     logHelpLine('');
-    logHelpLine(' setpw <password>   Updates the password for the dashboard.');
+    logHelpLine(' setpw <pw> (<id>)    Updates the password for the dashboard.');
     logHelpLine(' showblocked        Displays blocked list(s)');
     logHelpLine(' block <ip>         Add ip to blocked list(s)');
     logHelpLine(' unblock <ip>       Unblocks an ip from blocked list(s)');
-    logHelpLine('  <id>              Optional add ip or id to these commands');
-    logHelpLine('                     as second parameter in order to apply');
-    logHelpLine('                     to only one instance.');
     logHelpLine('');
     logHelpLine(' -v, --version      Shows current nogger version');
     logHelpLine(' -h, --help         Shows help menu');
@@ -280,12 +255,12 @@ function logHelpLine(val) {
     console.log(chalk.cyan('|'), fill(val, 60, true), chalk.cyan('|'));
 }
 
-function logBlockedList(instance) {
-    console.log(chalk.cyan('|' + fill('blocked list for ' + instance.id, 32, false, '-') + '|'));
-    if (instance.blockedList.length === 0) {
+function logBlockedList() {
+    console.log(chalk.cyan('|' + fill('blocked list', 32, false, '-') + '|'));
+    if (settings.blockedList.length === 0) {
         console.log(chalk.cyan('|'), fill('no blocked ip addresses', 30), chalk.cyan('|'));
     } else {
-        instance.blockedList.forEach(function (ip) {
+        settings.blockedList.forEach(function (ip) {
             console.log(chalk.cyan('|'), fill(ip, 30), chalk.cyan('|'));
         });
     }
@@ -333,11 +308,7 @@ function getDaemon(instance) {
         name: 'nogger-' + instance.id,
         pidfile: path.resolve(home, noggerDir, instance.id + '.pid'),
         argv: [
-            argv._[1],
-            instance.port,
-            instance.id,
-            instance.cert,
-            instance.key
+            instance.id
         ]
     });
 }
@@ -367,9 +338,11 @@ function initSettings() {
             instance.status = 'running';
 
         }
-        instanceLookup[instance.id] = index;
+        instanceLookup[instance.id.toUpperCase()] = index;
         settings.instances.push(new Instance(instance));
     });
+
+    settings.blockedList = rawSettings.blockedList;
 }
 
 function saveSettings() {
@@ -408,7 +381,7 @@ function generateUniqueId(add) {
 function isUniqueId(id) {
     var unique = true;
     settings.instances.some(function (instance) {
-        if (instance.id === id) {
+        if (instance.id.toUpperCase() === id.toUpperCase()) {
             if (instance.status === 'running') {
                 unique = false;
                 return true;
@@ -438,7 +411,6 @@ function Instance(data) {
     this.id = data.id;
     this.pw = data.pw;
 
-    this.blockedList = data.blockedList || [];
     this.status = data.status || 'starting';
 
     var errors = [];
@@ -454,14 +426,15 @@ function Instance(data) {
     if (!this.id) {
         this.id = generateUniqueId();
     }
-
-    if (this.id.length > 14) {
-        errors.push('id too long, max length is 14');
+    this.id = this.id.toUpperCase();
+    if (this.id.length > 8) {
+        errors.push('id too long, max length is 8');
     }
 
     if (!this.path) {
         errors.push('no path to logfile specified');
     } else {
+        this.path = path.resolve(this.path);
         try {
             fs.readFileSync(this.path);
         } catch (e) {
@@ -497,6 +470,7 @@ function Instance(data) {
             this.pw = generatePassword();
             console.log('generated a password for dashboard: ', chalk.magenta(this.pw));
         }
+        this.pw = this.pw.toString();
     }
 }
 
@@ -508,6 +482,7 @@ Instance.prototype.start = function (callback) {
     var pid = daemon.status();
     if (pid) {
         console.log('nogger instance with this id is already running. PID: ' + pid);
+        return false;
     } else {
         daemon.start(function (err, pid) {
             if (!err) {
@@ -516,43 +491,78 @@ Instance.prototype.start = function (callback) {
                     self.status = 'running';
                     callback()
                 });
+            } else {
+                self.status = 'error';
+                callback()
             }
         });
+        return true;
     }
 };
 
-Instance.prototype.stop = function () {
-    if (this.status === 'running') {
-        var daemon = getDaemon(this);
-        var pid = daemon.status();
-        if (pid) {
-            daemon.stop();
-            this.status = 'stopped';
-        } else {
-            console.log('');
-            console.log(this.id + ' is not running');
-            console.log('');
-        }
+Instance.prototype.stop = function (callback) {
+    callback = callback || function () {
+    };
+    var self = this;
+    var daemon = getDaemon(this);
+    var pid = daemon.status();
+    if (pid) {
+        daemon.stop(function () {
+            self.status = 'stopped';
+            saveSettings();
+            callback();
+        });
     } else {
         console.log('');
         console.log(this.id + ' is not running');
         console.log('');
+        callback();
     }
-    saveSettings();
+};
+
+Instance.prototype.restart = function(callback){
+    callback = callback || function () {
+    };
+    var self = this;
+    if (this.status === 'running') {
+        this.stop(function () {
+            self.start(function () {
+                saveSettings();
+                callback();
+            });
+        });
+    } else {
+        this.start(function () {
+            saveSettings();
+            callback();
+        });
+    }
 };
 
 Instance.prototype.remove = function () {
     if (this.status === 'running') {
+        var self = this;
         var daemon = getDaemon(this);
         var pid = daemon.status();
         if (pid) {
-            daemon.stop();
+            daemon.stop(function () {
+                self.del();
+            });
+        } else {
+            this.del();
         }
+    } else {
+        this.del();
     }
+};
+
+Instance.prototype.del = function () {
     settings.instances.splice(instanceLookup[this.id], 1);
     delete instanceLookup[this.id];
     saveSettings();
 };
+
+
 
 
 // start
