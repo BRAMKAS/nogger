@@ -573,7 +573,11 @@ cli.launch({}, function (env) {
     if (argv._.length && commands[argv._[0]]) {
         commands[argv._[0]]();
     } else {
-        help();
-        process.exit(1);
+        if (argv.v || argv.version) {
+            commands.version();
+        } else {
+            help();
+            process.exit(1);
+        }
     }
 });
