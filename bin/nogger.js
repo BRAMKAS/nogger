@@ -81,8 +81,9 @@ var commands = {
         if (!instance) {
             return;
         }
-        instance.remove();
-        list();
+        instance.remove(function () {
+            list();
+        });
     },
     list: function () {
         list();
@@ -539,7 +540,9 @@ Instance.prototype.restart = function (callback) {
     }
 };
 
-Instance.prototype.remove = function () {
+Instance.prototype.remove = function (callback) {
+    callback = callback || function () {
+    };
     if (this.status === 'running') {
         var self = this;
         var daemon = getDaemon(this);
@@ -547,12 +550,15 @@ Instance.prototype.remove = function () {
         if (pid) {
             daemon.stop(function () {
                 self.del();
+                callback();
             });
         } else {
             this.del();
+            callback();
         }
     } else {
         this.del();
+        callback();
     }
 };
 

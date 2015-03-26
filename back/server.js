@@ -6,7 +6,6 @@ var app = express();
 var argv = require('minimist')(process.argv.slice(2));
 var pem = require('pem');
 var _ = require('underscore');
-var grep = require('grep1');
 var Tail = require('tail').Tail;
 var lineReader = require('line-reader');
 
@@ -14,7 +13,6 @@ var pkg = require('./../package');
 var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 var noggerDir = '.nogger';
 var settingsPath = path.resolve(home, noggerDir, 'settings.json');
-var host;
 
 var id = argv._[0];
 
@@ -23,23 +21,19 @@ var settings = readSettings();
 var instance = getInstance();
 
 if (!instance) {
-    console.log('id not found');
+    console.log('Error: id not found');
     process.exit();
     return;
 }
 
-var c = 0;
-setInterval(function () {
-    console.log(c++);
-}, 1000);
-console.log('starting server');
+console.log('Info: starting server');
 var tail = new Tail(instance.path);
 unwatchTail();
 tail.on("line", function (data) {
     broadcast('line', data);
 });
 tail.on("error", function (error) {
-    console.log('Tail error: ', error);
+    console.log('Error: tail: ', error);
 });
 var clients = [];
 var wrongAttempts = {};
@@ -63,9 +57,7 @@ getCertificate(function (keys) {
 
     app.io.route('auth', function (req) {
         var ip = req.io.socket.handshake.address.address;
-        console.log('auth, ip:', ip, 'pw', req.data, instance.pw);
-        console.log('blockedList', settings.blockedList);
-
+        console.log('Info: Auth, ip:', ip);
         if (settings.blockedList.indexOf(ip) !== -1) {
             req.io.respond({
                 err: "Too many wrong attempts! You are blocked from the server. To unblock go to your terminal and type: >> nogger unblock " + ip,
@@ -87,15 +79,14 @@ getCertificate(function (keys) {
                     running.push({
                         id: otherInstance.id,
                         path: otherInstance.path,
-                        port: otherInstance.port,
-                        url: 'https://' + host + ':' + otherInstance.port
+                        port: otherInstance.port
                     });
                 }
             });
 
             fs.stat(instance.path, function (err, stats) {
                 if (err) {
-                    console.log(err);
+                    console.log('Error: fstat:', err);
                     stats = {};
                 }
                 req.io.respond({
@@ -106,7 +97,6 @@ getCertificate(function (keys) {
                             id: instance.id,
                             path: instance.path,
                             port: instance.port,
-                            url: 'https://' + host + ':' + instance.port,
                             size: stats.size
                         },
                         otherInstances: running
@@ -206,8 +196,7 @@ getCertificate(function (keys) {
 
     app.listen(instance.port);
     require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-        host = add;
-        console.log('server running on ' + add + ':' + instance.port);
+        console.log('Info: server running on ' + add + ':' + instance.port);
     });
 });
 
@@ -242,7 +231,7 @@ function updateBlockedList() {
     settings.blockedList = s.blockedList;
     fs.writeFile(settingsPath, JSON.stringify(s, null, 4), function (err) {
         if (err) {
-            console.log('error saving settings file', err);
+            console.log('Error: saving settings file', err);
         }
     });
 }
@@ -251,12 +240,12 @@ function getCertificate(callback) {
     if (instance.cert && instance.key) {
         fs.readFile(instance.cert, 'utf8', function (err, cert) {
             if (err) {
-                console.log(err);
+                console.log('Error: reading cert file', err);
                 process.exit();
             } else {
                 fs.readFile(instance.key, 'utf8', function (err, key) {
                     if (err) {
-                        console.log(err);
+                        console.log('Error: reading key file', err);
                         process.exit();
                     } else {
                         callback({
@@ -270,7 +259,7 @@ function getCertificate(callback) {
     } else {
         pem.createCertificate({days: 365, selfSigned: true}, function (err, keys) {
             if (err && !keys) {
-                console.log("error creating cert", err, keys);
+                console.log("Error: creating cert", err, keys);
                 process.exit();
             } else {
                 callback({
@@ -283,7 +272,6 @@ function getCertificate(callback) {
 }
 
 function saveLogs() {
-
     console.log = function () {
         var str = '';
         for (var i in arguments) {

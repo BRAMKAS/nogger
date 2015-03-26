@@ -2,7 +2,7 @@
   "name": "nogger",
   "preferGlobal": "true",
   "description": "node logger and monitoring tool",
-  "version": "2.0.5",
+  "version": "2.0.7",
   "homepage": "https://github.com/paul-em/nogger",
   "author": {
     "name": "Paul Em",
@@ -35,13 +35,11 @@
     "chalk": "~0.4.0",
     "daemonize2": "~0.4.2",
     "express.io": ">= 1.1.13",
-    "grep1": "0.0.5",
     "liftoff": "~0.11.1",
     "line-reader": "^0.2.4",
     "minimist": "~0.1.0",
     "nogger-node-adapter": ">= 0.5.3",
     "pem": "^1.7.2",
-    "redis": "~0.10.1",
     "tail": "^0.4.0",
     "underscore": "^1.8.2"
   },

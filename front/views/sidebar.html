@@ -6,7 +6,7 @@
             <a href="/others"><i class="fa fa-align-left"></i>other logs</a>
             <ul class="nav nav-sidebar">
                 <li ng-repeat="other in otherInstances | orderBy: 'port' | limitTo: 7" ng-class="{active: other.id === instance.id}">
-                    <a ng-href="{{other.url}}" title="{{other.path}}">{{other.id}}</a>
+                    <a ng-href="{{host + ':' + other.port}}" title="{{other.path}}">{{other.id}}</a>
                 </li>
             </ul>
         </li>
