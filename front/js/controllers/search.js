@@ -1,5 +1,6 @@
 'use strict';
 app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
+    $scope.start = 0;
     $scope.limit = 100;
     $scope.regex = false;
     $scope.caseSensitive = false;
@@ -13,16 +14,9 @@ app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
         if (!$scope.searching) {
             $scope.searching = true;
             $scope.searchResults = [];
-            console.log('searching',
-                {
-                    input: $scope.searchInput,
-                    limit: $scope.limit,
-                    regex: $scope.regex,
-                    caseSensitive: $scope.caseSensitive
-                }
-            );
             socket.emit('search', {
                 input: $scope.searchInput,
+                start: $scope.start,
                 limit: $scope.limit,
                 regex: $scope.regex,
                 caseSensitive: $scope.caseSensitive
@@ -33,6 +27,8 @@ app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
                 if (re.err) {
                     if (re.err && re.err.code === 'ENOENT') {
                         alert('search not supported on this system')
+                    } else {
+                        alert(re.err);
                     }
                 } else {
                     $scope.searchResults = re.data.result || [];

@@ -2,14 +2,14 @@
 app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
     $scope.settings = {
         buffer: 50,
-        grep : '',
-        grepRegex : false,
-        grepSensitive : false,
-        highlight : '',
-        highlightRegex : false,
-        highlightSensitive : false,
-        paused : false,
-        follow : true
+        grep: '',
+        grepRegex: false,
+        grepSensitive: false,
+        highlight: '',
+        highlightRegex: false,
+        highlightSensitive: false,
+        paused: false,
+        follow: true
     };
 
     var pauseQueue = [];
@@ -20,21 +20,7 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
         scrollBottom();
     }, 100);
 
-    socket.on('line', function (data) {
-        if (!$scope.settings.paused) {
-            $rootScope.logs.push(data);
-            if ($rootScope.logs.length > 500) {
-                console.log('exceeded 500 lines in cache - removing first 100');
-                $rootScope.logs.splice(0, 100);
-            }
-            debounceApply();
-        } else {
-            pauseQueue.push(data);
-            if (pauseQueue.length > 500) {
-                pauseQueue.splice(0, 100);
-            }
-        }
-    });
+    socket.on('line', addLine);
 
     // scroll to bottom
     $rootScope.$watch('logs.length', scrollBottom);
@@ -43,9 +29,9 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
     $rootScope.$watch('buffer', scrollBottom);
     window.scrollTo(0, document.body.scrollHeight);
 
-    $scope.pause = function(){
+    $scope.pause = function () {
         $scope.settings.paused = !$scope.settings.paused;
-        if(!$scope.settings.paused && pauseQueue.length > 0){
+        if (!$scope.settings.paused && pauseQueue.length > 0) {
             $rootScope.logs = $rootScope.logs.concat(pauseQueue);
             if ($rootScope.logs.length > 500) {
                 $rootScope.logs.splice(0, 100);
@@ -65,6 +51,22 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
         }
         return test(log, 'grep');
     };
+
+    function addLine(data) {
+        if (!$scope.settings.paused) {
+            $rootScope.logs.push(data);
+            if ($rootScope.logs.length > 500) {
+                console.log('exceeded 500 lines in cache - removing first 100');
+                $rootScope.logs.splice(0, 100);
+            }
+            debounceApply();
+        } else {
+            pauseQueue.push(data);
+            if (pauseQueue.length > 500) {
+                pauseQueue.splice(0, 100);
+            }
+        }
+    }
 
     function test(log, type) {
         if ($scope[type + 'Regex']) {
@@ -86,4 +88,8 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
             window.scrollTo(0, document.body.scrollHeight)
         }
     }
+
+    $scope.$on('$destroy', function () {
+        socket.removeListener('line', addLine);
+    })
 });

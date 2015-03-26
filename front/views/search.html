@@ -1,4 +1,4 @@
-<div class="col-md-3">
+<div class="col-md-1">
 </div>
 <div class="col-md-6">
     <section class="panel panel-default">
@@ -23,7 +23,19 @@
                 <h3 class="panel-title">Limit</h3>
             </div>
             <div class="panel-body">
-                <input class="form-control form-inline" type="number" min="1" max="5000" ng-model="limit">
+                <input class="form-control form-inline" type="number" min="1" ng-model="limit">
+            </div>
+        </section>
+    </div>
+</div>
+<div class="controls">
+    <div class="col-md-2">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Start at line</h3>
+            </div>
+            <div class="panel-body">
+                <input class="form-control form-inline" type="number" min="0" ng-model="start">
             </div>
         </section>
     </div>

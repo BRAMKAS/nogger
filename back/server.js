@@ -28,6 +28,10 @@ if (!instance) {
     return;
 }
 
+var c = 0;
+setInterval(function () {
+    console.log(c++);
+}, 1000);
 console.log('starting server');
 var tail = new Tail(instance.path);
 unwatchTail();
@@ -90,7 +94,7 @@ getCertificate(function (keys) {
             });
 
             fs.stat(instance.path, function (err, stats) {
-                if(err){
+                if (err) {
                     console.log(err);
                     stats = {};
                 }
@@ -159,18 +163,20 @@ getCertificate(function (keys) {
             }
             lineReader.eachLine(instance.path, function (line, last) {
                 total++;
-                if (regex) {
-                    if (line.match(regex)) {
-                        found.push(line);
+                if (total > data.start) {
+                    if (regex) {
+                        if (line.match(regex)) {
+                            found.push(line);
+                        }
+                    } else {
+                        if (line.toLowerCase().indexOf(data.input.toLowerCase()) !== -1) {
+                            found.push(line);
+                        }
                     }
-                } else {
-                    if (line.toLowerCase().indexOf(data.input.toLowerCase()) !== -1) {
-                        found.push(line);
+                    if (found.length > (data.limit || 500)) {
+                        req.io.respond({err: null, data: {result: found}});
+                        return false;
                     }
-                }
-                if (found.length > (data.limit || 500)) {
-                    req.io.respond({err: null, data: {result: found}});
-                    return false;
                 }
                 if (last) {
                     req.io.respond({err: null, data: {result: found, total: total}});
@@ -246,10 +252,12 @@ function getCertificate(callback) {
         fs.readFile(instance.cert, 'utf8', function (err, cert) {
             if (err) {
                 console.log(err);
+                process.exit();
             } else {
                 fs.readFile(instance.key, 'utf8', function (err, key) {
                     if (err) {
                         console.log(err);
+                        process.exit();
                     } else {
                         callback({
                             cert: cert,
@@ -261,8 +269,9 @@ function getCertificate(callback) {
         });
     } else {
         pem.createCertificate({days: 365, selfSigned: true}, function (err, keys) {
-            if (err) {
-                console.log("error creating cert", err);
+            if (err && !keys) {
+                console.log("error creating cert", err, keys);
+                process.exit();
             } else {
                 callback({
                     key: keys.serviceKey,
@@ -274,6 +283,7 @@ function getCertificate(callback) {
 }
 
 function saveLogs() {
+
     console.log = function () {
         var str = '';
         for (var i in arguments) {
