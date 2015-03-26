@@ -51,6 +51,7 @@ var commands = {
         }
 
         var success = instance.start(function () {
+            saveSettings();
             list();
         });
         if (success) {
@@ -395,6 +396,12 @@ function isUniqueId(id) {
     return unique;
 }
 
+function portUsed(port, exclude) {
+    return settings.instances.some(function (instance) {
+        return instance.id !== exclude && instance.status === 'running' && instance.port === port;
+    });
+}
+
 function generatePassword() {
     return Math.random().toString(36).slice(-8);
 }
@@ -417,11 +424,14 @@ function Instance(data) {
     var errors = [];
 
     if (!this.port) {
-        if (settings.instances.length > 0) {
-            this.port = settings.instances[settings.instances.length - 1].port + 1;
-        } else {
-            this.port = 3000;
+        this.port = 3000;
+        while(portUsed(this.port)){
+            this.port++;
         }
+    }
+
+    if (portUsed(this.port)) {
+        errors.push('port already in use');
     }
 
     if (!this.id) {
