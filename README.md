@@ -6,6 +6,8 @@ Read your log files online from a dashboard.
 
 Nogger is a log reader written with nodejs that brings features like grep and tail to the web. Zero configuration is needed!
 
+To see a detailed explaination have a look at this blog entry: [http://blog.paulem.eu/nogger/](http://blog.paulem.eu/nogger/)
+
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-1.png "Nogger Screenshot")
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-2.png "Nogger Screenshot")
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-3.png "Nogger Screenshot")
@@ -61,6 +63,11 @@ Feel free to start as many instances as you want.
 |                                                              |
 |--------------------------------------------------------------|
 ```
+A sample command to start watching a file would be:
+```
+nogger start /var/log/nginx/access.log -w supersecretpw -i nginx -p 1337 --cert /etc/nginx/ssl/server.crt --key /etc/nginx/ssl/server.key
+```
+
 ## Contributing
 
 Please submit all issues and pull requests to the [paul-em/nogger](http://github.com/paul-em/nogger) repository!
