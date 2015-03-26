@@ -69,14 +69,14 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
     }
 
     function test(log, type) {
-        if ($scope[type + 'Regex']) {
+        if ($scope.settings[type + 'Regex']) {
             try {
-                return log.match(new RegExp($scope[type], $scope[type + 'CaseSensitive'] ? '' : 'i'));
+                return log.match(new RegExp($scope.settings[type], $scope.settings[type + 'CaseSensitive'] ? '' : 'i'));
             } catch (e) {
                 return true;
             }
         } else {
-            return log.toLowerCase().indexOf($scope[type].toLowerCase()) != -1;
+            return log.toLowerCase().indexOf($scope.settings[type].toLowerCase()) != -1;
         }
     }
 
