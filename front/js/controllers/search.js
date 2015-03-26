@@ -14,6 +14,7 @@ app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
         if (!$scope.searching) {
             $scope.searching = true;
             $scope.searchResults = [];
+            $scope.reqLimit = $scope.limit;
             socket.emit('search', {
                 input: $scope.searchInput,
                 start: $scope.start,

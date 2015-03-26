@@ -49,7 +49,7 @@
             ng-show="searchResults.length === 0 && searched && !searching">Nothing to show
         </li>
         <li class="list-group-item list-group-item-danger center" ng-show="searchResults.length > limit">Found more than
-            {{limit}} entries. Only showing first {{limit}}.
+            {{reqLimit}} entries. Only showing first {{reqLimit}}.
         </li>
         <li class="list-group-item center" ng-show="searchResults.length <= limit && searchResults.length > 0">Found
             {{searchResults.length}} matches out of {{total | number}} lines.
