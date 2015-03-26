@@ -17,6 +17,8 @@ var pkg = require('./../package');
 var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 var noggerDir = '.nogger';
 var settingsPath = path.resolve(home, noggerDir, 'settings.json');
+var noop = function () {
+};
 
 var settings = {
     instances: [],
@@ -68,6 +70,18 @@ var commands = {
             list();
         });
     },
+    restartall: function(){
+        var finished = 0;
+        var expect = settings.instances.length;
+        settings.instances.forEach(function(instance){
+            instance.restart(function(){
+                finished++;
+                if(finished == expect){
+                    list();
+                }
+            });
+        });
+    },
     stop: function () {
         var instance = getInstanceById(argv._[1]);
         if (!instance) {
@@ -77,6 +91,18 @@ var commands = {
             list();
         });
     },
+    stopall: function(){
+        var finished = 0;
+        var expect = settings.instances.length;
+        settings.instances.forEach(function(instance){
+            instance.stop(function(){
+                finished++;
+                if(finished == expect){
+                    list();
+                }
+            });
+        });
+    },
     remove: function () {
         var instance = getInstanceById(argv._[1]);
         if (!instance) {
@@ -84,6 +110,18 @@ var commands = {
         }
         instance.remove(function () {
             list();
+        });
+    },
+    removeall: function(){
+        var finished = 0;
+        var expect = settings.instances.length;
+        settings.instances.forEach(function(instance){
+            instance.remove(function(){
+                finished++;
+                if(finished == expect){
+                    list();
+                }
+            });
         });
     },
     list: function () {
@@ -237,9 +275,11 @@ function help() {
     logHelpLine('                     avoid having to manually confirm the');
     logHelpLine('                     certificate in the browser');
     logHelpLine(' restart <id>       Restarts an available instance');
+    logHelpLine(' restartall         Restarts all available instances');
     logHelpLine(' stop <id>          Stops the nogger daemon');
-    logHelpLine(' remove <id>        Removes an instance from the list');
     logHelpLine(' stopall            Stops all nogger daemons');
+    logHelpLine(' remove <id>        Removes an instance from the list');
+    logHelpLine(' removeall          Removes all instances from the list');
     logHelpLine(' list               Returns list of nogger instances running');
     logHelpLine('');
     logHelpLine(' setpw <pw> (<id>)    Updates the password for the dashboard.');
@@ -398,7 +438,7 @@ function isUniqueId(id) {
 
 function portUsed(port, exclude) {
     return settings.instances.some(function (instance) {
-        return instance.id !== exclude && instance.status === 'running' && instance.port === port;
+        return instance.id !== exclude && instance.port === port;
     });
 }
 
@@ -430,7 +470,7 @@ function Instance(data) {
         }
     }
 
-    if (portUsed(this.port)) {
+    if (portUsed(this.port, this.id)) {
         errors.push('port already in use');
     }
 
@@ -488,8 +528,7 @@ function Instance(data) {
 }
 
 Instance.prototype.start = function (callback) {
-    callback = callback || function () {
-    };
+    callback = callback || noop;
     var daemon = getDaemon(this);
     var self = this;
     var pid = daemon.status();
@@ -514,8 +553,7 @@ Instance.prototype.start = function (callback) {
 };
 
 Instance.prototype.stop = function (callback) {
-    callback = callback || function () {
-    };
+    callback = callback || noop;
     var self = this;
     var daemon = getDaemon(this);
     var pid = daemon.status();
@@ -534,8 +572,7 @@ Instance.prototype.stop = function (callback) {
 };
 
 Instance.prototype.restart = function (callback) {
-    callback = callback || function () {
-    };
+    callback = callback || noop;
     var self = this;
     if (this.status === 'running') {
         this.stop(function () {
@@ -553,8 +590,7 @@ Instance.prototype.restart = function (callback) {
 };
 
 Instance.prototype.remove = function (callback) {
-    callback = callback || function () {
-    };
+    callback = callback || noop;
     if (this.status === 'running') {
         var self = this;
         var daemon = getDaemon(this);
@@ -576,7 +612,11 @@ Instance.prototype.remove = function (callback) {
 
 Instance.prototype.del = function () {
     settings.instances.splice(instanceLookup[this.id], 1);
-    delete instanceLookup[this.id];
+
+    instanceLookup = {};
+    settings.instances.forEach(function (instance, index) {
+        instanceLookup[instance.id.toUpperCase()] = index;
+    });
     saveSettings();
 };
 
