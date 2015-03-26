@@ -2,11 +2,11 @@
   "name": "nogger",
   "preferGlobal": "true",
   "description": "node logger and monitoring tool",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "homepage": "https://github.com/paul-em/nogger",
   "author": {
     "name": "Paul Em",
-    "email": ""
+    "email": "paul3m@gmail.com"
   },
   "repository": {
     "type": "git",
@@ -21,12 +21,12 @@
       "url": "https://github.com/paul-em/nogger/blob/master/LICENSE"
     }
   ],
-  "main": "./index.js",
+  "main": "index.js",
   "engines": {
     "node": ">= 0.10.0"
   },
   "bin": {
-    "nogger": "./bin/nogger.js"
+    "nogger": "bin/nogger.js"
   },
   "scripts": {
     "test": "mocha"
@@ -65,5 +65,18 @@
     "gulp-clean": "~0.3.1",
     "gulp-run-sequence": "~0.3.2"
   },
-  "keywords": []
+  "keywords": [
+      "logging",
+      "grep",
+      "logfile",
+      "monitor",
+      "nogger",
+      "node logger",
+      "logfile reader",
+      "dashboard",
+      "tail",
+      "cli",
+      "tools",
+      "sysadmin"
+  ]
 }

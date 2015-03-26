@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+#! /usr/bin/env node
+
 var fs = require('fs');
 var Liftoff = require('liftoff');
 var path = require('path');
