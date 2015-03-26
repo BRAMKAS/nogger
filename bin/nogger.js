@@ -63,7 +63,7 @@ var commands = {
         if (!instance) {
             return;
         }
-        instance.restart(function(){
+        instance.restart(function () {
             list();
         });
     },
@@ -324,25 +324,25 @@ function initSettings() {
         }
     }
 
+    if (rawSettings) {
+        rawSettings.instances.forEach(function (instance, index) {
+            var daemon = getDaemon(instance);
+            var pid = daemon.status();
+            if (!pid) {
+                if (instance.status === 'running') {
+                    instance.status = 'killed';
+                }
+                fs.unlink(path.resolve(home, noggerDir, instance.id + '.pid'), function (err) {
+                })
+            } else {
+                instance.status = 'running';
 
-    rawSettings.instances.forEach(function (instance, index) {
-        var daemon = getDaemon(instance);
-        var pid = daemon.status();
-        if (!pid) {
-            if (instance.status === 'running') {
-                instance.status = 'killed';
             }
-            fs.unlink(path.resolve(home, noggerDir, instance.id + '.pid'), function (err) {
-            })
-        } else {
-            instance.status = 'running';
-
-        }
-        instanceLookup[instance.id.toUpperCase()] = index;
-        settings.instances.push(new Instance(instance));
-    });
-
-    settings.blockedList = rawSettings.blockedList;
+            instanceLookup[instance.id.toUpperCase()] = index;
+            settings.instances.push(new Instance(instance));
+        });
+        settings.blockedList = rawSettings.blockedList;
+    }
 }
 
 function saveSettings() {
@@ -520,7 +520,7 @@ Instance.prototype.stop = function (callback) {
     }
 };
 
-Instance.prototype.restart = function(callback){
+Instance.prototype.restart = function (callback) {
     callback = callback || function () {
     };
     var self = this;
@@ -561,8 +561,6 @@ Instance.prototype.del = function () {
     delete instanceLookup[this.id];
     saveSettings();
 };
-
-
 
 
 // start
