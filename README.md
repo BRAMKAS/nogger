@@ -15,6 +15,10 @@ Install the module with: `npm install nogger -g`
 Make sure to set -g to install it globally to have the nogger command available!
 That's it! No databases or other dependencies are required. 
 
+In order to track a logfile you have to start an instance of nogger. As soon as you connect to the dashboard the script will listen on changes of the file.
+
+Feel free to start as many instances as you want.
+
 ## CLI
 
 ```
