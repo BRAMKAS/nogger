@@ -44,9 +44,11 @@ Feel free to start as many instances as you want.
 |                      avoid having to manually confirm the    |
 |                      certificate in the browser              |
 |  restart <id>       Restarts an available instance           |
+|  restartall         Restarts all available instances         |
 |  stop <id>          Stops the nogger daemon                  |
-|  remove <id>        Removes an instance from the list        |
 |  stopall            Stops all nogger daemons                 |
+|  remove <id>        Removes an instance from the list        |
+|  removeall          Removes all instances from the list      |
 |  list               Returns list of nogger instances running |
 |                                                              |
 |  setpw <pw> (<id>)    Updates the password for the dashboard |
