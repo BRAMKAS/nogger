@@ -439,7 +439,7 @@ function Instance(data) {
         try {
             fs.readFileSync(this.path);
         } catch (e) {
-            errors.push('could not open log file');
+            errors.push('could not open log file in location ' + this.path);
         }
     }
 
@@ -447,19 +447,21 @@ function Instance(data) {
         if (!this.cert) {
             errors.push('key file set, but not cert file');
         } else {
+            this.cert = path.resolve(this.cert);
             try {
-                fs.readFileSync(path.resolve(this.cert));
+                fs.readFileSync(this.cert);
             } catch (e) {
-                errors.push('could not open cert file');
+                errors.push('could not open cert file in location ' + this.cert);
             }
         }
         if (!this.key) {
             errors.push('cert file set, but not key file');
         } else {
+            this.key = path.resolve(this.key);
             try {
-                fs.readFileSync(path.resolve(this.key));
+                fs.readFileSync(this.key);
             } catch (e) {
-                errors.push('could not open key file');
+                errors.push('could not open key file in location ' + this.key);
             }
         }
     }
