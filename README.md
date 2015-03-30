@@ -1,10 +1,12 @@
-# ![Nogger Logo](https://raw.githubusercontent.com/paul-em/nogger/master/front/img/logo-60.png "Nogger Logo") Nogger [![Build Status](https://secure.travis-ci.org/paul-em/nogger.png?branch=master)](http://travis-ci.org/paul-em/nogger) [![NPM version](https://badge-me.herokuapp.com/api/npm/nogger.png)](http://badges.enytc.com/for/npm/nogger) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/paul-em/nogger/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+# ![Nogger Logo](https://raw.githubusercontent.com/paul-em/nogger/master/front/img/logo-60.png "Nogger Logo") Nogger 
 
 Read your log files online from a dashboard.
 
 ## What it is
 
 Nogger is a log reader written with nodejs that brings features like grep and tail to the web. Zero configuration is needed!
+
+To see a detailed explaination have a look at this blog entry: [http://blog.paulem.eu/nogger/](http://blog.paulem.eu/nogger/)
 
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-1.png "Nogger Screenshot")
 ![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-2.png "Nogger Screenshot")
@@ -44,9 +46,11 @@ Feel free to start as many instances as you want.
 |                      avoid having to manually confirm the    |
 |                      certificate in the browser              |
 |  restart <id>       Restarts an available instance           |
+|  restartall         Restarts all available instances         |
 |  stop <id>          Stops the nogger daemon                  |
-|  remove <id>        Removes an instance from the list        |
 |  stopall            Stops all nogger daemons                 |
+|  remove <id>        Removes an instance from the list        |
+|  removeall          Removes all instances from the list      |
 |  list               Returns list of nogger instances running |
 |                                                              |
 |  setpw <pw> (<id>)    Updates the password for the dashboard |
@@ -59,6 +63,11 @@ Feel free to start as many instances as you want.
 |                                                              |
 |--------------------------------------------------------------|
 ```
+A sample command to start watching a file would be:
+```
+nogger start /var/log/nginx/access.log -w supersecretpw -i nginx -p 1337 --cert /etc/nginx/ssl/server.crt --key /etc/nginx/ssl/server.key
+```
+
 ## Contributing
 
 Please submit all issues and pull requests to the [paul-em/nogger](http://github.com/paul-em/nogger) repository!
