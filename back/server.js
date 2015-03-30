@@ -7,7 +7,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var pem = require('pem');
 var _ = require('underscore');
 var Tail = require('tail').Tail;
-var lineReader = require('line-reader');
+var lineReader = require('reverse-line-reader');
 
 var pkg = require('./../package');
 var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
@@ -142,6 +142,9 @@ getCertificate(function (keys) {
             var found = [];
             var total = 0;
             var data = req.data;
+            data.input = data.input || '';
+            data.start = data.start || 0;
+            data.limit = data.limit || 500;
             var regex;
             if (data.regex) {
                 try {
@@ -163,7 +166,7 @@ getCertificate(function (keys) {
                             found.push(line);
                         }
                     }
-                    if (found.length > (data.limit || 500)) {
+                    if (found.length > (data.limit)) {
                         req.io.respond({err: null, data: {result: found}});
                         return false;
                     }

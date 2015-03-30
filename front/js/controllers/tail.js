@@ -4,15 +4,18 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
         buffer: 50,
         grep: '',
         grepRegex: false,
-        grepSensitive: false,
+        grepCaseSensitive: false,
         highlight: '',
         highlightRegex: false,
-        highlightSensitive: false,
+        highlightCaseSensitive: false,
         paused: false,
         follow: true
     };
 
     var pauseQueue = [];
+
+
+
 
     // update messages
     var debounceApply = _.debounce(function () {
@@ -24,9 +27,10 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
 
     // scroll to bottom
     $rootScope.$watch('logs.length', scrollBottom);
-    $rootScope.$watch('grep', scrollBottom);
-    $rootScope.$watch('grepSensitive', scrollBottom);
-    $rootScope.$watch('buffer', scrollBottom);
+    $rootScope.$watch('settings.grep', scrollBottom);
+    $rootScope.$watch('settings.grepCaseSensitive', scrollBottom);
+    $rootScope.$watch('settings.buffer', scrollBottom);
+    $rootScope.$watch('authenticated', getTail);
     window.scrollTo(0, document.body.scrollHeight);
 
     $scope.pause = function () {
@@ -50,6 +54,10 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
             return true;
         }
         return test(log, 'grep');
+    };
+
+    $scope.clear = function(){
+        $rootScope.logs = [];
     };
 
     function addLine(data) {
@@ -87,6 +95,28 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
             });
             window.scrollTo(0, document.body.scrollHeight)
         }
+    }
+
+    function getTail(){
+        if(!$rootScope.authenticated){
+            return;
+        }
+        // get initial logs
+        socket.emit('search', {
+            limit: 20
+        }, function (re) {
+            console.log('search returned: ', re);
+            if (re.err) {
+                if (re.err && re.err.code === 'ENOENT') {
+                    alert('search not supported on this system')
+                } else {
+                    alert(re.err);
+                }
+            } else {
+                $rootScope.logs = re.data.result;
+            }
+            $scope.$apply();
+        });
     }
 
     $scope.$on('$destroy', function () {

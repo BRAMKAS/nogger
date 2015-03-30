@@ -58,6 +58,6 @@
 
     <ul class="list-group">
         <li bindonce ng-repeat="result in searchResults track by $index"
-            class="list-group-item" bo-text="result"></li>
+            class="list-group-item" ng-bind-html="result | highlight:searchInput:regex:caseSensitive:'warning'"></li>
     </ul>
 </div>
