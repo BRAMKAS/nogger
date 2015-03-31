@@ -2,7 +2,7 @@
   "name": "nogger",
   "preferGlobal": "true",
   "description": "node logger and monitoring tool",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "homepage": "https://github.com/paul-em/nogger",
   "author": {
     "name": "Paul Em",

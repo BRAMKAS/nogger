@@ -15,8 +15,6 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
     var pauseQueue = [];
 
 
-
-
     // update messages
     var debounceApply = _.debounce(function () {
         $scope.$apply();
@@ -56,7 +54,7 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
         return test(log, 'grep');
     };
 
-    $scope.clear = function(){
+    $scope.clear = function () {
         $rootScope.logs = [];
     };
 
@@ -97,8 +95,8 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
         }
     }
 
-    function getTail(){
-        if(!$rootScope.authenticated){
+    function getTail() {
+        if (!$rootScope.authenticated) {
             return;
         }
         // get initial logs
@@ -113,7 +111,14 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
                     alert(re.err);
                 }
             } else {
-                $rootScope.logs = re.data.result.reverse();
+                if (re.data && re.data.result) {
+                    if (re.data.result[0] === '') {
+                        re.data.result.splice(0, 1);
+                    }
+                    $rootScope.logs = re.data.result.reverse();
+                } else {
+                    $rootScope.logs = [];
+                }
             }
             $scope.$apply();
         });
