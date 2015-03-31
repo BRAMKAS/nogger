@@ -113,7 +113,7 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
                     alert(re.err);
                 }
             } else {
-                $rootScope.logs = re.data.result;
+                $rootScope.logs = re.data.result.reverse();
             }
             $scope.$apply();
         });
