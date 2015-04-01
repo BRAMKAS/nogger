@@ -2,7 +2,7 @@
   "name": "nogger",
   "preferGlobal": "true",
   "description": "node logger and monitoring tool",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "homepage": "https://github.com/paul-em/nogger",
   "author": {
     "name": "Paul Em",
@@ -39,7 +39,7 @@
     "minimist": "~0.1.0",
     "nogger-node-adapter": ">= 0.5.3",
     "pem": "^1.7.2",
-    "reverse-line-reader": "^0.2.4",
+    "reverse-line-reader": "^0.2.5",
     "tail": "^0.4.0",
     "underscore": "^1.8.2"
   },
