@@ -48,16 +48,16 @@
         <li class="list-group-item list-group-item-danger center"
             ng-show="searchResults.length === 0 && searched && !searching">Nothing to show
         </li>
-        <li class="list-group-item list-group-item-danger center" ng-show="searchResults.length > limit">Found more than
+        <li class="list-group-item list-group-item-danger center" ng-show="searchResults.length > reqLimit">Found more than
             {{reqLimit}} entries. Only showing first {{reqLimit}}.
         </li>
-        <li class="list-group-item center" ng-show="searchResults.length <= limit && searchResults.length > 0">Found
+        <li class="list-group-item center" ng-show="searchResults.length <= reqLimit && searchResults.length > 0">Found
             {{searchResults.length}} matches out of {{total | number}} lines.
         </li>
     </ul>
 
     <ul class="list-group">
         <li bindonce ng-repeat="result in searchResults track by $index"
-            class="list-group-item" ng-bind-html="result | highlight:searchInput:regex:caseSensitive:'warning'"></li>
+            class="list-group-item" bo-html="result | highlight:searchInput:regex:caseSensitive:'warning'"></li>
     </ul>
 </div>
