@@ -3,8 +3,8 @@
         <ul class="list-group">
             <li ng-repeat="log in logs | reverse | limitTo:settings.buffer | reverse | filter:testGrep track by $index"
                 class="list-group-item"
-                ng-class="{'list-group-item-danger': testHighlight(log)}"
-                bo-html="log | highlight:settings.grep:settings.grepRegex:settings.grepCaseSensitive:'warning'">
+                ng-class="{'list-group-item-danger': testHighlight(log)}">
+                <logline data="log" highlight="settings.grep" update="true"></logline>
             </li>
         </ul>
         <p ng-show="!logs || logs.length === 0">Nothing to show</p>
@@ -50,15 +50,15 @@
             <section class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Grep</h3>
-                    <label class="regex-checkbox">regex<input type="checkbox" ng-model="settings.grepRegex"></label>
+                    <label class="regex-checkbox">regex<input type="checkbox" ng-model="settings.grep.regex"></label>
                 </div>
-                <div class="panel-body search-box" ng-class="{'search-regex': settings.grepRegex}">
-                    <input ng-model="settings.grep" type="search" class="form-control form-inline"
+                <div class="panel-body search-box" ng-class="{'search-regex': settings.grep.regex}">
+                    <input ng-model="settings.grep.input" type="search" class="form-control form-inline"
                            placeholder="Search...">
-                    <input type="button" ng-show="settings.grepRegex" class="btn"
-                           ng-click="settings.grepCaseSensitive = ! settings.grepCaseSensitive"
-                           value="{{settings.grepCaseSensitive ? 'i̷' : 'i'}}"
-                           title="{{settings.grepCaseSensitive ? 'case sensitive' : 'case insensitive'}}">
+                    <input type="button" ng-show="settings.grep.regex" class="btn"
+                           ng-click="settings.grep.caseSensitive = ! settings.grep.caseSensitive"
+                           value="{{settings.grep.caseSensitive ? 'i̷' : 'i'}}"
+                           title="{{settings.grep.caseSensitive ? 'case sensitive' : 'case insensitive'}}">
                 </div>
             </section>
         </div>
@@ -68,15 +68,15 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Highlight</h3>
                     <label class="regex-checkbox">regex<input type="checkbox"
-                                                              ng-model="settings.highlightRegex"></label>
+                                                              ng-model="settings.highlight.regex"></label>
                 </div>
-                <div class="panel-body search-box" ng-class="{'search-regex': settings.highlightRegex}">
-                    <input ng-model="settings.highlight" type="search" class="form-control form-inline"
+                <div class="panel-body search-box" ng-class="{'search-regex': settings.highlight.regex}">
+                    <input ng-model="settings.highlight.input" type="search" class="form-control form-inline"
                            placeholder="Search...">
-                    <input type="button" ng-show="settings.highlightRegex" class="btn"
-                           ng-click="settings.highlightCaseSensitive = ! settings.highlightCaseSensitive"
-                           value="{{settings.highlightCaseSensitive ? 'i̷' : 'i'}}"
-                           title="{{settings.highlightCaseSensitive ? 'case sensitive' : 'case insensitive'}}">
+                    <input type="button" ng-show="settings.highlight.regex" class="btn"
+                           ng-click="settings.highlight.caseSensitive = ! settings.highlight.caseSensitive"
+                           value="{{settings.highlight.caseSensitive ? 'i̷' : 'i'}}"
+                           title="{{settings.highlight.caseSensitive ? 'case sensitive' : 'case insensitive'}}">
                 </div>
             </section>
         </div>

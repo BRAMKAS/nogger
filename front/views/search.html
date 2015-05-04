@@ -4,14 +4,14 @@
     <section class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Search</h3>
-            <label class="regex-checkbox">regex<input type="checkbox" ng-model="regex"></label>
+            <label class="regex-checkbox">regex<input type="checkbox" ng-model="settings.search.regex"></label>
         </div>
-        <div class="panel-body search-box" ng-class="{'search-regex': regex}">
-            <input ng-model="searchInput" type="search" class="form-control form-inline" ng-enter="search()"
+        <div class="panel-body search-box" ng-class="{'search-regex': settings.search.regex}">
+            <input ng-model="settings.search.input" type="search" class="form-control form-inline" ng-enter="search()"
                    placeholder="Search...">
-            <input type="button" ng-show="regex" class="btn" ng-click="caseSensitive = ! caseSensitive"
-                   value="{{caseSensitive ? 'i̷' : 'i'}}"
-                   title="{{caseSensitive ? 'case sensitive' : 'case insensitive'}}">
+            <input type="button" ng-show="settings.search.regex" class="btn" ng-click="settings.search.caseSensitive = ! settings.search.caseSensitive"
+                   value="{{settings.search.caseSensitive ? 'i̷' : 'i'}}"
+                   title="{{settings.search.caseSensitive ? 'case sensitive' : 'case insensitive'}}">
             <button class="btn" ng-click="search()">GO</button>
         </div>
     </section>
@@ -23,7 +23,7 @@
                 <h3 class="panel-title">Limit</h3>
             </div>
             <div class="panel-body">
-                <input class="form-control form-inline" type="number" min="1" ng-model="limit">
+                <input class="form-control form-inline" type="number" min="1" ng-model="settings.limit">
             </div>
         </section>
     </div>
@@ -35,7 +35,7 @@
                 <h3 class="panel-title">Start at line</h3>
             </div>
             <div class="panel-body">
-                <input class="form-control form-inline" type="number" min="0" ng-model="start">
+                <input class="form-control form-inline" type="number" min="0" ng-model="settings.start">
             </div>
         </section>
     </div>
@@ -44,20 +44,21 @@
 </div>
 <div class="col-md-12">
     <ul class="list-group">
-        <li class="list-group-item list-group-item-warning center" ng-show="searching">loading</li>
+        <li class="list-group-item list-group-item-warning center" ng-show="settings.searching">loading</li>
         <li class="list-group-item list-group-item-danger center"
-            ng-show="searchResults.length === 0 && searched && !searching">Nothing to show
+            ng-show="settings.searchResults.length === 0 && settings.searched && !settings.searching">Nothing to show
         </li>
-        <li class="list-group-item list-group-item-danger center" ng-show="searchResults.length > reqLimit">Found more than
-            {{reqLimit}} entries. Only showing first {{reqLimit}}.
+        <li class="list-group-item list-group-item-danger center" ng-show="settings.searchResults.length > settings.reqLimit">Found more than
+            {{settings.reqLimit}} entries. Only showing first {{settings.reqLimit}}.
         </li>
-        <li class="list-group-item center" ng-show="searchResults.length <= reqLimit && searchResults.length > 0">Found
-            {{searchResults.length}} matches out of {{total | number}} lines.
+        <li class="list-group-item center" ng-show="settings.searchResults.length <= settings.reqLimit && settings.searchResults.length > 0">Found
+            {{settings.searchResults.length}} matches out of {{settings.total | number}} lines.
         </li>
     </ul>
 
     <ul class="list-group">
-        <li bindonce ng-repeat="result in searchResults track by $index"
-            class="list-group-item" bo-html="result | highlight:searchInput:regex:caseSensitive:'warning'"></li>
+        <li bindonce ng-repeat="result in settings.searchResults track by $index" class="list-group-item">
+            <logline data="result" highlight="settings.search" update="false"></logline>
+        </li>
     </ul>
 </div>

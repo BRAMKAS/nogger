@@ -1,30 +1,35 @@
 'use strict';
 app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
-    $scope.start = 0;
-    $scope.limit = 100;
-    $scope.regex = false;
-    $scope.caseSensitive = false;
-    $scope.searchInput = '';
-    $scope.searchResults = [];
-    $scope.searched = false;
-    $scope.searching = false;
-    $scope.total = 0;
+    $scope.settings = {
+        start: 0,
+        limit: 100,
+        search: {
+            input: '',
+            regex: false,
+            caseSensitive: false
+        },
+        totoal: 0,
+        searching: false,
+        searched: false,
+        searchResults: []
+    };
 
     $scope.search = function () {
-        if (!$scope.searching) {
-            $scope.searching = true;
-            $scope.searchResults = [];
-            $scope.reqLimit = $scope.limit;
+        if (!$scope.settings.searching) {
+            $scope.settings.searching = true;
+            $scope.settings.searchResults = [];
+            $scope.settings.reqLimit = $scope.settings.limit;
             socket.emit('search', {
-                input: $scope.searchInput,
-                start: $scope.start,
-                limit: $scope.limit,
-                regex: $scope.regex,
-                caseSensitive: $scope.caseSensitive
+                input: $scope.settings.search.input,
+                regex: $scope.settings.search.regex,
+                caseSensitive: $scope.settings.search.caseSensitive,
+
+                start: $scope.settings.start,
+                limit: $scope.settings.limit
             }, function (re) {
                 console.log(re);
-                $scope.searched = true;
-                $scope.searching = false;
+                $scope.settings.searched = true;
+                $scope.settings.searching = false;
                 if (re.err) {
                     if (re.err && re.err.code === 'ENOENT') {
                         alert('search not supported on this system')
@@ -32,8 +37,8 @@ app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
                         alert(re.err);
                     }
                 } else {
-                    $scope.searchResults = re.data.result || [];
-                    $scope.total = re.data.total;
+                    $scope.settings.searchResults = re.data.result || [];
+                    $scope.settings.total = re.data.total;
                 }
                 $scope.$apply();
             });

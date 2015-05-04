@@ -2,12 +2,16 @@
 app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
     $scope.settings = {
         buffer: 50,
-        grep: '',
-        grepRegex: false,
-        grepCaseSensitive: false,
-        highlight: '',
-        highlightRegex: false,
-        highlightCaseSensitive: false,
+        grep: {
+            input: '',
+            regex: false,
+            caseSensitive: false
+        },
+        highlight: {
+            input: '',
+            regex: false,
+            caseSensitive: false
+        },
         paused: false,
         follow: true
     };
@@ -25,8 +29,8 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
 
     // scroll to bottom
     $rootScope.$watch('logs.length', scrollBottom);
-    $rootScope.$watch('settings.grep', scrollBottom);
-    $rootScope.$watch('settings.grepCaseSensitive', scrollBottom);
+    $rootScope.$watch('settings.grep.input', scrollBottom);
+    $rootScope.$watch('settings.grep.caseSensitive', scrollBottom);
     $rootScope.$watch('settings.buffer', scrollBottom);
     $rootScope.$watch('authenticated', getTail);
     window.scrollTo(0, document.body.scrollHeight);
@@ -41,7 +45,7 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
         }
     };
     $scope.testHighlight = function (log) {
-        if ($scope.settings.highlight.length === 0) {
+        if ($scope.settings.highlight.input.length === 0) {
             return false;
         }
         return test(log, 'highlight');
@@ -75,14 +79,14 @@ app.controller("TailCtrl", function ($rootScope, $scope, socket, $location) {
     }
 
     function test(log, type) {
-        if ($scope.settings[type + 'Regex']) {
+        if ($scope.settings[type].regex) {
             try {
-                return log.match(new RegExp($scope.settings[type], $scope.settings[type + 'CaseSensitive'] ? '' : 'i'));
+                return log.match(new RegExp($scope.settings[type].input, $scope.settings[type].caseSensitive ? '' : 'i'));
             } catch (e) {
                 return true;
             }
         } else {
-            return log.toLowerCase().indexOf($scope.settings[type].toLowerCase()) != -1;
+            return log.toLowerCase().indexOf($scope.settings[type].input.toLowerCase()) != -1;
         }
     }
 
