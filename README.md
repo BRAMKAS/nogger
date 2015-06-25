@@ -1,5 +1,7 @@
 # ![Nogger Logo](https://raw.githubusercontent.com/paul-em/nogger/master/front/img/logo-60.png "Nogger Logo") Nogger 
 
+[![Join the chat at https://gitter.im/paul-em/nogger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/paul-em/nogger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Read your log files online from a dashboard.
 
 ## What it is
