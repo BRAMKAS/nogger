@@ -164,6 +164,7 @@ getCertificate(function (keys) {
             var match;
             var used;
             var matchAfter = 0;
+            var usedCount = 0;
             lineReader.eachLine(instance.path, function (line, last) {
                 total++;
                 match = false, used = false;
@@ -186,6 +187,7 @@ getCertificate(function (keys) {
                                 lookbeforeBuffer = [];
                             }
                             found.push(line);
+                            usedCount++;
                             used = true;
                             if(data.lookafter && match){
                                 matchAfter = data.lookafter;
@@ -194,7 +196,7 @@ getCertificate(function (keys) {
                             }
                         }
                     }
-                    if (found.length > (data.limit)) {
+                    if (usedCount > data.limit) {
                         req.io.respond({err: null, data: {result: found}});
                         return false;
                     }
