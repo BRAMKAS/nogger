@@ -6,9 +6,9 @@ app.directive('logline', function () {
             highlight: '=',
             update: '='
         },
-        template: ['<span ng-repeat="item in overlays" ng-class="{\'list-group-item-warning\': item.highlight}" bo-text="item.data"></span>'],
+        template: ['<span ng-repeat="item in overlays" ng-class="{\'list-group-item-warning\': item.highlight, \'lookaround\': item.lookaround}" bo-text="item.data"></span>'],
         link: function (scope, element, attrs) {
-            if(scope.update){
+            if (scope.update) {
                 scope.$watch('highlight', update, true);
             }
             update();
@@ -22,27 +22,34 @@ app.directive('logline', function () {
                     } else {
                         found = scope.data.match(new RegExp(escape(scope.highlight.input), 'gi'));
                     }
-
-                    var searchPointer = 0;
-                    found.forEach(function (result) {
-                        var index = scope.data.indexOf(result, searchPointer);
-                        if (index > searchPointer) {
+                    if (found) {
+                        var searchPointer = 0;
+                        found.forEach(function (result) {
+                            var index = scope.data.indexOf(result, searchPointer);
+                            if (index > searchPointer) {
+                                scope.overlays.push({
+                                    highlight: false,
+                                    data: scope.data.substring(searchPointer, index)
+                                });
+                            }
+                            searchPointer = index;
+                            scope.overlays.push({
+                                highlight: true,
+                                data: scope.data.substr(searchPointer, result.length)
+                            });
+                            searchPointer = searchPointer + result.length;
+                        });
+                        if (searchPointer < scope.data.length) {
                             scope.overlays.push({
                                 highlight: false,
-                                data: scope.data.substring(searchPointer, index)
+                                data: scope.data.substring(searchPointer, scope.data.length)
                             });
                         }
-                        searchPointer = index;
-                        scope.overlays.push({
-                            highlight: true,
-                            data: scope.data.substr(searchPointer, result.length)
-                        });
-                        searchPointer = searchPointer + result.length;
-                    });
-                    if(searchPointer < scope.data.length){
+                    } else {
                         scope.overlays.push({
                             highlight: false,
-                            data: scope.data.substring(searchPointer, scope.data.length)
+                            data: scope.data,
+                            lookaround: true
                         });
                     }
                 } else {
@@ -53,7 +60,7 @@ app.directive('logline', function () {
                 }
             }
 
-            function escape(text){
+            function escape(text) {
                 return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
             }
         }

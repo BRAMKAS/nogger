@@ -19,7 +19,7 @@
     <div class="col-md-2">
         <section class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Limit</h3>
+                <h3 class="panel-title" title="Limit the search results">Limit</h3>
             </div>
             <div class="panel-body">
                 <input class="form-control form-inline" type="number" min="1" ng-model="settings.limit">
@@ -28,10 +28,10 @@
     </div>
 </div>
 <div class="controls">
-    <div class="col-md-2">
+    <div class="col-md-1">
         <section class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Skip results</h3>
+                <h3 class="panel-title" title="Skip this many results">Skip</h3>
             </div>
             <div class="panel-body">
                 <input class="form-control form-inline" type="number" min="0" ng-model="settings.skipResults">
@@ -40,10 +40,10 @@
     </div>
 </div>
 <div class="controls">
-    <div class="col-md-2">
+    <div class="col-md-1">
         <section class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Start at line</h3>
+                <h3 class="panel-title" title="Start to search at this line (0 = last)">Start</h3>
             </div>
             <div class="panel-body">
                 <input class="form-control form-inline" type="number" min="0" ng-model="settings.start">
@@ -55,7 +55,7 @@
     <div class="col-md-1">
         <section class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Before</h3>
+                <h3 class="panel-title" title="Add this amount of lines before the matched line">Before</h3>
             </div>
             <div class="panel-body">
                 <input class="form-control form-inline" type="number" min="0" ng-model="settings.lookbefore">
@@ -67,7 +67,7 @@
     <div class="col-md-1">
         <section class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">After</h3>
+                <h3 class="panel-title" title="Add this amount of lines after the matched line">After</h3>
             </div>
             <div class="panel-body">
                 <input class="form-control form-inline" type="number" min="0" ng-model="settings.lookbefore">
