@@ -189,8 +189,7 @@ getCertificate(function (keys) {
                             used = true;
                             if(data.lookafter && match){
                                 matchAfter = data.lookafter;
-                            }
-                            if(matchAfter){
+                            } else if(matchAfter){
                                 matchAfter--;
                             }
                         }
