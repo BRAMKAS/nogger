@@ -162,11 +162,12 @@ getCertificate(function (keys) {
                 data.input = data.input.toLowerCase();
             }
             var match;
+            var used;
             var matchAfter = 0;
             lineReader.eachLine(instance.path, function (line, last) {
                 total++;
+                match = false, used = false;
                 if (total > data.start) {
-                    match = false;
                     if (regex) {
                         match = line.match(regex);
                     } else {
@@ -185,6 +186,7 @@ getCertificate(function (keys) {
                                 lookbeforeBuffer = [];
                             }
                             found.push(line);
+                            used = true;
                             if(data.lookafter && match){
                                 matchAfter = data.lookafter;
                             }
@@ -201,7 +203,7 @@ getCertificate(function (keys) {
                 if (last) {
                     req.io.respond({err: null, data: {result: found, total: total}});
                 } else {
-                    if(data.lookbefore){
+                    if(data.lookbefore && !used){
                         lookbeforeBuffer.push(line);
                         if(lookbeforeBuffer.length > data.lookbefore){
                             lookbeforeBuffer.splice(0, 1);
