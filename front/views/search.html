@@ -1,5 +1,4 @@
-<div class="col-md-1">
-</div>
+
 <div class="col-md-6">
     <section class="panel panel-default">
         <div class="panel-heading">
@@ -32,6 +31,18 @@
     <div class="col-md-2">
         <section class="panel panel-default">
             <div class="panel-heading">
+                <h3 class="panel-title">Skip results</h3>
+            </div>
+            <div class="panel-body">
+                <input class="form-control form-inline" type="number" min="0" ng-model="settings.skipResults">
+            </div>
+        </section>
+    </div>
+</div>
+<div class="controls">
+    <div class="col-md-2">
+        <section class="panel panel-default">
+            <div class="panel-heading">
                 <h3 class="panel-title">Start at line</h3>
             </div>
             <div class="panel-body">
@@ -40,7 +51,29 @@
         </section>
     </div>
 </div>
-<div class="col-md-1">
+<div class="controls">
+    <div class="col-md-1">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Before</h3>
+            </div>
+            <div class="panel-body">
+                <input class="form-control form-inline" type="number" min="0" ng-model="settings.lookbefore">
+            </div>
+        </section>
+    </div>
+</div>
+<div class="controls">
+    <div class="col-md-1">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">After</h3>
+            </div>
+            <div class="panel-body">
+                <input class="form-control form-inline" type="number" min="0" ng-model="settings.lookbefore">
+            </div>
+        </section>
+    </div>
 </div>
 <div class="col-md-12">
     <ul class="list-group">

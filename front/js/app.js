@@ -13,11 +13,11 @@ var app = angular.module('app', [
                 templateUrl: 'views/logsOverview.html',
                 controller: 'LogsOverviewCtrl'
             })
-            .when('/search', {
+            .when('/', {
                 templateUrl: 'views/search.html',
                 controller: 'SearchCtrl'
             })
-            .when('/', {
+            .when('/tail', {
                 templateUrl: 'views/tail.html',
                 controller: 'TailCtrl'
             })

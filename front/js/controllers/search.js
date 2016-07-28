@@ -8,7 +8,11 @@ app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
             regex: false,
             caseSensitive: false
         },
-        totoal: 0,
+        lookbefore: 0,
+        lookafter: 0,
+        skipResults: 0,
+        
+        total: 0,
         searching: false,
         searched: false,
         searchResults: []
@@ -25,7 +29,10 @@ app.controller("SearchCtrl", function ($rootScope, $scope, socket) {
                 caseSensitive: $scope.settings.search.caseSensitive,
 
                 start: $scope.settings.start,
-                limit: $scope.settings.limit
+                limit: $scope.settings.limit,
+                lookbefore: $scope.settings.lookbefore,
+                lookafter: $scope.settings.lookafter,
+                skipResults: $scope.settings.skipResults
             }, function (re) {
                 console.log(re);
                 $scope.settings.searched = true;

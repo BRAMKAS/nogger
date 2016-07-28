@@ -1,7 +1,7 @@
 <div class="col-sm-3 col-md-2 sidebar inverse" ng-class="{'showSidebar': show.sidebar}">
     <ul class="nav nav-sidebar">
-        <li ng-class="{active: route === '/'}"><a href="/"><i class="fa fa-bar-chart-o"></i>live logs</a></li>
-        <li ng-class="{active: route === '/search'}"><a href="/search"><i class="fa fa-bar-chart-o"></i>search logs</a></li>
+        <li ng-class="{active: route === '/'}"><a href="/"><i class="fa fa-bar-chart-o"></i>search logs</a></li>
+        <li ng-class="{active: route === '/tail'}"><a href="/tail"><i class="fa fa-bar-chart-o"></i>live logs</a></li>
         <li ng-class="{active: route === '/others'}" ng-if="otherInstances.length > 0">
             <a href="/others"><i class="fa fa-align-left"></i>other logs</a>
             <ul class="nav nav-sidebar">

@@ -140,11 +140,16 @@ getCertificate(function (keys) {
     app.io.route('search', function (req) {
         if (checkAuth(req)) {
             var found = [];
+            var lookbeforeBuffer = [];
             var total = 0;
+            var skipped = 0;
             var data = req.data;
             data.input = data.input || '';
             data.start = data.start || 0;
             data.limit = data.limit || 500;
+            data.skipResults = data.skipResults || 0;
+            data.lookbefore = data.lookbefore || 0;
+            data.lookafter = data.lookafter || 0;
             var regex;
             if (data.regex) {
                 try {
@@ -153,17 +158,39 @@ getCertificate(function (keys) {
                     req.io.respond({err: 'regex not valid', data: null});
                     return;
                 }
+            } else {
+                data.input = data.input.toLowerCase();
             }
+            var match;
+            var matchAfter = 0;
             lineReader.eachLine(instance.path, function (line, last) {
                 total++;
                 if (total > data.start) {
+                    match = false;
                     if (regex) {
-                        if (line.match(regex)) {
-                            found.push(line);
-                        }
+                        match = line.match(regex);
                     } else {
-                        if (line.toLowerCase().indexOf(data.input.toLowerCase()) !== -1) {
+                        match = line.toLowerCase().indexOf(data.input) !== -1;
+                    }
+
+
+                    if(match || matchAfter){
+                        if(skipped < data.skipResults){
+                            skipped++;
+                        } else {
+                            if(lookbeforeBuffer.length){
+                                lookbeforeBuffer.forEach(function(beforeLine){
+                                    found.push(beforeLine);
+                                });
+                                lookbeforeBuffer = [];
+                            }
                             found.push(line);
+                            if(data.lookafter && match){
+                                matchAfter = data.lookafter;
+                            }
+                            if(matchAfter){
+                                matchAfter--;
+                            }
                         }
                     }
                     if (found.length > (data.limit)) {
@@ -173,6 +200,13 @@ getCertificate(function (keys) {
                 }
                 if (last) {
                     req.io.respond({err: null, data: {result: found, total: total}});
+                } else {
+                    if(data.lookbefore){
+                        lookbeforeBuffer.push(line);
+                        if(lookbeforeBuffer.length > data.lookbefore){
+                            lookbeforeBuffer.splice(0, 1);
+                        }
+                    }
                 }
             });
         } else {
