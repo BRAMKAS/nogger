@@ -187,7 +187,9 @@ getCertificate(function (keys) {
                                 lookbeforeBuffer = [];
                             }
                             found.push(line);
-                            usedCount++;
+                            if(match){
+                                usedCount++;
+                            }
                             used = true;
                             if(data.lookafter && match){
                                 matchAfter = data.lookafter;
