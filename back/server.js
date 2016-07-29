@@ -198,7 +198,7 @@ getCertificate(function (keys) {
                             }
                         }
                     }
-                    if (usedCount > data.limit) {
+                    if (usedCount > data.limit && !matchAfter) {
                         req.io.respond({err: null, data: {result: found}});
                         return false;
                     }
