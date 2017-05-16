@@ -32,15 +32,18 @@ exports.readdir = folder => new Promise((resolve, reject) => {
 
 exports.tail = (file, options) => new Promise((resolve, reject) => {
   options = options || {};
-  const limit = options.limit || 100;
   let search = options.search || '';
-  const skip = options.skip || 0;
-  const before = options.before || 0;
-  const after = options.after || 0;
+  const limit = parseInt(options.limit, 10) || 100;
+  const skip = parseInt(options.skip, 10) || 0;
+  const before = parseInt(options.before, 10) || 0;
+  const after = parseInt(options.after, 10) || 0;
+  const caseSensitive = options.caseSensitive && options.caseSensitive !== 'false';
+  const useRegex = options.regex && options.regex !== 'false';
+
   let regex;
-  if (options.regex) {
+  if (useRegex) {
     try {
-      regex = new RegExp(search, options.caseSensitive ? '' : 'i');
+      regex = new RegExp(search, caseSensitive ? '' : 'i');
     } catch (e) {
       reject();
       return;
@@ -84,7 +87,11 @@ exports.tail = (file, options) => new Promise((resolve, reject) => {
           });
           lookbeforeBuffer = [];
         }
-        found.push({ v: line });
+        if (matchAfter) {
+          found.push({ v: line, after: true });
+        } else {
+          found.push({ v: line });
+        }
         if (match) {
           usedCount += 1;
         }

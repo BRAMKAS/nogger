@@ -225,12 +225,19 @@ describe('server reader', () => {
           throw e;
         }));
 
-    it('should not work properly with tar', () =>
-      reader.tail(path.resolve(__dirname, 'testLogs', 'weirdLog.tar'))
+    it('should work with all props set', () =>
+      reader.tail(path.resolve(__dirname, 'testLogs', 'log1'), {
+        search: '5star2000',
+        skip: 0,
+        before: 0,
+        after: 0,
+        regex: false,
+        caseSensitive: false,
+      })
         .then((result) => {
           expect(result).to.be.ok();
-          expect(result.contents.length).not.to.eql(7);
-          expect(result.total).not.to.eql(7);
+          expect(result.contents.length).to.eql(1);
+          expect(result.total).to.eql(6);
         })
         .catch((e) => {
           throw e;
