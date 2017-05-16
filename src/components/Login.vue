@@ -79,4 +79,8 @@
     form {
         padding: 16px;
     }
+
+    .mdl-layout__header {
+        display: flex;
+    }
 </style>

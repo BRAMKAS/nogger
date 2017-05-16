@@ -34,7 +34,7 @@
             </main>
         </div>
 
-        <login v-show="!auth" @success="authSuccess()"></login>
+        <login v-show="auth === false" @success="authSuccess()"></login>
     </div>
 </template>
 
@@ -115,7 +115,7 @@
           }
           params += `${encodeURIComponent(key)}=${encodeURIComponent(this.file.filter[key])}`;
         });
-        api.get(`file/${this.selected}?${params}`)
+        api.get(`file/${encodeURIComponent(this.selected)}?${params}`)
           .then((re) => {
             console.log('load file', re);
             this.file.contents = re.contents;

@@ -37,7 +37,7 @@ function checkAuth(req, res, next) {
 
 api.post('/login', (req, res) => auth.login(req.body)
   .then(() => {
-    req.session.auth = req.body.email;
+    req.session.auth = req.body.username;
     res.json({ success: true });
   })
   .catch((err) => {
