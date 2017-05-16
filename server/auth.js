@@ -8,15 +8,15 @@ const maxLoginAttempts = 10;
 const loginAttemptCountTimeout = 5 * 60 * 1000;
 
 exports.login = data => new Promise((resolve, reject) => {
-  if (!data || !data.email || !data.password) {
-    reject(new Error('Auth - No email or password provided'));
+  if (!data || !data.username || !data.password) {
+    reject(new Error('Auth - No username or password provided'));
     return;
   }
-  const email = data.email.toLowerCase();
+  const username = data.username.toLowerCase();
 
   Logins.count(
     {
-      email,
+      username,
       date: {
         $gt: Date.now() - loginAttemptCountTimeout,
       },
@@ -27,7 +27,7 @@ exports.login = data => new Promise((resolve, reject) => {
       } else if (logins > maxLoginAttempts) {
         reject(new Error('Auth - too many logins. Try again later'));
       }
-      Users.findOne({ email }, (err, user) => {
+      Users.findOne({ username }, (err, user) => {
         if (err) {
           reject(err);
           return;
@@ -46,7 +46,7 @@ exports.login = data => new Promise((resolve, reject) => {
       });
 
       Logins.insert({
-        email,
+        username,
         date: Date.now(),
       }, (err) => {
         if (err) {
@@ -54,30 +54,67 @@ exports.login = data => new Promise((resolve, reject) => {
         }
       });
     });
-})
-;
+});
 
 exports.register = data => new Promise((resolve, reject) => {
-  if (!data || !data.email || !data.password) {
-    reject(new Error('Register - No email or password provided'));
+  if (!data || !data.username || !data.password) {
+    reject(new Error('No username or password provided'));
     return;
   }
-  const email = data.email.toLowerCase();
-
-  bcrypt.hash(data.password, saltRounds, (err, hash) => {
-    if (err) {
-      reject(err);
+  const username = data.username.toLowerCase();
+  Users.findOne({ username }, (findErr, user) => {
+    if (user) {
+      reject(new Error('User exists already'));
       return;
     }
-    Users.insert({
-      email: data.email,
-      password: hash,
-    }, (insertErr) => {
-      if (insertErr) {
-        reject(insertErr);
+    bcrypt.hash(data.password, saltRounds, (err, hash) => {
+      if (err) {
+        reject(err);
         return;
       }
-      resolve();
+      Users.insert({
+        username,
+        password: hash,
+      }, (insertErr) => {
+        if (insertErr) {
+          reject(insertErr);
+          return;
+        }
+        resolve();
+      });
+    });
+  });
+});
+
+exports.changePassword = data => new Promise((resolve, reject) => {
+  if (!data || !data.username || !data.password) {
+    reject(new Error('No username or password provided'));
+    return;
+  }
+  const username = data.username.toLowerCase();
+  Users.findOne({ username }, (findErr, user) => {
+    if (!user) {
+      reject(new Error('User does not exist'));
+      return;
+    }
+    bcrypt.hash(data.password, saltRounds, (err, hash) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      Users.update(
+        {
+          username,
+        },
+        {
+          $set: { password: hash },
+        }, (insertErr) => {
+          if (insertErr) {
+            reject(insertErr);
+            return;
+          }
+          resolve();
+        });
     });
   });
 });

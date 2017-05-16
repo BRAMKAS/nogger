@@ -1,11 +1,10 @@
-const Settings = require('./db').Settings;
+const settings = {
+  folder: process.cwd(),
+  port: 1337,
+};
 
-exports.getFolder = () => new Promise((resolve) => {
-  Settings.findOne({ _id: 'v3' }, (err, settings) => {
-    let folder = process.cwd();
-    if (settings && settings.folder) {
-      folder = settings.folder;
-    }
-    resolve(folder);
-  });
-});
+exports.setFolder = folder => (settings.folder = folder);
+exports.setPort = port => (settings.port = port);
+
+exports.getFolder = () => settings.cwd;
+exports.getPort = () => settings.port;
