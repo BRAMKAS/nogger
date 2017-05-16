@@ -27,7 +27,7 @@ api.use(session({
 }));
 
 function checkAuth(req, res, next) {
-  if (req.session.auth || process.env.NODE_ENV !== 'production') {
+  if (req.session.auth) {
     next();
   } else {
     res.status(401).send('Not authenticated');
@@ -48,6 +48,10 @@ api.post('/login', (req, res) => auth.login(req.body)
       res.status(400).send('Error logging in - check your nogger logs for more information');
     }
   }));
+
+api.get('/check-auth', (req, res) => {
+  res.json({ auth: !!(req.session && req.session.auth) });
+});
 
 api.get('/folder', checkAuth, (req, res) =>
   reader.readdir(settings.getFolder())

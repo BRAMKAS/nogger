@@ -32,6 +32,10 @@ exports.login = data => new Promise((resolve, reject) => {
           reject(err);
           return;
         }
+        if (!user) {
+          reject(new Error('Auth - User not found'));
+          return;
+        }
         bcrypt.compare(data.password, user.password, (hashErr, success) => {
           if (hashErr) {
             reject(hashErr);

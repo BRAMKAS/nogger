@@ -33,14 +33,14 @@ exports.readdir = folder => new Promise((resolve, reject) => {
 exports.tail = (file, options) => new Promise((resolve, reject) => {
   options = options || {};
   const limit = options.limit || 100;
-  const filter = options.filter || '';
+  const search = options.search || '';
   const skip = options.skip || 0;
   const before = options.before || 0;
   const after = options.after || 0;
   let regex;
   if (options.regex) {
     try {
-      regex = new RegExp(filter, options.caseSensitive ? '' : 'i');
+      regex = new RegExp(search, options.caseSensitive ? '' : 'i');
     } catch (e) {
       reject();
       return;
@@ -64,7 +64,7 @@ exports.tail = (file, options) => new Promise((resolve, reject) => {
       if (regex) {
         match = line.match(regex);
       } else {
-        match = line.toLowerCase().indexOf(filter) !== -1;
+        match = line.toLowerCase().indexOf(search) !== -1;
       }
 
       if (match || matchAfter) {
@@ -90,12 +90,12 @@ exports.tail = (file, options) => new Promise((resolve, reject) => {
         }
       }
       if (usedCount >= limit && !matchAfter) {
-        resolve({ result: found });
+        resolve({ contents: found.reverse(), total: null });
         return false;
       }
     }
     if (last) {
-      resolve({ resolve: found, total });
+      resolve({ contents: found.reverse(), total });
     } else if (before && !used) {
       lookbeforeBuffer.push(line);
       if (lookbeforeBuffer.length > before) {
