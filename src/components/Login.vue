@@ -46,11 +46,11 @@
           password: this.password,
         })
           .then((re) => {
-            console.log('SUCCESS', re);
             if (re.success) {
               this.$emit('success');
+            } else {
+              this.error = re.errorText;
             }
-            this.error = re.errorText;
           })
           .catch((err) => {
             this.error = err.message;

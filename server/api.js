@@ -34,6 +34,16 @@ function checkAuth(req, res, next) {
   }
 }
 
+api.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log('error destroying session', err);
+      res.json({ success: false });
+    } else {
+      res.json({ success: true });
+    }
+  });
+});
 
 api.post('/login', (req, res) => auth.login(req.body)
   .then(() => {

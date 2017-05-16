@@ -10,6 +10,11 @@
                 </span>
             </li>
         </ul>
+
+        <div class="mdl-js-snackbar mdl-snackbar" ref="snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
     </div>
 </template>
 
@@ -22,7 +27,10 @@
     methods: {
       select(item) {
         if (!item.file) {
-          alert('Accessing folders is not yet supported');
+          this.$refs.snackbar.MaterialSnackbar.showSnackbar({
+            message: 'Accessing folders is not yet supported',
+            timeout: 2000,
+          });
         } else {
           this.$emit('select', item.name);
         }

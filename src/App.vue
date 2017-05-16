@@ -16,6 +16,7 @@
                         <i class="material-icons">more_vert</i>
                     </button>
                     <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
+                        <li class="mdl-menu__item" @click="contribute()">Contribute</li>
                         <li class="mdl-menu__item" @click="logout()">Logout</li>
                     </ul>
                 </div>
@@ -35,6 +36,11 @@
         </div>
 
         <login v-show="auth === false" @success="authSuccess()"></login>
+
+        <div class="mdl-js-snackbar mdl-snackbar" ref="snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
     </div>
 </template>
 
@@ -117,7 +123,6 @@
         });
         api.get(`file/${encodeURIComponent(this.selected)}?${params}`)
           .then((re) => {
-            console.log('load file', re);
             this.file.contents = re.contents;
             this.file.total = re.total;
             this.file.loading = false;
@@ -125,6 +130,10 @@
           .catch((err) => {
             this.file.error = err.message;
             this.file.loading = false;
+            this.$refs.snackbar.MaterialSnackbar.showSnackbar({
+              message: err.message,
+              timeout: 2000,
+            });
           });
       },
       loadFolder() {
@@ -142,10 +151,26 @@
           .catch((err) => {
             this.folder.error = err.message;
             this.folder.loading = false;
+            this.$refs.snackbar.MaterialSnackbar.showSnackbar({
+              message: err.message,
+              timeout: 2000,
+            });
           });
       },
+      contribute() {
+        window.open('https://github.com/paul-em/nogger', '_blank');
+      },
       logout() {
-        console.log('logout');
+        api.post('logout')
+          .then(() => {
+            this.auth = false;
+          })
+          .catch((err) => {
+            this.$refs.snackbar.MaterialSnackbar.showSnackbar({
+              message: err.message,
+              timeout: 2000,
+            });
+          });
       },
     },
   };

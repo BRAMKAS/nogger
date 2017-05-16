@@ -130,7 +130,6 @@
         }
         const regexOpts = `g${this.appliedFilters.regex && this.appliedFilters.caseSensitive ? '' : 'i'}`;
         const re = line.replace(new RegExp(this.appliedFilters.search, regexOpts), '<span class="highlight">$&</span>');
-        console.log(re);
         return re;
       },
     },
