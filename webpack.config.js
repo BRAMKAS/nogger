@@ -20,7 +20,10 @@ module.exports = {
       },
       {
         test: /\.css/,
-        loader: 'css-loader',
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+        ],
       },
       {
         test: /\.js$/,
@@ -29,8 +32,8 @@ module.exports = {
       },
       {
         test: /\.(js|vue)$/,
-        loader: "eslint-loader",
-        exclude: /node_modules/
+        loader: 'eslint-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.(ttf|eot|woff|png|jpg|gif|svg)$/,

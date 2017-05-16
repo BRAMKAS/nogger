@@ -6,5 +6,5 @@ const settings = {
 exports.setFolder = folder => (settings.folder = folder);
 exports.setPort = port => (settings.port = port);
 
-exports.getFolder = () => settings.cwd;
+exports.getFolder = () => settings.folder;
 exports.getPort = () => settings.port;

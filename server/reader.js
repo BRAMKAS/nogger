@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const lineReader = require('reverse-line-reader');
 
 exports.readdir = folder => new Promise((resolve, reject) => {
@@ -7,7 +8,25 @@ exports.readdir = folder => new Promise((resolve, reject) => {
       reject(err);
       return;
     }
-    resolve(contents);
+    const results = [];
+    Promise.all(contents.map(file => new Promise((resolveStat, rejectStat) => {
+      fs.stat(path.join(folder, file), (statErr, stat) => {
+        if (statErr) {
+          rejectStat(statErr);
+          return;
+        }
+        results.push({
+          name: file,
+          size: stat.size,
+          modified: stat.mtime.getTime(),
+          birthtime: stat.birthtime.getTime(),
+          file: stat.isFile(),
+        });
+        resolveStat();
+      });
+    }))).then(() => {
+      resolve(results);
+    });
   });
 });
 
