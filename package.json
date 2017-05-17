@@ -1,14 +1,18 @@
 {
   "name": "nogger",
-  "version": "3.0.4",
+  "preferGlobal": true,
+  "version": "3.0.5",
   "description": "node logger",
   "main": "index.js",
+  "bin": {
+    "nogger": "bin/nogger.js"
+  },
   "scripts": {
     "test": "mocha",
     "start": "cross-env NODE_ENV=production node server",
     "build": "cross-env NODE_ENV=production webpack -p",
     "devFront": "webpack-dev-server --content-base public --open",
-    "dev": "concurrently --kill-others --prefix \"[{name}]\" --names \"server,webpack\" \"node server -p 8081\" \"webpack --watch\"",
+    "dev": "concurrently --kill-others --prefix \"[{name}]\" --names \"server,webpack\" \"node server -p 8080\" \"webpack --watch\"",
     "postinstall": "npm run build"
   },
   "repository": {
@@ -16,8 +20,18 @@
     "url": "git+https://github.com/paul-em/nogger.git"
   },
   "keywords": [
-    "nodejs",
-    "logger"
+    "logging",
+    "grep",
+    "logfile",
+    "monitor",
+    "nogger",
+    "node logger",
+    "logfile reader",
+    "dashboard",
+    "tail",
+    "cli",
+    "tools",
+    "sysadmin"
   ],
   "author": "Paul Em",
   "license": "ISC",
