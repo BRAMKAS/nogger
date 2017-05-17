@@ -1,4 +1,7 @@
 # ![Nogger Logo](https://github.com/paul-em/nogger/raw/master/assets/logo-flipped.png "Nogger Logo") Nogger 3.0
+![Dependencies](https://david-dm.org/paul-em/nogger.svg)
+![Travis CI](https://travis-ci.org/paul-em/nogger.svg?branch=master)
+![Greenkeeper badge](https://badges.greenkeeper.io/paul-em/nogger.svg)
 
 Read your log files online from a dashboard.
 
