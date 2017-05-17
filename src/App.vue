@@ -6,7 +6,9 @@
                 <div class="mdl-layout__header-row">
                     <img :src="logo" class="logo" @click="unselect()">
                     <!-- Title -->
-                    <span class="mdl-layout-title">{{!selected ? 'Select file' : selected}}</span>
+                    <span class="mdl-layout-title">
+                        {{!selected ? 'Select file' : `${selected} (${getSelectedFileSize()})`}}
+                    </span>
                     <!-- Add spacer, to align navigation to the right -->
                     <div class="mdl-layout-spacer"></div>
                     <!-- Navigation. We hide it in small screens. -->
@@ -26,6 +28,7 @@
                     <file-viewer v-show="selected"
                                  ref="file"
                                  :contents="file.contents"
+                                 :total="file.total"
                                  :on-filter="applyFilter"></file-viewer>
                     <folder-viewer v-show="!selected"
                                    ref="folder"
@@ -156,6 +159,13 @@
               timeout: 2000,
             });
           });
+      },
+      getSelectedFileSize() {
+        const file = this.folder.contents.find(item => item.name === this.selected);
+        if (file) {
+          return this.$refs.folder.formatSize(file.size);
+        }
+        return 0;
       },
       contribute() {
         window.open('https://github.com/paul-em/nogger', '_blank');

@@ -13,6 +13,11 @@
             </ul>
         </div>
 
+        <div class="mdl-card mdl-shadow--2dp meta">
+            <p v-if="total">Searched all lines ({{total}}) and found {{contents.length}} matches</p>
+            <p v-if="!total">Displaying first {{contents.length}} matching lines</p>
+        </div>
+
         <div class="mdl-card mdl-shadow--2dp mdl-color--primary search-bar">
             <button id="menu-top-left"
                     @click.prevent=""
@@ -153,8 +158,15 @@
         min-height: 10px;
     }
 
-    .contents {
+    .meta {
+        margin-top: 16px;
         margin-bottom: 75px;
+        padding: 16px;
+    }
+
+    .meta p {
+        font-style: italic;
+        margin: 0;
     }
 
     .contents .material-icons {
