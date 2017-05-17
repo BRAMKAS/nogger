@@ -1,6 +1,4 @@
-# ![Nogger Logo](https://raw.githubusercontent.com/paul-em/nogger/master/front/img/logo-60.png "Nogger Logo") Nogger 
-
-[![Join the chat at https://gitter.im/paul-em/nogger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/paul-em/nogger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# ![Nogger Logo](https://github.com/paul-em/nogger/raw/master/assets/logo-flipped.png "Nogger Logo") Nogger 3.0
 
 Read your log files online from a dashboard.
 
@@ -10,16 +8,16 @@ Nogger is a log reader written with nodejs that brings features like grep and ta
 
 To see a detailed explaination have a look at this blog entry: [http://blog.paulem.eu/nogger/](http://blog.paulem.eu/nogger/)
 
-![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-1.png "Nogger Screenshot")
-![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-2.png "Nogger Screenshot")
-![Nogger Screenshot](https://raw.githubusercontent.com/paul-em/nogger/master/assets/screenshot-3.png "Nogger Screenshot")
+![Nogger Screenshot](https://github.com/paul-em/nogger/raw/master/assets/screenshot_login.png "Nogger Screenshot")
+![Nogger Screenshot](https://github.com/paul-em/nogger/raw/master/assets/screenshot_folder.png "Nogger Screenshot")
+![Nogger Screenshot](https://github.com/paul-em/nogger/raw/master/assets/screenshot_file.png "Nogger Screenshot")
+![Nogger Screenshot](https://github.com/paul-em/nogger/raw/master/assets/screenshot_highlight.png "Nogger Screenshot")
+![Nogger Screenshot](https://github.com/paul-em/nogger/raw/master/assets/screenshot_before_after.png "Nogger Screenshot")
 
 ## Getting Started
 Install the module with: `npm install nogger -g`
 Make sure to set -g to install it globally to have the nogger command available!
 That's it! No databases or other dependencies are required. 
-
-In order to track a logfile you have to start an instance of nogger. As soon as you connect to the dashboard the script will listen on changes of the file.
 
 Feel free to start as many instances as you want.
 
@@ -35,41 +33,28 @@ Feel free to start as many instances as you want.
 |                                                              |
 | actions:                                                     |
 |                                                              |
-|  start [path]       Starts nogger with logfile path          |
-|   -w, --pw <key>)   Optional. Set password for dashboard.    |
-|                       If not set a password is generated.    |
-|   -i, --id <id>)    Optional. A identifier that can be used  |
-|                      instead of a generated one              |
-|   -p, --port <port> Optional. Port for dashboard.            |
-|   -c, --cert <cert> Optional. Provide SSL certificate in     |
-|                      order to avoid having to manually       |
-|                      confirm the certificate in the browser  |
-|   -k, --key <key>   Optional. Provide SSL key in order to    |
-|                      avoid having to manually confirm the    |
-|                      certificate in the browser              |
-|  restart <id>       Restarts an available instance           |
-|  restartall         Restarts all available instances         |
-|  stop <id>          Stops the nogger daemon                  |
-|  stopall            Stops all nogger daemons                 |
-|  remove <id>        Removes an instance from the list        |
-|  removeall          Removes all instances from the list      |
-|  list               Returns list of nogger instances running |
+|  start                Starts nogger on port 1337 in cwd      |
+|   -p, --port <port>      Optional. Port for dashboard.       |
+|   -f, --folder <folder>  Optional. Absolute LogFiles folder. |
 |                                                              |
-|  setpw <pw> (<id>)    Updates the password for the dashboard |
-|  showblocked        Displays blocked list(s)                 |
-|  block <ip>         Add ip to blocked list(s)                |
-|  unblock <ip>       Unblocks an ip from blocked list(s)      |
+|  adduser <user> <pw>  Adds a user for dashboard login        |
+|  listusers            Lists all users in db                  |
+|  removeuser <user>    Removes an existing user               |
+|  changepw <user> <pw> Changes password of existing user      |
 |                                                              |
-|  -v, --version      Shows current nogger version             |
-|  -h, --help         Shows help menu                          |
+|  -v, --version        Shows current nogger version           |
+|  -h, --help           Shows help menu                        |
 |                                                              |
 |--------------------------------------------------------------|
 ```
-A sample command to start watching a file would be:
+A sample command to start watching a folder would be:
 ```
-nogger start /var/log/nginx/access.log -w supersecretpw -i nginx -p 1337 --cert /etc/nginx/ssl/server.crt --key /etc/nginx/ssl/server.key
+nogger start /var/log/nginx/
 ```
-
+Just make sure you have added a user like so (you can also do this after you started the server)
+```
+nogger adduser paul supersecretpw
+```
 ## Contributing
 
 Please submit all issues and pull requests to the [paul-em/nogger](http://github.com/paul-em/nogger) repository!
@@ -78,7 +63,7 @@ Please submit all issues and pull requests to the [paul-em/nogger](http://github
 If you have any problem or suggestion please open an issue [here](https://github.com/paul-em/nogger/issues).
 
 ## License
-Copyright (c) 2014 Paul Em
+Copyright (c) 2017 Paul Em
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
