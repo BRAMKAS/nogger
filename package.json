@@ -8,7 +8,7 @@
     "start": "cross-env NODE_ENV=production node server",
     "build": "cross-env NODE_ENV=production webpack -p",
     "devFront": "webpack-dev-server --content-base public --open",
-    "dev": "concurrently --kill-others --prefix \"[{name}]\" --names \"server,webpack\" \"node server -p 8080\" \"webpack --watch\"",
+    "dev": "concurrently --kill-others --prefix \"[{name}]\" --names \"server,webpack\" \"node server -p 8080\" \"webpack --watch\""
   },
   "repository": {
     "type": "git",
