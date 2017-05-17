@@ -4,6 +4,8 @@
 ![Travis CI](https://travis-ci.org/paul-em/nogger.svg?branch=master)
 ![Greenkeeper badge](https://badges.greenkeeper.io/paul-em/nogger.svg)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/paul-em/nogger.svg)](https://greenkeeper.io/)
+
 Read your log files online from a dashboard.
 
 ## What it is
