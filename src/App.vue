@@ -173,7 +173,6 @@
       checkUpdates() {
         api.get('/latest-version')
           .then((re) => {
-            this.version = '3.0.2';
             const update = this.compareVersion(this.version, re.version);
             if (update) {
               this.$refs.snackbar.MaterialSnackbar.showSnackbar({

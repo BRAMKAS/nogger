@@ -11,7 +11,7 @@ exports.start = () => {
 
   const app = express();
 
-  app.use(logger(production ? 'common' : 'dev'));
+  app.use(logger('common'));
   app.use(express.static(publicPath));
   app.use('/api', api);
   app.use((req, res) => {
