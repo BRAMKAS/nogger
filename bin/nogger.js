@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 
 const minimist = require('minimist');
 const chalk = require('chalk');
