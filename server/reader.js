@@ -83,7 +83,7 @@ exports.tail = (file, options) => new Promise((resolve, reject) => {
       } else {
         if (lookbeforeBuffer.length) {
           lookbeforeBuffer.forEach((beforeLine) => {
-            found.push({ v: beforeLine, before: true });
+            found.push({ v: beforeLine, before: !match });
           });
           lookbeforeBuffer = [];
         }
