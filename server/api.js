@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const nedbSession = require('nedb-session-store');
+const request = require('request-promise');
 const reader = require('./reader');
 const settings = require('./settings');
 const auth = require('./auth');
@@ -58,6 +59,20 @@ api.post('/login', (req, res) => auth.login(req.body)
       res.status(400).send('Error logging in - check your nogger logs for more information');
     }
   }));
+
+api.get('/latest-version', (req, res) => {
+  request({
+    uri: 'https://registry.npmjs.org/nogger/latest',
+    json: true,
+  })
+    .then((re) => {
+      res.json({ success: true, version: re.version });
+    })
+    .catch((err) => {
+      console.log('Error loading latest version', err);
+      res.json({ success: false });
+    });
+});
 
 api.get('/check-auth', (req, res) => {
   res.json({ auth: !!(req.session && req.session.auth) });

@@ -18,6 +18,7 @@
                         <i class="material-icons">more_vert</i>
                     </button>
                     <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
+                        <li class="mdl-menu__item" @click="checkUpdates()">Check for updates</li>
                         <li class="mdl-menu__item" @click="contribute()">Contribute</li>
                         <li class="mdl-menu__item" @click="logout()">Logout</li>
                     </ul>
@@ -55,6 +56,7 @@
   import Login from './components/Login.vue';
   import api from './api';
   import logo from '../assets/logo.png';
+  import pkg from '../package.json';
 
   export default {
     name: 'App',
@@ -80,6 +82,7 @@
         error: null,
       },
       logo,
+      version: pkg.version,
     }),
     mounted() {
       componentHandler.upgradeElements(this.$el);
@@ -166,6 +169,43 @@
           return this.$refs.folder.formatSize(file.size);
         }
         return 0;
+      },
+      checkUpdates() {
+        api.get('/latest-version')
+          .then((re) => {
+            this.version = '3.0.2';
+            const update = this.compareVersion(this.version, re.version);
+            if (update) {
+              this.$refs.snackbar.MaterialSnackbar.showSnackbar({
+                message: `Version ${this.version} - ${update}`,
+                timeout: 10000,
+                actionHandler: () => window.open('https://github.com/paul-em/nogger#user-content-updating', '_blank'),
+                actionText: 'Update',
+              });
+            } else {
+              this.$refs.snackbar.MaterialSnackbar.showSnackbar({
+                message: `Version ${this.version} - You are up to date!`,
+                timeout: 5000,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log('Error loading latest version', err);
+          });
+      },
+      compareVersion(local, latest) {
+        const localSplit = local.split('.');
+        const latestSplit = latest.split('.');
+        if (parseInt(localSplit[0], 10) < parseInt(latestSplit[0], 10)) {
+          return 'new major version update available';
+        }
+        if (parseInt(localSplit[1], 10) < parseInt(latestSplit[1], 10)) {
+          return 'new version update available';
+        }
+        if (parseInt(localSplit[2], 10) < parseInt(latestSplit[2], 10)) {
+          return 'new minor version update available';
+        }
+        return null;
       },
       contribute() {
         window.open('https://github.com/paul-em/nogger', '_blank');

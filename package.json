@@ -1,7 +1,7 @@
 {
   "name": "nogger",
   "preferGlobal": true,
-  "version": "3.0.9",
+  "version": "3.0.10",
   "description": "node logger",
   "main": "index.js",
   "bin": {
@@ -72,6 +72,8 @@
     "nedb": "^1.8.0",
     "nedb-session-store": "^1.1.1",
     "node-sass": "^4.5.2",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
     "reverse-line-reader": "^0.2.6",
     "sass-loader": "^6.0.5",
     "style-loader": "^0.17.0",

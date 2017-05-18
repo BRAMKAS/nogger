@@ -19,6 +19,6 @@ exports.start = () => {
   });
 
   app.listen(port, () => {
-    console.log(`Nogger service listening on port ${port}`);
+    console.log(`Nogger service listening on port ${port} - env: ${production ? 'production' : 'development'}`);
   });
 };

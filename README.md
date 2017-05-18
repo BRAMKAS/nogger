@@ -61,6 +61,15 @@ Just make sure you have added a user like so (you can also do this after you sta
 ```
 nogger adduser paul supersecretpw
 ```
+## Updating
+
+For all minor version updates just run 
+```
+npm install nogger -g
+```
+again and restart your process.
+Major updates with breaking changes will have detailed explanations.
+
 ## Contributing
 
 Please submit all issues and pull requests to the [paul-em/nogger](http://github.com/paul-em/nogger) repository!
