@@ -127,15 +127,33 @@
         });
       },
       escape(text) {
-        return text.replace('<', '&lt;').replace('>', '&gt;');
+        return text
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&apos;');
       },
       highlight(line) {
         if (!this.appliedFilters.search) {
           return this.escape(line);
         }
         const regexOpts = `g${this.appliedFilters.regex && this.appliedFilters.caseSensitive ? '' : 'i'}`;
-        const re = line.replace(new RegExp(this.appliedFilters.search, regexOpts), '<span class="highlight">$&</span>');
-        return re;
+        const regex = new RegExp(this.appliedFilters.search, regexOpts);
+        let match = regex.exec(line);
+        if (!match) {
+          return this.escape(line);
+        }
+        let escapedLine = '';
+        let prevMatchEnd = 0;
+        while (match) {
+          escapedLine += this.escape(line.substring(prevMatchEnd, match.index));
+          escapedLine += `<span class="highlight">${this.escape(line.substr(match.index, match[0].length))}</span>`;
+          prevMatchEnd = match.index + match[0].length;
+          match = regex.exec(line);
+        }
+        escapedLine += this.escape(line.substr(prevMatchEnd, line.length));
+        return escapedLine;
       },
     },
     watch: {
@@ -148,7 +166,7 @@
 
 <style>
     .highlight {
-        background-color: rgb(0,150,136);
+        background-color: rgb(0, 150, 136);
         color: white;
     }
 </style>
