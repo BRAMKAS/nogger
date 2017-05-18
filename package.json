@@ -1,11 +1,11 @@
 {
   "name": "nogger",
   "preferGlobal": true,
-  "version": "3.0.14",
+  "version": "3.0.15",
   "description": "node logger",
   "main": "index.js",
   "bin": {
-    "nogger": "bin/nogger.js"
+    "nogger": "./bin/nogger.js"
   },
   "scripts": {
     "test": "mocha",
