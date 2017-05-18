@@ -148,7 +148,8 @@
 
 <style>
     .highlight {
-        background-color: #fffe39;
+        background-color: rgb(0,150,136);
+        color: white;
     }
 </style>
 
