@@ -39,5 +39,6 @@ module.exports = {
     'no-param-reassign': [2, { 'props': false }],
     'no-console': ["warn", { allow: ["warn", "error"] }],
     'no-underscore-dangle': ['error', { 'allow': ['_id'] }],
+    'import/no-extraneous-dependencies': 0,
   }
 };

@@ -189,7 +189,10 @@
             }
           })
           .catch((err) => {
-            console.log('Error loading latest version', err);
+            this.$refs.snackbar.MaterialSnackbar.showSnackbar({
+              message: `Error loading latest version ${err.message}`,
+              timeout: 5000,
+            });
           });
       },
       compareVersion(local, latest) {
